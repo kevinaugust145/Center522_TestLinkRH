@@ -473,7 +473,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAX 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qlA-be-7Jb">
-                            <rect key="frame" x="165" y="121" width="45" height="18"/>
+                            <rect key="frame" x="150" y="121" width="60" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="g7e-nY-Jms"/>
                             </constraints>
@@ -482,7 +482,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MIN 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bUT-ju-iiU">
-                            <rect key="frame" x="170" y="140" width="40" height="18"/>
+                            <rect key="frame" x="154.5" y="140" width="55.5" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="acm-is-o4B"/>
                             </constraints>
@@ -491,7 +491,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALARM UNSET" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="50T-2a-lJy">
-                            <rect key="frame" x="125.5" y="130" width="84.5" height="20"/>
+                            <rect key="frame" x="91.5" y="130" width="118.5" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20" id="1BG-Aj-pNU"/>
                             </constraints>
@@ -531,7 +531,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAX 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVG-Pe-kgQ">
-                            <rect key="frame" x="165" y="178" width="45" height="18"/>
+                            <rect key="frame" x="150" y="178" width="60" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="dB2-SZ-CX2"/>
                             </constraints>
@@ -540,7 +540,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MIN 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMG-R8-W4H">
-                            <rect key="frame" x="170" y="197" width="40" height="18"/>
+                            <rect key="frame" x="154.5" y="197" width="55.5" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="Ztt-q3-wqQ"/>
                             </constraints>
@@ -549,7 +549,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALARM UNSET" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYI-na-Jcs">
-                            <rect key="frame" x="125.5" y="187" width="84.5" height="20"/>
+                            <rect key="frame" x="91.5" y="187" width="118.5" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20" id="y5m-OF-j7N"/>
                             </constraints>
@@ -589,7 +589,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAX 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gbm-vW-m0C">
-                            <rect key="frame" x="165" y="235" width="45" height="18"/>
+                            <rect key="frame" x="150" y="235" width="60" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="V2U-cb-w7t"/>
                             </constraints>
@@ -598,7 +598,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MIN 00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eaW-Lj-Mlt">
-                            <rect key="frame" x="170" y="254" width="40" height="18"/>
+                            <rect key="frame" x="154.5" y="254" width="55.5" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="c5h-CS-jrB"/>
                             </constraints>
@@ -607,7 +607,7 @@ Graph</string>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALARM UNSET" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T9W-0j-Nma">
-                            <rect key="frame" x="125.5" y="244" width="84.5" height="20"/>
+                            <rect key="frame" x="91.5" y="244" width="118.5" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20" id="uxL-cq-ml9"/>
                             </constraints>

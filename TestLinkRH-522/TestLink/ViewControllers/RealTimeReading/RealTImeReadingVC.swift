@@ -88,6 +88,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     super.viewDidLoad()
     
    
+    viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
     
     if USERDEFAULT.value(forKey: "temperatureData") != nil
     {
@@ -328,39 +329,25 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     lblRH.text = "\( MainCenteralManager.sharedInstance().data.RHtemperature )\(" %")"
     
     if let minVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "minValue") as? String{
-        var minimumValue = minVal
+        let minimumValue = minVal
         
         if minimumValue == ""{
             lblRHMin.text = "MIN 00"
         }
         else{
-            if isFahrenheit {
-                
-                minimumValue = String(format: "%.1f", (Float(minVal)! * 1.8) + 32)
-            }else if  isKelvin {
-                
-                minimumValue = String(format: "%.1f", (Float(minVal)! + 273.15))
-            }
-            
+     
             lblRHMin.text = "MIN \( String(format: "%.1f", Float(minimumValue)!) )"
         }
     }
     
     if let maxVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "maxValue") as? String{
-        var maximumValue = maxVal
+        let maximumValue = maxVal
         
         if maximumValue == ""{
             lblRHMax.text = "MAX 00"
         }
         else{
-            if isFahrenheit {
-                
-                maximumValue = String(format: "%.1f", (Float(maxVal)! * 1.8) + 32)
-                
-            }else if  isKelvin {
-                
-                maximumValue = String(format: "%.1f", (Float(maxVal)! + 273.15))
-            }
+       
             lblRHMax.text = "MAX \(String(format: "%.1f", Float(maximumValue)!) )"
         }
     }
@@ -563,12 +550,12 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         }
         else{
             
-            if isFahrenheit {
+            if isCelsius {
                 
-                minimumValue = String(format: "%.1f", (Float(minVal)! * 1.8) + 32)
+                minimumValue = String(format: "%.1f", (Float(minVal)! - 32) / 1.8)
             }else if  isKelvin {
                 
-                minimumValue = String(format: "%.1f", (Float(minVal)! + 273.15))
+                minimumValue = String(format: "%.1f", (Float(minVal)! + 459.67) * (5/9))
             }
             lblT2Min.text = "MIN \(String(format: "%.1f", Float(minimumValue)!))"
         }
@@ -583,12 +570,12 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         }
         else{
             
-            if isFahrenheit {
+            if isCelsius {
                 
-                maximumValue = String(format: "%.1f", (Float(maxVal)! * 1.8) + 32)
+                maximumValue = String(format: "%.1f", (Float(maxVal)! - 32) / 1.8)
             }else if  isKelvin {
                 
-                maximumValue = String(format: "%.1f", (Float(maxVal)! + 273.15))
+                maximumValue = String(format: "%.1f", (Float(maxVal)! + 459.67) * (5/9))
             }
             
             lblT2Max.text = "MAX \(String(format: "%.1f", Float(maximumValue)!))"
@@ -774,6 +761,86 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.post(name: notificationName, object: nil)
         
     }
+    
+    
+    @IBAction func switched(_ sender:UISwitch){
+        
+        
+        if isCelsius {
+            
+            lblMinMaxTemp.text = "Please enter value between -200 C to 1370 C."
+            
+        }else if isFahrenheit {
+            
+            lblMinMaxTemp.text = "Please enter value between -328 F to 2498 F."
+            
+        }else if isKelvin {
+            
+            lblMinMaxTemp.text = "Please enter value between 73.15 K to 1643.15 K."
+        }
+        
+        
+        
+        if sender.tag == 21{
+            if sender.isOn{
+                
+                lblMinMaxTemp.text = "Please enter value between 0 to 100."
+                indexID = sender.tag
+                txtMinTemp.text = ""
+                txtMaxTemp.text = ""
+                self.view.addSubview(viewAlarmTemp)
+                
+            }
+            else{
+                USERDEFAULT.set(false, forKey: "isRH")
+                USERDEFAULT.synchronize()
+                
+                lblRHMax.isHidden = true
+                lblRHMin.isHidden = true
+                lblRHAlarmStatus.isHidden = false
+                
+            }
+        }
+        else if sender.tag == 22{
+            if sender.isOn{
+                
+                indexID = sender.tag
+                txtMinTemp.text = ""
+                txtMaxTemp.text = ""
+                self.view.addSubview(viewAlarmTemp)
+                
+            }
+            else{
+                USERDEFAULT.set(false, forKey: "isT1")
+                USERDEFAULT.synchronize()
+                
+                lblT1Max.isHidden = true
+                lblT1Min.isHidden = true
+                lblT1AlarmStatus.isHidden = false
+                
+            }
+            
+        }
+        else if sender.tag == 23{
+            if sender.isOn{
+                indexID = sender.tag
+                txtMinTemp.text = ""
+                txtMaxTemp.text = ""
+                self.view.addSubview(viewAlarmTemp)
+            }
+            else{
+                USERDEFAULT.set(false, forKey: "isT2")
+                USERDEFAULT.synchronize()
+                
+                lblT2Max.isHidden = true
+                lblT2Min.isHidden = true
+                lblT2AlarmStatus.isHidden = false
+                
+            }
+            
+        }
+        
+    }
     // MARK: - Other Methods
   
   func addTapGestureInOurView(){
@@ -798,14 +865,221 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
  
   
   
-  @IBAction func btnAlarmSetClicked(_ sender:UIButton){
-    
- 
-  }
+    @IBAction func btnAlarmSetClicked(_ sender:UIButton){
+        
+        
+        if txtMinTemp.text == "" {
+            showAlert(Appname, title: "Please fill minimum field")
+        }
+        else if txtMaxTemp.text == ""{
+            showAlert(Appname, title: "Please fill maximum field")
+        }
+        else{
+            
+            var minTemp:String = txtMinTemp.text!
+            var maxTemp:String = txtMaxTemp.text!
+            
+            
+            var alertMsg = "Please enter value between -200 C to 1370 C."
+            /* var min : Float = 0
+             var max : Float = 0
+             
+             if isCelSelected {
+             
+             alertMsg = "Please enter value between -200 C to 1370 C."
+             max = -200
+             min = 1370
+             
+             }else if isFahSelected {
+             
+             alertMsg = "Please enter value between -328 F to 2498 F."
+             max = -328
+             min = 2498
+             
+             
+             }else if isKelvin {
+             
+             alertMsg = "Please enter value between -73.15 K to 1643.15 K."
+             max = -73.15
+             min = 1643.15
+             }
+             */
+            
+            if indexID == 21{
+                
+                if Float(minTemp)! < 0 {
+                    alertMsg = "Please enter value between 0 to 100."
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else if Float(maxTemp)! > 100 {
+                    alertMsg = "Please enter value between 0 to 100."
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else if Float(minTemp)! > Float(maxTemp)! {
+                    alertMsg = "Minimum value is not more then max"
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else
+                {
+                    USERDEFAULT.set(true, forKey: "isRH")
+                    USERDEFAULT.synchronize()
+                    
+                    lblRHMax.isHidden = false
+                    lblRHMin.isHidden = false
+                    lblRHAlarmStatus.isHidden = true
+                    
+                    lblRHMin.text = "MIN \(txtMinTemp.text!)"
+                    lblRHMax.text = "MAX \(txtMaxTemp.text!)"
+                    
+                    switchRH.isOn = true
+                    
+                    let temp = (self.rangeData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                    print("Before Upadate Value : ",temp)
+                    temp.setValue(minTemp, forKey: "minValue")
+                    temp.setValue(maxTemp, forKey: "maxValue")
+                    print("After update Value : ",temp)
+                    if (self.rangeData.count > 0) {
+                        self.rangeData.replaceObject(at: 0, with: temp)
+                    }
+                    
+                    USERDEFAULT.set(self.rangeData, forKey: "temperatureData")
+                    USERDEFAULT.synchronize()
+                    
+                    viewAlarmTemp.removeFromSuperview()
+                }
+            }
+            else{
+                
+                //Please enter value between -200 C to 1370 C.
+                if Float(minTemp)! < -200 {
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else if Float(maxTemp)! > 1370 {
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else if Float(minTemp)! > Float(maxTemp)! {
+                    showAlert(Appname, title: alertMsg)
+                    return
+                }
+                else
+                {
+                    
+                    if indexID == 22{
+                        
+                        if isFahrenheit {
+                            minTemp = String((Float(minTemp)! - 32) / 1.8)
+                            maxTemp = String((Float(maxTemp)! - 32) / 1.8)
+                        }else if isKelvin {
+                            
+                            minTemp = String((Float(minTemp)! - 273.15))
+                            maxTemp = String((Float(maxTemp)! - 273.15))
+                            
+                        }
+                        
+                        USERDEFAULT.set(true, forKey: "isT1")
+                        USERDEFAULT.synchronize()
+                        
+                        lblT1Max.isHidden = false
+                        lblT1Min.isHidden = false
+                        lblT1AlarmStatus.isHidden = true
+                        
+                        lblT1Min.text = "MIN \(txtMinTemp.text!)"
+                        lblT1Max.text = "MAX \(txtMaxTemp.text!)"
+                        
+                        switchT1.isOn = true
+                        
+                        let temp = (self.rangeData[1] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                        print("Before Upadate Value : ",temp)
+                        temp.setValue(minTemp, forKey: "minValue")
+                        temp.setValue(maxTemp, forKey: "maxValue")
+                        print("After update Value : ",temp)
+                        if (self.rangeData.count > 1) {
+                            self.rangeData.replaceObject(at: 1, with: temp)
+                        }
+                    }
+                    else if indexID == 23{
+                        
+                        if isCelsius {
+                            
+                            minTemp = String((Float(minTemp)! * 1.8) + 32)
+                            maxTemp = String((Float(maxTemp)! * 1.8) + 32)
+                            
+                        }else if isKelvin {
+                            
+                            minTemp = String((Float(minTemp)! * 1.8) - 459.67)
+                            maxTemp = String((Float(maxTemp)! * 1.8) - 459.67)
+                        }
+                        
+                        USERDEFAULT.set(true, forKey: "isT2")
+                        USERDEFAULT.synchronize()
+                        
+                        lblT2Max.isHidden = false
+                        lblT2Min.isHidden = false
+                        lblT2AlarmStatus.isHidden = true
+                        
+                        lblT2Min.text = "MIN \(txtMinTemp.text!)"
+                        lblT2Max.text = "MAX \(txtMaxTemp.text!)"
+                        
+                        switchT2.isOn = true
+                        
+                        let temp = (self.rangeData[2] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                        print("Before Upadate Value : ",temp)
+                        temp.setValue(minTemp, forKey: "minValue")
+                        temp.setValue(maxTemp, forKey: "maxValue")
+                        print("After update Value : ",temp)
+                        if (self.rangeData.count > 2) {
+                            self.rangeData.replaceObject(at: 2, with: temp)
+                        }
+                    }
+                    
+                    USERDEFAULT.set(self.rangeData, forKey: "temperatureData")
+                    USERDEFAULT.synchronize()
+                    
+                    viewAlarmTemp.removeFromSuperview()
+                }
+            }
+            
+        }
+    }
   
-  @IBAction func btnAlarmCancelClicked(_ sender:UIButton){
-   
-  }
+    @IBAction func btnAlarmCancelClicked(_ sender:UIButton){
+        if indexID == 21{
+            USERDEFAULT.set(false, forKey: "isRH")
+            USERDEFAULT.synchronize()
+            switchRH.isOn = false
+            
+            lblRHMax.isHidden = true
+            lblRHMin.isHidden = true
+            lblRHAlarmStatus.isHidden = false
+            
+        }
+        else if indexID == 22{
+            USERDEFAULT.set(false, forKey: "isT1")
+            USERDEFAULT.synchronize()
+            switchT1.isOn = false
+            
+            lblT1Max.isHidden = true
+            lblT1Min.isHidden = true
+            lblT1AlarmStatus.isHidden = false
+        }
+        else if indexID == 23{
+            USERDEFAULT.set(false, forKey: "isT2")
+            USERDEFAULT.synchronize()
+            switchT2.isOn = false
+            
+            lblT2Max.isHidden = true
+            lblT2Min.isHidden = true
+            lblT2AlarmStatus.isHidden = false
+            
+        }
+        
+        viewAlarmTemp.removeFromSuperview()
+    }
   
 
   func CheckingTemperature(){
@@ -842,7 +1116,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
                 if RHIntValue! < minIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -856,7 +1130,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 }
                 else if RHIntValue! > maxIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -881,10 +1155,11 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     if let t1 = USERDEFAULT.value(forKey: "isT1") as? Bool{
         
         if  t1 == true{
+            
             var minVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "minValue") as? String
             var maxVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "maxValue") as? String
             
-            if isFahrenheit {
+            /*if isFahrenheit {
                 
                 minVal = String((Float(minVal!)! * 1.8) + 32)
                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
@@ -897,7 +1172,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }
+            }*/
             
             let minIntValue = Float(minVal!)
             let maxIntValue = Float(maxVal!)
@@ -907,6 +1182,18 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
                 if t1IntValue! < minIntValue! {
                     if temperatureT1AlertBool == true {
+                        
+                        if isFahrenheit {
+                            
+                            minVal = celToFeh(degree: minVal!)
+                        }else if isKelvin {
+                            
+                            minVal = celToKel(degree: minVal!)
+                        }else{
+                            
+                            minVal = String(format:"%.1f",Float(minVal!)!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -921,6 +1208,18 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 }
                 else if t1IntValue! > maxIntValue! {
                     if temperatureT1AlertBool == true {
+                        
+                        if isFahrenheit {
+                            
+                            maxVal = celToFeh(degree: maxVal!)
+                        }else if isKelvin {
+                            
+                            maxVal = celToKel(degree: maxVal!)
+                        }else{
+                            
+                            maxVal = String(format:"%.1f",Float(maxVal!)!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -942,14 +1241,12 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
-    
     if let t2 = USERDEFAULT.value(forKey: "isT2") as? Bool{
         if  t2 == true{
             var minVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "minValue") as? String
             var maxVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "maxValue") as? String
             
-            if isFahrenheit {
+           /* if isFahrenheit {
                 
                 minVal = String((Float(minVal!)! * 1.8) + 32)
                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
@@ -962,7 +1259,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }
+            }*/
             
             let minIntValue = Float(minVal!)
             let maxIntValue = Float(maxVal!)
@@ -972,6 +1269,18 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
             if t2IntValue != nil {
                 if t2IntValue! < minIntValue! {
                     if temperatureT2AlertBool == true {
+                        
+                        if isCelsius {
+                            
+                            minVal = FehToCel(degree: minVal!)
+                        }else if isKelvin {
+                            
+                            minVal = FehToKel(degree: minVal!)
+                        }else{
+                            
+                            minVal = String(format:"%.1f",Float(minVal!)!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -986,6 +1295,18 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 }
                 else if t2IntValue! > maxIntValue! {
                     if temperatureT2AlertBool == true {
+                        
+                        if isCelsius {
+                            
+                            maxVal = FehToCel(degree: maxVal!)
+                        }else if isKelvin {
+                            
+                            maxVal = FehToKel(degree: maxVal!)
+                        }else{
+                            
+                            maxVal = String(format:"%.1f",Float(maxVal!)!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -1007,6 +1328,25 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     }
     
 }
+    func celToFeh(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! * 1.8) + 32)
+    }
+    func celToKel(degree : String) -> String {
+        
+        return String(format:"%.1f",Float(degree)! + 273.15)
+    }
+    
+    func FehToCel(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! - 32) / 1.8)
+    }
+    
+    func FehToKel(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! + 459.67) * (5/9))
+    }
+    
 
 }
 

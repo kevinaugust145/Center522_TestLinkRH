@@ -165,38 +165,38 @@ import CoreBluetooth
         var isCelsius = false
         var isKelvin = false
         
-        if let isFah = USERDEFAULT.value(forKey: "isFahrenheit") as? Bool{
-            if  isFah == true{
-                USERDEFAULT.set(true, forKey: "isFahrenheit")
-                USERDEFAULT.synchronize()
-                btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
-                btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                self.currentScale.text = "Current Scale : Fahrenheit"
-                isFahrenheit = true
-            }
+        if USERDEFAULT.value(forKey: "isFahrenheit") as? Bool == true {
+           
+            USERDEFAULT.set(true, forKey: "isFahrenheit")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            self.currentScale.text = "Current Scale : Fahrenheit"
+            isFahrenheit = true
+            
         }
-        else if let isCel = USERDEFAULT.value(forKey: "isCelsius") as? Bool {
-            if  isCel == true{
-                USERDEFAULT.set(true, forKey: "isCelsius")
-                USERDEFAULT.synchronize()
-                btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
-                btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                self.currentScale.text = "Current Scale : Celsius"
-                isCelsius = true
-            }
+        else if USERDEFAULT.value(forKey: "isCelsius") as? Bool == true {
+            
+            USERDEFAULT.set(true, forKey: "isCelsius")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            self.currentScale.text = "Current Scale : Celsius"
+            isCelsius = true
+            
         }
-        else if let isKel = USERDEFAULT.value(forKey: "isKelvin") as? Bool {
-            if  isKel == true{
-                USERDEFAULT.set(true, forKey: "isKelvin")
-                USERDEFAULT.synchronize()
-                btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-                btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
-                self.currentScale.text = "Current Scale : Kelvin"
-                isKelvin = true
-            }
+        else if USERDEFAULT.value(forKey: "isKelvin") as? Bool == true {
+           
+            USERDEFAULT.set(true, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            self.currentScale.text = "Current Scale : Kelvin"
+            isKelvin = true
+            
         }
         else{
             
@@ -248,12 +248,12 @@ import CoreBluetooth
             }
             
             if (temperatureData.object(at: 0) as AnyObject).value(forKey: "maxValue") as! String == ""{
-                lblRHMin.text = "MAX 00"
+                lblRHMax.text = "MAX 00"
             }
             else{
                 var maxTemp:String = "\((temperatureData.object(at: 0) as AnyObject).value(forKey: "maxValue") as! String)"
                 maxTemp = String(format: "%.1f",  Float(maxTemp)!)
-                lblRHMin.text = "MAX \(maxTemp)"
+                lblRHMax.text = "MAX \(maxTemp)"
             }
             
             if (temperatureData.object(at: 1) as AnyObject).value(forKey: "minValue") as! String == ""{
@@ -263,9 +263,9 @@ import CoreBluetooth
                 var minTemp:String = "\((temperatureData.object(at: 1) as AnyObject).value(forKey: "minValue") as! String)"
                 
                 if isFahrenheit {
-                    minTemp = String((Float(minTemp)! * 1.8) + 32)
+                    minTemp = String((Float(minTemp)! * 1.8) + 32) //Celsius to Fahrenheit
                 }else if isKelvin {
-                    
+                    minTemp = String(Float(minTemp)! + 273.15) //Celsius to Kelvin
                 }
                 minTemp = String(format: "%.1f",  Float(minTemp)!)
                 lblT1Min.text = "MIN \(minTemp)"
@@ -280,7 +280,7 @@ import CoreBluetooth
                 if isFahrenheit {
                     maxTemp = String((Float(maxTemp)! * 1.8) + 32)
                 }else if isKelvin {
-                    
+                    maxTemp = String(Float(maxTemp)! + 273.15)
                 }
                 maxTemp = String(format: "%.1f",  Float(maxTemp)!)
                 lblT1Max.text = "MAX \(maxTemp)"
@@ -295,25 +295,25 @@ import CoreBluetooth
             else{
                 var minTemp:String = "\((temperatureData.object(at: 2) as AnyObject).value(forKey: "minValue") as! String)"
                 
-                if isFahrenheit {
-                    minTemp = String((Float(minTemp)! * 1.8) + 32)
+                if isCelsius {
+                    minTemp = String(format: "%.1f", (Float(minTemp)! - 32) / 1.8)
                 }else if isKelvin {
-                    
+                    minTemp = String(format: "%.1f", (Float(minTemp)! + 459.67) * (5/9))
                 }
                 minTemp = String(format: "%.1f",  Float(minTemp)!)
                 lblT2Min.text = "MIN \(minTemp)"
             }
             
-            if (temperatureData.object(at: 1) as AnyObject).value(forKey: "maxValue") as! String == ""{
+            if (temperatureData.object(at: 2) as AnyObject).value(forKey: "maxValue") as! String == ""{
                 lblT2Max.text = "MAX 00"
             }
             else{
-                var maxTemp:String = "\((temperatureData.object(at: 1) as AnyObject).value(forKey: "maxValue") as! String)"
+                var maxTemp:String = "\((temperatureData.object(at: 2) as AnyObject).value(forKey: "maxValue") as! String)"
                 
-                if isFahrenheit {
-                    maxTemp = String((Float(maxTemp)! * 1.8) + 32)
+                if isCelsius {
+                    maxTemp = String(format: "%.1f", (Float(maxTemp)! - 32) / 1.8)
                 }else if isKelvin {
-                    
+                    maxTemp = String(format: "%.1f", (Float(maxTemp)! + 459.67) * (5/9))
                 }
                 maxTemp = String(format: "%.1f",  Float(maxTemp)!)
                 lblT2Max.text = "MAX \(maxTemp)"
@@ -501,6 +501,9 @@ import CoreBluetooth
                 USERDEFAULT.set(false, forKey: "isFahrenheit")
                 USERDEFAULT.set(false, forKey: "isKelvin")
                 USERDEFAULT.synchronize()
+                self.currentScale.text = "Current Scale : Celsius"
+                SetData()
+                setSettingData()
             }
             
         }else if sender.tag == 102 {
@@ -514,6 +517,9 @@ import CoreBluetooth
                 USERDEFAULT.set(true, forKey: "isFahrenheit")
                 USERDEFAULT.set(false, forKey: "isKelvin")
                 USERDEFAULT.synchronize()
+                self.currentScale.text = "Current Scale : Fahrenheit"
+                SetData()
+                setSettingData()
             }
             
         }else if sender.tag == 103 {
@@ -527,15 +533,11 @@ import CoreBluetooth
                 USERDEFAULT.set(false, forKey: "isFahrenheit")
                 USERDEFAULT.set(true, forKey: "isKelvin")
                 USERDEFAULT.synchronize()
+                self.currentScale.text = "Current Scale : Kelvin"
+                SetData()
+                setSettingData()
             }
         }
-        
-   
-        MainCenteralManager.sharedInstance().CommandC()
-            
-        let notificationName = Notification.Name("settingDataNotification")
-        NotificationCenter.default.post(name: notificationName, object: nil)
-        
     }
     
     @IBAction func switched(_ sender:UISwitch){
@@ -660,14 +662,17 @@ import CoreBluetooth
             if indexID == 21{
                 
                 if Float(minTemp)! < 0 {
+                    alertMsg = "Please enter value between 0 to 100."
                     showAlert(Appname, title: alertMsg)
                     return
                 }
                 else if Float(maxTemp)! > 100 {
+                    alertMsg = "Please enter value between 0 to 100."
                     showAlert(Appname, title: alertMsg)
                     return
                 }
                 else if Float(minTemp)! > Float(maxTemp)! {
+                    alertMsg = "Minimum value is not more then max"
                     showAlert(Appname, title: alertMsg)
                     return
                 }
@@ -683,6 +688,8 @@ import CoreBluetooth
                     lblRHMin.text = "MIN \(txtMinTemp.text!)"
                     lblRHMax.text = "MAX \(txtMaxTemp.text!)"
                     
+                    swichRH.isOn = true
+                    
                     let temp = (self.rangeData[0] as! NSDictionary).mutableCopy() as! NSMutableDictionary
                     print("Before Upadate Value : ",temp)
                     temp.setValue(minTemp, forKey: "minValue")
@@ -691,6 +698,11 @@ import CoreBluetooth
                     if (self.rangeData.count > 0) {
                         self.rangeData.replaceObject(at: 0, with: temp)
                     }
+                    
+                    USERDEFAULT.set(self.rangeData, forKey: "temperatureData")
+                    USERDEFAULT.synchronize()
+                    
+                    viewAlarmTemp.removeFromSuperview()
                 }
             }
             else{
@@ -710,17 +722,18 @@ import CoreBluetooth
                 }
                 else
                 {
-                    if isFahSelected {
-                        minTemp = String((Float(minTemp)! - 32) / 1.8)
-                        maxTemp = String((Float(maxTemp)! - 32) / 1.8)
-                    }else if isKelvin {
-                        
-                        minTemp = String((Float(minTemp)! + 273.15))
-                        maxTemp = String((Float(maxTemp)! + 273.15))
-                        
-                    }
                     
                     if indexID == 22{
+                        
+                        if isFahSelected {
+                            minTemp = String((Float(minTemp)! - 32) / 1.8)
+                            maxTemp = String((Float(maxTemp)! - 32) / 1.8)
+                        }else if isKelvin {
+                            
+                            minTemp = String((Float(minTemp)! - 273.15))
+                            maxTemp = String((Float(maxTemp)! - 273.15))
+                            
+                        }
                         
                         USERDEFAULT.set(true, forKey: "isT1")
                         USERDEFAULT.synchronize()
@@ -731,6 +744,8 @@ import CoreBluetooth
                         
                         lblT1Min.text = "MIN \(txtMinTemp.text!)"
                         lblT1Max.text = "MAX \(txtMaxTemp.text!)"
+                        
+                        swichT1.isOn = true
                         
                         let temp = (self.rangeData[1] as! NSDictionary).mutableCopy() as! NSMutableDictionary
                         print("Before Upadate Value : ",temp)
@@ -743,6 +758,17 @@ import CoreBluetooth
                     }
                     else if indexID == 23{
                         
+                        if isCelSelected {
+                  
+                            minTemp = String((Float(minTemp)! * 1.8) + 32)
+                            maxTemp = String((Float(maxTemp)! * 1.8) + 32)
+                            
+                        }else if isKelvin {
+                        
+                            minTemp = String((Float(minTemp)! * 1.8) - 459.67)
+                            maxTemp = String((Float(maxTemp)! * 1.8) - 459.67)
+                        }
+                        
                         USERDEFAULT.set(true, forKey: "isT2")
                         USERDEFAULT.synchronize()
                         
@@ -752,6 +778,8 @@ import CoreBluetooth
                         
                         lblT2Min.text = "MIN \(txtMinTemp.text!)"
                         lblT2Max.text = "MAX \(txtMaxTemp.text!)"
+                        
+                        swichT2.isOn = true
                         
                         let temp = (self.rangeData[2] as! NSDictionary).mutableCopy() as! NSMutableDictionary
                         print("Before Upadate Value : ",temp)
@@ -867,7 +895,7 @@ import CoreBluetooth
                 
                 if RHIntValue! < minIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)")
               
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -881,7 +909,7 @@ import CoreBluetooth
                 }
                 else if RHIntValue! > maxIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -909,7 +937,7 @@ import CoreBluetooth
             var minVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "minValue") as? String
             var maxVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "maxValue") as? String
             
-            if isFahrenheit {
+            /*if isFahrenheit {
                 
                 minVal = String((Float(minVal!)! * 1.8) + 32)
                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
@@ -922,7 +950,10 @@ import CoreBluetooth
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }
+            }*/
+            
+            minVal = String(format: "%.1f",  Float(minVal!)!)
+            maxVal = String(format: "%.1f",  Float(maxVal!)!)
             
             let minIntValue = Float(minVal!)
             let maxIntValue = Float(maxVal!)
@@ -932,6 +963,15 @@ import CoreBluetooth
                 
                 if t1IntValue! < minIntValue! {
                     if temperatureT1AlertBool == true {
+                        
+                        if isFahrenheit {
+                            
+                            minVal = celToFeh(degree: minVal!)
+                        }else if isKelvin {
+                            
+                           minVal = celToKel(degree: minVal!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -946,6 +986,15 @@ import CoreBluetooth
                 }
                 else if t1IntValue! > maxIntValue! {
                     if temperatureT1AlertBool == true {
+                        
+                        if isFahrenheit {
+                            
+                            maxVal = celToFeh(degree: maxVal!)
+                        }else if isKelvin {
+                            
+                            maxVal = celToKel(degree: maxVal!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -974,7 +1023,7 @@ import CoreBluetooth
             var minVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "minValue") as? String
             var maxVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "maxValue") as? String
             
-            if isFahrenheit {
+            /*if isFahrenheit {
                 
                 minVal = String((Float(minVal!)! * 1.8) + 32)
                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
@@ -987,7 +1036,9 @@ import CoreBluetooth
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }
+            }*/
+            minVal = String(format: "%.1f",  Float(minVal!)!)
+            maxVal = String(format: "%.1f",  Float(maxVal!)!)
             
             let minIntValue = Float(minVal!)
             let maxIntValue = Float(maxVal!)
@@ -997,6 +1048,15 @@ import CoreBluetooth
             if t2IntValue != nil {
                 if t2IntValue! < minIntValue! {
                     if temperatureT2AlertBool == true {
+                        
+                        if isCelsius {
+                            
+                            minVal = FehToCel(degree: minVal!)
+                        }else if isKelvin {
+                            
+                            minVal = FehToKel(degree: minVal!)
+                        }
+                        
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -1011,6 +1071,14 @@ import CoreBluetooth
                 }
                 else if t2IntValue! > maxIntValue! {
                     if temperatureT2AlertBool == true {
+                        
+                        if isCelsius {
+                            
+                            maxVal = FehToCel(degree: maxVal!)
+                        }else if isKelvin {
+                            
+                            maxVal = FehToKel(degree: maxVal!)
+                        }
                         viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
@@ -1033,6 +1101,26 @@ import CoreBluetooth
     
   }
   
+    func celToFeh(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! * 1.8) + 32)
+    }
+    func celToKel(degree : String) -> String {
+        
+        return String(format:"%.1f",Float(degree)! + 273.15)
+    }
+    
+    func FehToCel(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! - 32) / 1.8)
+    }
+    
+    func FehToKel(degree : String) -> String {
+        
+        return String(format:"%.1f",(Float(degree)! + 459.67) * (5/9))
+    }
+    
+    
     func settingBetryImg (betryStatus:UInt8) {
         
         if betryStatus == 1 {
@@ -1058,6 +1146,135 @@ import CoreBluetooth
   func SetData() {
     
     
+    let deviceTempType = USERDEFAULT.string(forKey: "tempType")//USERDEFAULT.value(forKey: "tempType")
+    if  deviceTempType == MainCenteralManager.sharedInstance().data.cOrFOrK {
+        
+        
+    }else{
+        
+        USERDEFAULT.set(MainCenteralManager.sharedInstance().data.cOrFOrK, forKey: "tempType")
+        USERDEFAULT.synchronize()
+        
+        if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+            
+            USERDEFAULT.set(true, forKey: "isCelsius")
+            USERDEFAULT.set(false, forKey: "isKelvin")
+            USERDEFAULT.set(false, forKey: "isFahrenheit")
+            USERDEFAULT.synchronize()
+            
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+            
+            USERDEFAULT.set(true, forKey: "isFahrenheit")
+            USERDEFAULT.set(false, forKey: "isCelsius")
+            USERDEFAULT.set(false, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+            
+            USERDEFAULT.set(true, forKey: "isKelvin")
+            USERDEFAULT.set(false, forKey: "isFahrenheit")
+            USERDEFAULT.set(false, forKey: "isCelsius")
+            USERDEFAULT.synchronize()
+        }
+    }
+    
+    if USERDEFAULT.value(forKey: "isFahrenheit") as? Bool == true {
+        
+        USERDEFAULT.set(true, forKey: "isFahrenheit")
+        USERDEFAULT.synchronize()
+        btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+        btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        isFahSelected = true
+        isCelSelected = false
+        isKelvin = false
+        //MainCenteralManager.sharedInstance().data.feh = "F"
+        self.currentScale.text = "Current Scale : Fahrenheit"
+
+    }
+    else if USERDEFAULT.value(forKey: "isCelsius") as? Bool == true {
+        
+        USERDEFAULT.set(true, forKey: "isCelsius")
+        USERDEFAULT.synchronize()
+        btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+        btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        isCelSelected = true
+        isFahSelected = false
+        isKelvin = false
+        //MainCenteralManager.sharedInstance().data.cels == "C"
+        self.currentScale.text = "Current Scale : Celsius"
+ 
+        
+    }
+    else if USERDEFAULT.value(forKey: "isKelvin") as? Bool == true {
+        
+        USERDEFAULT.set(true, forKey: "isKelvin")
+        USERDEFAULT.synchronize()
+        btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+        isKelvin = true
+        isFahSelected = false
+        isCelSelected = false
+        //MainCenteralManager.sharedInstance().data.kel = "K"
+        self.currentScale.text = "Current Scale : Kelvin"
+    }
+    else{
+        
+        if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+            
+            USERDEFAULT.set(true, forKey: "isCelsius")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            isCelSelected = false
+            isKelvin = false
+            isFahSelected = false
+            self.currentScale.text = "Current Scale : Celsius"
+
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+            
+            USERDEFAULT.set(true, forKey: "isFahrenheit")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            isFahSelected = true
+            isCelSelected = false
+            isKelvin = false
+            self.currentScale.text = "Current Scale : Fahrenheit"
+
+            
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+            
+            USERDEFAULT.set(true, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            isKelvin = true
+            isFahSelected = false
+            isCelSelected = false
+            self.currentScale.text = "Current Scale : Kelvin"
+            
+        }else {
+            
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            isKelvin = false
+            isFahSelected = false
+            isCelSelected = false
+            self.currentScale.text = "Current Scale : -- "
+        }
+    }
+    
+
+    
+    /*
+    
     if  USERDEFAULT.value(forKey: "isCelsius") as? Bool == true {
         
         btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
@@ -1065,7 +1282,7 @@ import CoreBluetooth
         btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
         isCelSelected = true
         isFahSelected = false
-        isCelSelected = false
+        isKelvin = false
         self.currentScale.text = "Current Scale : Celsius"
         USERDEFAULT.set(true, forKey: "isCelsius")
         USERDEFAULT.set(false, forKey: "isFahrenheit")
@@ -1079,7 +1296,7 @@ import CoreBluetooth
         btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
         isCelSelected = false
         isFahSelected = true
-        isCelSelected = false
+        isKelvin = false
         self.currentScale.text = "Current Scale : Fahrenheit"
         USERDEFAULT.set(true, forKey: "isFahrenheit")
         USERDEFAULT.set(false, forKey: "isCelsius")
@@ -1095,7 +1312,7 @@ import CoreBluetooth
         btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
         isCelSelected = false
         isFahSelected = false
-        isCelSelected = true
+        isKelvin = true
         self.currentScale.text = "Current Scale : Kelvin"
         USERDEFAULT.set(false, forKey: "isFahrenheit")
         USERDEFAULT.set(false, forKey: "isCelsius")
@@ -1116,7 +1333,7 @@ import CoreBluetooth
         USERDEFAULT.set(false, forKey: "isFahrenheit")
         USERDEFAULT.set(false, forKey: "isKelvin")
         USERDEFAULT.synchronize()
-    }
+    }*/
     
     self.imgbettery.image = UIImage.init(named: MainCenteralManager.sharedInstance().data.imgbettery)
     
