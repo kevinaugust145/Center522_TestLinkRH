@@ -29,25 +29,11 @@ class XAxisValueFormatter: NSObject, IAxisValueFormatter {
         
         
         if APPDELEGATE.xAxisValuesFinal.count > seconds {
-            
-            //print("APPDELEGATE.xAxisValuesFinal", APPDELEGATE.xAxisValuesFinal)
-            
-            //print("String(APPDELEGATE.xAxisValuesFinal[seconds]) ", APPDELEGATE.xAxisValuesFinal[seconds] as! String)
-            
+
             return APPDELEGATE.xAxisValuesFinal[seconds] as! String
         }
         
         return ""
-//        let hours: Int = seconds / 3600
-//        let remainder: Int = seconds % 3600
-//        let minutes: Int = remainder / 60
-//        let seconds: Int = remainder % 60
-//        if hours > 0 {
-//            return "\(hours)h \(minutes)m \(seconds)s"
-//        }
-//        else {
-//            return "\(minutes)m \(seconds)s"
-//        }
     }
 }
 
@@ -68,18 +54,11 @@ class YAxisValueFormatter: NSObject, IAxisValueFormatter {
             return ""
         }
         
-        
-        
         if seconds < 0 {
             return ""
         }
         
-        
         if APPDELEGATE.xAxisValuesFinal.count > seconds {
-            
-            //print("APPDELEGATE.xAxisValuesFinal", APPDELEGATE.xAxisValuesFinal)
-            
-            //print("String(APPDELEGATE.xAxisValuesFinal[seconds]) ", APPDELEGATE.xAxisValuesFinal[seconds] as! String)
             
             return APPDELEGATE.xAxisValuesFinal[seconds] as! String
         }
@@ -121,6 +100,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
 
     var isRecord:Bool!//For checking recording is started or stopped
     
+    @IBOutlet var nslcViewPickerBottom: NSLayoutConstraint!
     @IBOutlet var viewPicker:UIView!
     @IBOutlet var pickerView:UIPickerView!
     var pickerSelIndx:Int!
@@ -128,39 +108,39 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
 
     @IBOutlet var lblPickerValue:UILabel!
 
+    @IBOutlet var btnRH:UIButton!
     @IBOutlet var btnT1:UIButton!
     @IBOutlet var btnT2:UIButton!
-    @IBOutlet var btnT3:UIButton!
-    @IBOutlet var btnT4:UIButton!
-    
+
+    @IBOutlet var lblRHText:UILabel!
     @IBOutlet var lblT1Text:UILabel!
     @IBOutlet var lblT2Text:UILabel!
-    @IBOutlet var lblT3Text:UILabel!
-    @IBOutlet var lblT4Text:UILabel!
-
+   
+    
     @IBOutlet var lblNoRecord: UILabel!
     
     @IBOutlet var viewName:UIView!
     @IBOutlet var viewDescription:UIView!
     
     @IBOutlet var lineChartView:LineChartView!
+    @IBOutlet var RHLineChartView: LineChartView!
     
     @IBOutlet var saveDataBtn: UIButton!
     //0774C6 , R7 G116 B198
     
     var dataSets:NSMutableArray!
+    var RHdataSets:NSMutableArray!
+
     
     var set1 : LineChartDataSet? = nil
     var set2 : LineChartDataSet? = nil
     var set3 : LineChartDataSet? = nil
-    var set4 : LineChartDataSet? = nil
     
     var myLineGraphdata: LineChartData!
     
     var yVals1 : NSMutableArray = NSMutableArray()
     var yVals2 : NSMutableArray = NSMutableArray()
     var yVals3 : NSMutableArray = NSMutableArray()
-    var yVals4 : NSMutableArray = NSMutableArray()
     
     var xAxisCount:Int = 0
     
@@ -173,8 +153,16 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
     var isT1Connected:Bool = true
     var isT2Connected:Bool = true
-    var isT3Connected:Bool = true
-    var isT4Connected:Bool = true
+    var isRHConnected:Bool = true
+    
+    var isWetBulb:Bool = false
+    var isDewPoint:Bool = false
+    var isNormal:Bool = false
+    
+    var cOrFOrK = ""
+    var TOrWOrD = ""
+    
+    var isFirstTime : Bool = true
     
     var myDeviceType:String = ""
     
@@ -184,7 +172,6 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         yVals1 = NSMutableArray()
         yVals2 = NSMutableArray()
         yVals3 = NSMutableArray()
-        yVals4 = NSMutableArray()
         
         APPDELEGATE.xAxisValuesFinal = NSMutableArray()
         APPDELEGATE.xAxisDatesValuesFinal = NSMutableArray()
@@ -203,11 +190,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         }
 
         txtCSVDescription.placeholder = "Write Note"
+        
+        btnRH.layer.cornerRadius = btnT1.frame.size.width / 2
         btnT1.layer.cornerRadius = btnT1.frame.size.width / 2
         btnT2.layer.cornerRadius = btnT1.frame.size.width / 2
-        btnT3.layer.cornerRadius = btnT1.frame.size.width / 2
-        btnT4.layer.cornerRadius = btnT1.frame.size.width / 2
-        
+
         viewName.layer.masksToBounds = true
         viewName.layer.borderWidth = 1.0
         viewName.layer.borderColor = UIColor.black.cgColor
@@ -234,22 +221,23 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             viewBottomPart.isHidden = false
         }
 
-        viewPicker.frame = CGRect(x: self.viewPicker.frame.origin.x, y: self.view.frame.size.height + self.view.frame.origin.y, width: viewPicker.frame.size.width, height: viewPicker.frame.size.height)
+        nslcViewPickerBottom.constant = -200
 
         self.addTapGestureInOurView()
         
         self.settingGraph()
         
         if isFromDataDownload {
+            
+            self.lblRHText.text = ""
             self.lblT1Text.text = ""
             self.lblT2Text.text = ""
-            self.lblT3Text.text = ""
-            self.lblT4Text.text = ""
+            
             self.view.backgroundColor = UIColor.white
             lblTitle.text = "Graph View"
         }
         else{
-            myCommandATimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.btncommandA), userInfo: nil, repeats: true)
+            myCommandATimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.commandA), userInfo: nil, repeats: true)
             
             let myInterval : TimeInterval = TimeInterval(Float(self.pickerSelIndx + 1))
             print("myInterval", myInterval)
@@ -287,8 +275,8 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     // MARK: - CHARTVIEW METHODS
     
     func settingGraph (){
-        self.lineChartView.delegate = self;
         
+        self.lineChartView.delegate = self;
         self.lineChartView.chartDescription?.enabled = false;
         self.lineChartView.dragEnabled = true;
         self.lineChartView.setScaleEnabled(true)
@@ -297,6 +285,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         self.lineChartView.backgroundColor = UIColor.white//[UIColor colorWithWhite:204/255.f alpha:1.f];
         
+       
         //self.lineChartView.setVisibleXRange(minXRange: 0, maxXRange: 10)
         
         let l:Legend = self.lineChartView.legend
@@ -317,6 +306,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         xAxis.labelPosition = .bottom
         xAxis.valueFormatter = XAxisValueFormatter()
         xAxis.labelRotationAngle = -45
+        //xAxis.enabled = false   It will enable or disable axis
         
         // Modify My Martin
         let leftAxis : YAxis = self.lineChartView.leftAxis
@@ -326,6 +316,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         leftAxis.drawZeroLineEnabled = false
         leftAxis.granularityEnabled = false
         leftAxis.labelPosition = .outsideChart
+        
         //leftAxis.valueFormatter = YAxisValueFormatter()
         
         // Added By Martin
@@ -334,6 +325,50 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         self.lineChartView.animate(xAxisDuration: 2.5)
         
+        
+        //Chart for RH value
+        
+        RHLineChartView.delegate = self
+        RHLineChartView.chartDescription?.enabled = false
+        RHLineChartView.dragEnabled = true
+        RHLineChartView.setScaleEnabled(true)
+        RHLineChartView.drawGridBackgroundEnabled = false
+        RHLineChartView.pinchZoomEnabled = true
+        RHLineChartView.backgroundColor = UIColor.white
+        
+        
+        let RHl:Legend = self.RHLineChartView.legend
+        RHl.form = .none
+        RHl.textColor = UIColor.white
+        RHl.horizontalAlignment = .left
+        RHl.verticalAlignment = .top
+        //l.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.f];
+        RHl.orientation = .horizontal
+        RHl.drawInside = true
+        
+        let RHxAxis : XAxis = self.RHLineChartView.xAxis
+        RHxAxis.labelTextColor = UIColor.black
+        RHxAxis.drawGridLinesEnabled = false
+        RHxAxis.drawAxisLineEnabled = false
+        RHxAxis.granularityEnabled = true
+        RHxAxis.labelPosition = .bottom
+        RHxAxis.valueFormatter = XAxisValueFormatter()
+        RHxAxis.labelRotationAngle = -45
+        RHxAxis.enabled = false
+        
+        let RHleftAxis : YAxis = self.RHLineChartView.leftAxis
+        RHleftAxis.labelTextColor = UIColor.black
+        RHleftAxis.axisLineColor = UIColor.clear
+        RHleftAxis.drawGridLinesEnabled = false
+        RHleftAxis.drawZeroLineEnabled = false
+        RHleftAxis.granularityEnabled = false
+        RHleftAxis.labelPosition = .outsideChart
+        
+        self.RHLineChartView.rightAxis.labelTextColor = UIColor.clear
+        self.RHLineChartView.rightAxis.axisLineColor = UIColor.clear
+        self.RHLineChartView.animate(xAxisDuration: 2.5)
+
+        
         //If we are coming from FILE OPEN SCREEN
         if isFromDataDownload {
             
@@ -341,34 +376,28 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
                 for i in 0..<myRecords.count {
                     
+                    if ((myRecords[i] as AnyObject).value(forKey: "RH") as! String) != "--" &&
+                        ((myRecords[i] as AnyObject).value(forKey: "RH") as! String) != "OL" &&
+                        ((myRecords[i] as AnyObject).value(forKey: "RH") as! String) != "-OL"
+                    {
+                        yVals1.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "RH") as! String)!))
+                    }
+                    
                     if ((myRecords[i] as AnyObject).value(forKey: "T1") as! String) != "--" &&
                         ((myRecords[i] as AnyObject).value(forKey: "T1") as! String) != "OL" &&
                         ((myRecords[i] as AnyObject).value(forKey: "T1") as! String) != "-OL"
                     {
-                        yVals1.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T1") as! String)!))
+                        yVals2.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T1") as! String)!))
                     }
                     
                     if ((myRecords[i] as AnyObject).value(forKey: "T2") as! String) != "--" &&
                         ((myRecords[i] as AnyObject).value(forKey: "T2") as! String) != "OL" &&
                         ((myRecords[i] as AnyObject).value(forKey: "T2") as! String) != "-OL"
                     {
-                        yVals2.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T2") as! String)!))
+                        yVals3.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T2") as! String)!))
                     }
                     
-                    if ((myRecords[i] as AnyObject).value(forKey: "T3") as! String) != "--" &&
-                        ((myRecords[i] as AnyObject).value(forKey: "T3") as! String) != "OL" &&
-                        ((myRecords[i] as AnyObject).value(forKey: "T3") as! String) != "-OL"
-                    {
-                        yVals3.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T3") as! String)!))
-                    }
-                    
-                    if ((myRecords[i] as AnyObject).value(forKey: "T4") as! String) != "--" &&
-                        ((myRecords[i] as AnyObject).value(forKey: "T4") as! String) != "OL" &&
-                        ((myRecords[i] as AnyObject).value(forKey: "T4") as! String) != "-OL"
-                    {
-                        yVals4.add(ChartDataEntry.init(x: Double(i), y: Double((myRecords[i] as AnyObject).value(forKey: "T4") as! String)!))
-                    }
-                    
+              
                     
                     APPDELEGATE.xAxisValuesFinal.add((myRecords[i] as AnyObject).value(forKey: "time") as! String)
                     
@@ -395,7 +424,48 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     }
     
     
-    func setDataCount(t1: String, t2:String, t3:String, t4:String, scale:String, seventhByte:UInt8) {
+    func setDataCount(RH:String,t1: String, t2:String, scale:String, seventhByte:UInt8) {
+      
+        let deviceTempType = USERDEFAULT.string(forKey: "currentTemp")
+        if  deviceTempType == scale {
+            isFirstTime = false
+        }else{
+            
+            USERDEFAULT.set(scale, forKey: "currentTemp")
+            USERDEFAULT.synchronize()
+            
+            if !isFirstTime {
+                
+                yVals1 = NSMutableArray()
+                yVals2 = NSMutableArray()
+                yVals3 = NSMutableArray()
+                
+                self.settingGraph()
+                self.graphSetup()
+            }
+            
+        }
+        
+        print("current temp = ",scale)
+        var newT1 = t1
+        var newT2 = t2
+        
+        if scale == "C" {
+            
+            // T(°C) = (T(°F) - 32) / 1.8
+            newT2 = String(format: "%.1f", (Float(t2)! - 32) / 1.8)
+            
+        }else if scale == "F" {
+            
+            // T(°F) = T(°C) × 1.8 + 32
+            newT1 = String(format: "%.1f",(Float(newT1)! * 1.8) + 32)
+            
+        }else if scale == "K" {
+            
+           // T(K) = T(°C) + 273.15
+            newT1 = String(format: "%.1f",(Float(newT1)! + 273.15))
+            newT2 = String(format:"%.1f",(Float(newT2)! + 459.67) * (5/9))
+        }
         
         let date = Date()
         let formatter = DateFormatter()
@@ -412,162 +482,172 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         let minutes = calendar.component(.minute, from: date as Date)
         let seconds = calendar.component(.second, from: date as Date)
         
-        //        myData.setValue(result, forKey: "date")
-        //        myData.setValue(String(format:"%02d:%02d:%02d", hour, minutes, seconds), forKey: "time")
-        
-        //return String(format:"%02d:%02d:%02d", hour, minutes, seconds)
-        
         APPDELEGATE.xAxisValuesFinal.add(String(format:"%02d:%02d:%02d", hour, minutes, seconds))
         
         APPDELEGATE.xAxisDatesValuesFinal.add(String(format:"%04d/%02d/%02d", currentYear, currentMonth, currentDate))
         
         APPDELEGATE.xAxisScaleValuesFinal.add(scale)
-        
-        //print("APPDELEGATE.xAxisValuesFinal", APPDELEGATE.xAxisValuesFinal)
-        //print("APPDELEGATE.xAxisDatesValuesFinal", APPDELEGATE.xAxisDatesValuesFinal)
-        
+
         var isData1 = false
         
         let byte7 = self.converToBinary(x1: seventhByte)
         
         if (byte7[3] == "1"){
             isData1 = false
-            self.lblT1Text.text = "Unplug"
+            self.lblRHText.text = "Unplug"
         }
-        else if Float(t1 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
+        else if Float(RH as String)! > 100 {
             isData1 = false
-            self.lblT1Text.text = "OL"
+            self.lblRHText.text = "OL"
         }
-        else if Float(t1 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
+        else if Float(RH as String)! < 0 {
             isData1 = false
-            self.lblT1Text.text = "-OL"
+            self.lblRHText.text = "-OL"
         }
         else {
             // Added By Martin
             isData1 = true
-            self.lblT1Text.text = t1
-            yVals1.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t1)!))
+            self.lblRHText.text = RH + "%"
+            yVals1.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(RH)!))
         }
         
-//        if Float(t1 as String)! > MaxTempValue || Float(t1 as String)! < MinTempValue {
-//            self.lblT1Text.text = "Unplug"
-//        }
-//        else {
-//            // Added By Martin
-//            self.lblT1Text.text = t1
-//            yVals1.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t1)!))
-//        }
+        
         
         var isData2 = false
         
         if (byte7[2] == "1"){
             isData2 = false
-            self.lblT2Text.text = "Unplug"
+            self.lblT1Text.text = "Unplug"
         }
-        else if Float(t2 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
+        else if Float(newT1 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
             isData2 = false
-            self.lblT2Text.text = "OL"
+            self.lblT1Text.text = "OL"
         }
-        else if Float(t2 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
+        else if Float(newT1 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
             isData2 = false
-            self.lblT2Text.text = "-OL"
+            self.lblT1Text.text = "-OL"
         }
         else {
             // Added By Martin
             isData2 = true
-            self.lblT2Text.text = t2
-            yVals2.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t2)!))
+            if scale == "C" {
+                
+                self.lblT1Text.text = "\(TOrWOrD) \( newT1 ) \u{00B0}\("C")"
+                
+            }else if scale == "F" {
+  
+                self.lblT1Text.text =  "\(TOrWOrD) \( newT1 ) \u{00B0}\("F")"
+                
+            }else if scale == "K" {
+                
+                self.lblT1Text.text =  "\(TOrWOrD) \( newT1 ) \u{00B0}\("K")"
+                
+            }
+            
+            yVals2.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(newT1)!))
         }
         
-        
-        
-//        if Float(t2 as String)! > MaxTempValue || Float(t2 as String)! < MinTempValue {
-//            self.lblT2Text.text = "Unplug"
-//        }
-//        else {
-//            // Added By Martin
-//            self.lblT2Text.text = t2
-//            yVals2.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t2)!))
-//        }
         
         var isData3 = false
         
         if (byte7[1] == "1"){
             isData3 = false
-            self.lblT3Text.text = "Unplug"
+            self.lblT2Text.text = "Unplug"
         }
-        else if Float(t3 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
+        else if Float(newT2 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
             isData3 = false
-            self.lblT3Text.text = "OL"
+            self.lblT2Text.text = "OL"
         }
-        else if Float(t3 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
+        else if Float(newT2 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
             isData3 = false
-            self.lblT3Text.text = "-OL"
+            self.lblT2Text.text = "-OL"
         }
         else {
             // Added By Martin
             isData3 = true
-            self.lblT3Text.text = t3
-            yVals3.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t3)!))
+            self.lblT2Text.text = newT2
+            
+            if scale == "C" {
+                
+                self.lblT2Text.text = "\( newT2 ) \u{00B0}\("C")"
+                
+            }else if scale == "F" {
+                
+                self.lblT2Text.text =  "\( newT2 ) \u{00B0}\("F")"
+                
+            }else if scale == "K" {
+                
+                self.lblT2Text.text =  "\( newT2 ) \u{00B0}\("K")"
+                
+            }
+            
+            yVals3.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(newT2)!))
         }
         
-//        if Float(t3 as String)! > MaxTempValue || Float(t3 as String)! < MinTempValue {
-//            self.lblT3Text.text = "Unplug"
-//        }
-//        else {
-//            // Added By Martin
-//            self.lblT3Text.text = t3
-//            yVals3.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t3)!))
-//        }
-        
-        var isData4 = false
-        
-        if (byte7[0] == "1"){
-            isData4 = false
-            self.lblT4Text.text = "Unplug"
-        }
-        else if Float(t4 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
-            isData4 = false
-            self.lblT4Text.text = "OL"
-        }
-        else if Float(t4 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
-            isData4 = false
-            self.lblT4Text.text = "-OL"
-        }
-        else {
-            // Added By Martin
-            isData4 = true
-            self.lblT4Text.text = t4
-            yVals4.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t4)!))
-        }
-        
-//        if Float(t4 as String)! > MaxTempValue || Float(t4 as String)! < MinTempValue {
-//            self.lblT4Text.text = "Unplug"
-//        }
-//        else {
-//            // Added By Martin
-//            self.lblT4Text.text = t4
-//            yVals4.add(ChartDataEntry.init(x: Double(xAxisCount), y: Double(t4)!))
-//        }
+
         
         // Comment By Martin: Currently Sample Rate is 1 that's why it's working fine but then we change the sample rate then we have to change increment logic according to sample rate to disply proper seconds value on graph.
         
-        if !isData1 && !isData2 && !isData3 && !isData4 {
+        if !isData1 && !isData2 && !isData3 {
+            
             print("Unplug")
         }
         else {
             xAxisCount = xAxisCount + 1
             self.graphSetup()
         }
+        
     }
     
     func graphSetup() {
+        
+        
+        if RHLineChartView.data?.dataSetCount != nil {
+            
+            self.setLinesOnRHGraph()
+            
+        }else{
+            
+            let line1Color = UUColor.init(red: 235.0/255.0, green: 168.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+            set1 = LineChartDataSet.init(values: NSArray(array: yVals1) as? [ChartDataEntry], label: "A")
+            set1?.axisDependency = .left;
+            set1?.setColor(line1Color)
+            set1?.setCircleColor(line1Color)
+            set1?.lineWidth = 1.0
+            set1?.circleRadius = 3.0
+            set1?.fillAlpha = 65/255.0
+            set1?.fillColor = line1Color
+            set1?.highlightColor = line1Color
+            set1?.drawCircleHoleEnabled = false
+            
+            RHdataSets = NSMutableArray.init()
+            RHdataSets.add(set1!)
+            
+            myLineGraphdata = LineChartData.init(dataSets: NSArray(array: RHdataSets) as? [IChartDataSet])
+            
+            myLineGraphdata.setDrawValues(false)
+            myLineGraphdata.setValueTextColor(UIColor.white)
+            self.RHLineChartView.data = myLineGraphdata
+            
+            self.RHLineChartView.xAxis.axisMaximum = Double(xAxisCount)
+            self.RHLineChartView.setVisibleXRangeMaximum(18)
+            self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left)
+            
+            //self.lineChartView.setVisibleYRangeMinimum(0, axis: .left)
+            
+            if xAxisCount > 0 {
+                self.RHLineChartView.moveViewToX(Double(xAxisCount - 1))
+            }
+        }
+        
         
         if self.lineChartView.data?.dataSetCount != nil {
             self.setLinesOnGraph()
         }
         else{
-            let line1Color = UUColor.init(red: 244.0/255.0, green: 165.0/255.0, blue: 34.0/255.0, alpha: 1.0)
+            
+            // Commeted by mitesh
+           /* let line1Color = UUColor.init(red: 235.0/255.0, green: 168.0/255.0, blue: 0.0/255.0, alpha: 1.0)
             set1 = LineChartDataSet.init(values: NSArray(array: yVals1) as? [ChartDataEntry], label: "A")
             set1?.axisDependency = .left;
             set1?.setColor(line1Color)
@@ -577,50 +657,38 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             set1?.fillAlpha = 65/255.0
             set1?.fillColor = line1Color
             set1?.highlightColor = line1Color
-            set1?.drawCircleHoleEnabled = false
+            set1?.drawCircleHoleEnabled = false*/
             
-            let line2Color = UUColor.init(red: 15.0/255.0, green: 70.0/255.0, blue: 144.0/255.0, alpha: 1.0)
+            let line2Color = UUColor.init(red: 72.0/255.0, green: 180.0/255.0, blue: 148.0/255.0, alpha: 1.0)
             set2 = LineChartDataSet.init(values: NSArray(array: yVals2) as? [ChartDataEntry], label: "B")
             set2?.axisDependency = .left;  // Modify By Martin
             set2?.setColor(line2Color)
             set2?.setCircleColor(line2Color)
             set2?.lineWidth = 1.0
-            set2?.circleRadius = 2.0
+            set2?.circleRadius = 3.0
             set2?.fillAlpha = 65/255.0
             set2?.fillColor = line2Color
             set2?.highlightColor = line2Color
             set2?.drawCircleHoleEnabled = false
             
-            let line3Color = UUColor.init(red: 0.0/255.0, green: 213.0/255.0, blue: 126.0/255.0, alpha: 1.0)
+            let line3Color = UUColor.init(red: 206.0/255.0, green: 44.0/255.0, blue: 60.0/255.0, alpha: 1.0)
             set3 = LineChartDataSet.init(values: NSArray(array: yVals3) as? [ChartDataEntry], label: "C")
             set3?.axisDependency = .left;   // Modify By Martin
             set3?.setColor(line3Color)
             set3?.setCircleColor(line3Color)
             set3?.lineWidth = 1.0
-            set3?.circleRadius = 2.0
+            set3?.circleRadius = 3.0
             set3?.fillAlpha = 65/255.0
             set3?.fillColor = line3Color
             set3?.highlightColor = line3Color
             set3?.drawCircleHoleEnabled = false
             
-            let line4Color =  UUColor.init(red: 255.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-            set4 = LineChartDataSet.init(values: NSArray(array: yVals4) as? [ChartDataEntry], label: "D")
-            set4?.axisDependency = .left;  // Modify By Martin
-            set4?.setColor(line4Color)
-            set4?.setCircleColor(line4Color)
-            set4?.lineWidth = 1.0
-            set4?.circleRadius = 2.0
-            set4?.fillAlpha = 65/255.0
-            set4?.fillColor = line4Color
-            set4?.highlightColor = line4Color
-            set4?.drawCircleHoleEnabled = false
-            
             dataSets = NSMutableArray.init()
             //Commented by Meet
-            dataSets.add(set1!)
+            //dataSets.add(set1!)  // Commeted by mitesh
             dataSets.add(set2!)
             dataSets.add(set3!)
-            dataSets.add(set4!)
+           
             
             // Modifyed By Martin.
             myLineGraphdata = LineChartData.init(dataSets: NSArray(array: dataSets) as? [IChartDataSet])
@@ -641,28 +709,62 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         }
     }
     
-    func setLinesOnGraph() {
+    func setLinesOnRHGraph()  {
+        
         set1?.values = NSArray(array: yVals1) as! [ChartDataEntry]
+        
+        if self.lblNoRecord.isHidden == false {
+            
+            var RHmyCount:Int = 0
+            
+            if RHdataSets.contains(set1!) && yVals1.count == 0 {
+                RHmyCount += 1
+            }
+            
+            
+            if RHdataSets.count > 0 && RHdataSets.count != RHmyCount {
+                
+                self.lblNoRecord.isHidden = true
+                self.RHLineChartView.isHidden = false
+                
+                myLineGraphdata = LineChartData.init(dataSets: NSArray(array: RHdataSets!) as? [IChartDataSet])
+                myLineGraphdata.setValueTextColor(UIColor.white)
+                self.RHLineChartView.data = myLineGraphdata
+            }
+            
+        }
+        
+        self.RHLineChartView.data?.notifyDataChanged()
+        self.RHLineChartView.notifyDataSetChanged()
+        
+        self.RHLineChartView.xAxis.axisMaximum = Double(xAxisCount)
+        self.RHLineChartView.setVisibleXRangeMaximum(18)
+        self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left)
+        
+        if xAxisCount > 0 {
+            self.RHLineChartView.moveViewToX(Double(xAxisCount - 1))
+        }
+    }
+    
+    func setLinesOnGraph() {
+        
+        //set1?.values = NSArray(array: yVals1) as! [ChartDataEntry]  // Commeted by mitesh
         set2?.values = NSArray(array: yVals2) as! [ChartDataEntry]
         set3?.values = NSArray(array: yVals3) as! [ChartDataEntry]
-        set4?.values = NSArray(array: yVals4) as! [ChartDataEntry]
-        
+    
         if self.lblNoRecord.isHidden == false {
             var myCount:Int = 0
             
-            if dataSets.contains(set1!) && yVals1.count == 0 {
+            /*if dataSets.contains(set1!) && yVals1.count == 0 {
                 myCount += 1
-            }
+            }*/
             if dataSets.contains(set2!) && yVals2.count == 0 {
                 myCount += 1
             }
             if dataSets.contains(set3!) && yVals3.count == 0 {
                 myCount += 1
             }
-            if dataSets.contains(set4!) && yVals4.count == 0 {
-                myCount += 1
-            }
-            
+  
             if dataSets.count > 0 && dataSets.count != myCount {
                 
                 self.lblNoRecord.isHidden = true
@@ -678,15 +780,10 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         self.lineChartView.data?.notifyDataChanged()
         self.lineChartView.notifyDataSetChanged()
         
-        //print("setLinesOnGraph called")
-        
-        //print("xAxisCount called - ",xAxisCount)
-        
         self.lineChartView.xAxis.axisMaximum = Double(xAxisCount)
         self.lineChartView.setVisibleXRangeMaximum(18)
         self.lineChartView.setVisibleYRangeMaximum(10, axis: .left)
-        //self.lineChartView.setVisibleYRangeMinimum(0, axis: .left)
-        
+  
         if xAxisCount > 0 {
             self.lineChartView.moveViewToX(Double(xAxisCount - 1))
         }
@@ -698,30 +795,9 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         var myAlertMsg:String = ""
         
-//        var set2 = LineChartDataSet()
-//        set2 = (chartView.data?.dataSets[1] as? LineChartDataSet)!
-//        let values2 = set2.values
-//        //print("values : ", values)
-//        let index2 = values2.index(where: {$0.x == highlight.x})  // search index
-//        print("index2 : ", index2 ?? "ABC")
-//        
-//        if index2 != nil {
-//            let myChartDataEntry2:ChartDataEntry = values2[index2!]
-//            print("values2[index2] - 2nd set : ", myChartDataEntry2)
-//            print("myChartDataEntry2.y - 2nd set : ", myChartDataEntry2.y)
-//            
-//            if myAlertMsg == "" {
-//                myAlertMsg = "T2 : \(myChartDataEntry2.y)"
-//            }
-//            else {
-//                myAlertMsg = myAlertMsg+"\nT2 : \(myChartDataEntry2.y)"
-//            }
-//        }
         
-        
-        if dataSets.contains(set1!) {
-            //var set1 = LineChartDataSet()
-            //set1 = (chartView.data?.dataSets[0] as? LineChartDataSet)!
+        if RHdataSets.contains(set1!) {
+         
             let values1 = self.set1?.values
             //print("values : ", values)
             let index1 = values1?.index(where: {$0.x == highlight.x})  // search index
@@ -733,17 +809,16 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
                 if myAlertMsg == "" {
                     myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index1!] as! String) \(APPDELEGATE.xAxisValuesFinal[index1!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry1.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index1!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
                 }
                 else {
-                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry1.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index1!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
                 }
             }
         }
         
         if dataSets.contains(set2!) {
-//            var set2 = LineChartDataSet()
-//            set2 = (chartView.data?.dataSets[1] as? LineChartDataSet)!
+
             let values2 = self.set2?.values
             //print("values : ", values)
             let index2 = values2?.index(where: {$0.x == highlight.x})  // search index
@@ -756,17 +831,16 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
                 if myAlertMsg == "" {
                     myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index2!] as! String) \(APPDELEGATE.xAxisValuesFinal[index2!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
                 }
                 else {
-                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
                 }
             }
         }
         
         if dataSets.contains(set3!) {
-//            var set3 = LineChartDataSet()
-//            set3 = (chartView.data?.dataSets[2] as? LineChartDataSet)!
+
             let values3 = self.set3?.values
             //print("values : ", values)
             let index3 = values3?.index(where: {$0.x == highlight.x})  // search index
@@ -778,36 +852,14 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
                 if myAlertMsg == "" {
                     myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index3!] as! String) \(APPDELEGATE.xAxisValuesFinal[index3!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT3 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
                 }
                 else {
-                    myAlertMsg = myAlertMsg+"\nT3 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
                 }
             }
         }
         
-        
-        if dataSets.contains(set4!) {
-//            var set4 = LineChartDataSet()
-//            set4 = (chartView.data?.dataSets[3] as? LineChartDataSet)!
-            let values4 = self.set4?.values
-            //print("values : ", values)
-            let index4 = values4?.index(where: {$0.x == highlight.x})  // search index
-            print("index4 : ", index4 ?? "ABC")
-            if index4 != nil {
-                let myChartDataEntry4:ChartDataEntry = values4![index4!]
-                print("values4[index4] - 4th set : ", myChartDataEntry4)
-                print("myChartDataEntry4.y - 4th set : ", myChartDataEntry4.y)
-                
-                if myAlertMsg == "" {
-                    myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index4!] as! String) \(APPDELEGATE.xAxisValuesFinal[index4!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT4 = \(myChartDataEntry4.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index4!] as! String)"
-                }
-                else {
-                    myAlertMsg = myAlertMsg+"\nT4 = \(myChartDataEntry4.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index4!] as! String)"
-                }
-            }
-        }
         
         //APPDELEGATE.window.makeToast(myAlertMsg)
         self.view.makeToast(myAlertMsg)
@@ -826,23 +878,20 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         let point:CGPoint = sender.location(in: sender.view)
         let viewTouched = view.hitTest(point, with: nil)
-        
-        
+    
         if viewTouched!.isKind(of: UIButton.self) && viewTouched!.isKind(of:UITextView.self){
             
         }
         else{
             self.view.endEditing(true)
-            //            scrMain.setContentOffset(CGPoint(x: 0.0, y: 0.0), animated: true)
-            
-            
+    
             if (viewTouched!.superview!.superview == viewPicker) {
             }else if(viewTouched!.superview == viewPicker){
             }else if(viewTouched == viewPicker){
             }else{
                 UIView.animate(withDuration: 0.3) {
                     
-                    self.viewPicker.frame=CGRect(x: self.view.frame.size.width - self.viewPicker.frame.size.width, y: self.view.frame.size.height + self.view.frame.origin.y, width: self.viewPicker.frame.size.width, height: self.viewPicker.frame.size.height)
+                    self.nslcViewPickerBottom.constant = -200
                 }
             }
         }
@@ -899,7 +948,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
     // MARK: - @Action Methods
     @IBAction func btnAddStaticData(_ sender: UIButton) {
-        self.setDataCount(t1: "10", t2: "40", t3: "50", t4: "30", scale: "C", seventhByte: 0)
+        self.setDataCount(RH: "10", t1: "40", t2: "50", scale: "C", seventhByte: 0)
     }
     
     @IBAction func btnShowHideGraphLines(_ sender: UIButton) {
@@ -911,16 +960,17 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         if sender.tag == 10 {
             
             //if set1 != nil {
-                if dataSets.contains(set1!) {
-                    dataSets.remove(set1!)
+                if RHdataSets.contains(set1!) {
+                    RHdataSets.remove(set1!)
                     sender.backgroundColor = UIColor.gray
                 }
                 else{
-                    dataSets.add(set1!)
+    
+                    RHdataSets.add(set1!)
                     if #available(iOS 10.0, *) {
-                        sender.backgroundColor = UIColor(displayP3Red: 244/255, green: 165/255, blue: 34/255, alpha: 1.0)
+                        sender.backgroundColor = UIColor(displayP3Red: 235/255, green: 168/255, blue: 0/255, alpha: 1.0)
                     } else {
-                        sender.backgroundColor = UIColor(red: 244/255, green: 165/255, blue: 34/255, alpha:  1.0)
+                        sender.backgroundColor = UIColor(red: 235/255, green: 168/255, blue: 0/255, alpha:  1.0)
                     }
                 }
             //}
@@ -932,10 +982,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             }
             else{
                 dataSets.add(set2!)
+                
                 if #available(iOS 10.0, *) {
-                    sender.backgroundColor = UIColor(displayP3Red: 15/255, green: 70/255, blue: 144/255, alpha: 1.0)
+                    sender.backgroundColor = UIColor(displayP3Red: 72/255, green: 180/255, blue: 148/255, alpha: 1.0)
                 } else {
-                    sender.backgroundColor = UIColor(red: 15/255, green: 70/255, blue: 144/255, alpha:  1.0)
+                    sender.backgroundColor = UIColor(red: 72/255, green: 180/255, blue: 148/255, alpha:  1.0)
                 }
             }
         }
@@ -945,47 +996,52 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 sender.backgroundColor = UIColor.gray
             }
             else{
+                
                 dataSets.add(set3!)
                 if #available(iOS 10.0, *) {
-                    sender.backgroundColor = UIColor(displayP3Red: 0/255, green: 213/255, blue: 126/255, alpha: 1.0)
+                    sender.backgroundColor = UIColor(displayP3Red: 206/255, green: 44/255, blue: 60/255, alpha: 1.0)
                 } else {
-                    sender.backgroundColor = UIColor(red: 0/255, green: 213/255, blue: 126/255, alpha:  1.0)
+                    sender.backgroundColor = UIColor(red: 206/255, green: 44/255, blue: 60/255, alpha:  1.0)
                 }
                 
             }
         }
-        else if sender.tag == 13 {
-            if dataSets.contains(set4!) {
-                dataSets.remove(set4!)
-                sender.backgroundColor = UIColor.gray
-            }
-            else{
-                dataSets.add(set4!)
-                if #available(iOS 10.0, *) {
-                    sender.backgroundColor = UIColor(displayP3Red: 255/255, green: 0/255, blue: 0/255, alpha: 1.0)
-                } else {
-                    sender.backgroundColor = UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha:  1.0)
-                }
-            }
-        }
+       
         
         print("btnShowHideGraphLines called")
         
         var myCount:Int = 0
+        var myCountRH:Int = 0
         
-        if dataSets.contains(set1!) && yVals1.count == 0 {
-            myCount += 1
+        if RHdataSets.contains(set1!) && yVals1.count == 0 {
+            myCountRH += 1
         }
+        
+        if RHdataSets.count == 0 || RHdataSets.count == myCountRH {
+            print("dataSets are blank.")
+            self.lblNoRecord.isHidden = false
+            self.RHLineChartView.isHidden = true
+            //"No chart data available."
+        }
+        else{
+            self.lblNoRecord.isHidden = true
+            self.RHLineChartView.isHidden = false
+            
+            myLineGraphdata = LineChartData.init(dataSets: NSArray(array: RHdataSets!) as? [IChartDataSet])
+            myLineGraphdata.setValueTextColor(UIColor.white)
+            self.RHLineChartView.data = myLineGraphdata
+            self.RHLineChartView.data?.notifyDataChanged()
+            self.RHLineChartView.notifyDataSetChanged()
+        }
+        
+     
         if dataSets.contains(set2!) && yVals2.count == 0 {
             myCount += 1
         }
         if dataSets.contains(set3!) && yVals3.count == 0 {
             myCount += 1
         }
-        if dataSets.contains(set4!) && yVals4.count == 0 {
-            myCount += 1
-        }
-        
+       
         if dataSets.count == 0 || dataSets.count == myCount {
             print("dataSets are blank.")
             self.lblNoRecord.isHidden = false
@@ -1019,15 +1075,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             return
         }
         
-//        if isRecord == true{
-//            APPDELEGATE.window.makeToast("Please stop the recording first.")
-//            return
-//        }
-        
         yVals1 = NSMutableArray()
         yVals2 = NSMutableArray()
         yVals3 = NSMutableArray()
-        yVals4 = NSMutableArray()
+    
+        self.settingGraph()
         self.graphSetup()
     }
     
@@ -1088,6 +1140,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     }
     
     @objc func setDataOnMap(){
+        
         //Without any data, we can not able to start the recording
         if myDataArray == nil {
             return
@@ -1106,248 +1159,198 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         let byte7 = self.converToBinary(x1: myDataArray[6])
         
         if (byte7[3] == "1"){
+            self.isRHConnected = false
+        }
+        else{
+            self.isRHConnected = true
+        }
+        
+        if (byte7[2] == "1"){
             self.isT1Connected = false
         }
         else{
             self.isT1Connected = true
         }
         
-        if (byte7[2] == "1"){
+        if (byte7[1] == "1"){
             self.isT2Connected = false
         }
         else{
             self.isT2Connected = true
         }
         
-        if (byte7[1] == "1"){
-            self.isT3Connected = false
-        }
-        else{
-            self.isT3Connected = true
-        }
-        
-        if (byte7[0] == "1"){
-            self.isT4Connected = false
-        }
-        else{
-            self.isT4Connected = true
-        }
-        
         myDeviceType = MainCenteralManager.sharedInstance().getDeviceType(value: myDataArray[5])
-        //self.getDeviceType(value: byteArray[5])
+    
+        let byte42 = self.converToBinary(x1: myDataArray[42])
+        print(byte42)
+        print(byte42[0])
         
-        if (byte3[0] == "1")
-        {
-            //self.tempType = "C"
-            self.setDataCount(t1: self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]), t2: self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]), t3: self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]), t4: self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]), scale: "C", seventhByte: myDataArray[6])
+        
+        let byte43 = self.converToBinary(x1: myDataArray[43])
+        print(byte43)
+        print(byte43[0])
+        
+        if (byte3[2] == "0" && byte3[3] == "0"){ //00 Fahrenheit
+ 
+             cOrFOrK = "F"
+          
+            if USERDEFAULT.string(forKey: "currentTemp") == "" || USERDEFAULT.string(forKey: "currentTemp") == nil {
+                USERDEFAULT.set("F", forKey: "currentTemp")
+                USERDEFAULT.synchronize()
+            }
+            
+        }else if (byte3[2] == "0" && byte3[3] == "1"){ //01 Celsius
+            
+             cOrFOrK = "C"
+        
+            if USERDEFAULT.string(forKey: "currentTemp") == "" || USERDEFAULT.string(forKey: "currentTemp") == nil {
+                USERDEFAULT.set("C", forKey: "currentTemp")
+                USERDEFAULT.synchronize()
+            }
+            
+        }else{ //10 Kelvin T(K) = 20°C + 273.15 = 293.15 K
+            
+            cOrFOrK = "K"
+            
+            if USERDEFAULT.string(forKey: "currentTemp") == "" || USERDEFAULT.string(forKey: "currentTemp") == nil {
+                USERDEFAULT.set("K", forKey: "currentTemp")
+                USERDEFAULT.synchronize()
+            }
+            
+     
         }
-        else
-        {
-            //self.tempType = "F"
-            self.setDataCount(t1: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t2: self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), t3: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), t4: self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]), scale: "F", seventhByte: myDataArray[6])
+        
+        if (byte42[0] == "1"){ // This is for Wet Bulb
+
+            self.setDataCount(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+            
+            TOrWOrD = "Tw"
+            self.isWetBulb = true
+            self.isNormal = false
+            self.isDewPoint = false
+            
+        }else if (byte43[0] == "1") { // This is for Dew Point
+            
+             self.setDataCount(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[17], x2: myDataArray[18]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+            
+            TOrWOrD = "Td"
+            self.isDewPoint = true
+            self.isWetBulb = false
+            self.isNormal = false
+            
+        }else { // This is for Normal
+            
+            self.setDataCount(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+            
+            TOrWOrD = "T"
+            self.isNormal = true
+            self.isDewPoint = false
+            self.isWetBulb = false
         }
+    
     }
     
-    
-    @objc func setSavedDataTrue() {
-
+    func sendDataForRecord(RH:String,t1: String, t2:String, scale:String, seventhByte:UInt8) {
+        
         let myData : NSMutableDictionary = NSMutableDictionary()
+        let byte7 = self.converToBinary(x1: seventhByte)
+ 
+        var newT1 = t1
+        var newT2 = t2
         
-        let byte3 = self.converToBinary(x1: myDataArray[2])
-        
-        let byte7 = self.converToBinary(x1: myDataArray[6])
-        
-        if (byte3[0] == "1")
-        {
-            //self.tempType = "C"
+        if scale == "C" {
+            
+            // T(°C) = (T(°F) - 32) / 1.8
+            newT2 = String(format: "%.1f", (Float(t2)! - 32) / 1.8)
+            
             myData.setValue("C", forKey: "scale")
             
-            if (byte7[3] == "1"){
-                myData.setValue("--", forKey: "T1")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T1")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T1")
-            }
-            else {
-                myData.setValue(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]), forKey: "T1")
-            }
+        }else if scale == "F" {
             
-//            if Float(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MaxTempValue || Float(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T1")
-//            }
-//            else{
-//                myData.setValue(self.getCelsius(x1: myDataArray[9], x2: myDataArray[10]), forKey: "T1")
-//            }
+            // T(°F) = T(°C) × 1.8 + 32
+            newT1 = String(format: "%.1f",(Float(newT1)! * 1.8) + 32)
             
-            if (byte7[2] == "1"){
-                myData.setValue("--", forKey: "T2")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T2")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T2")
-            }
-            else {
-                myData.setValue(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]), forKey: "T2")
-            }
-            
-//            if Float(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MaxTempValue || Float(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T2")
-//            }
-//            else{
-//                myData.setValue(self.getCelsius(x1: myDataArray[11], x2: myDataArray[12]), forKey: "T2")
-//            }
-            
-            if (byte7[1] == "1"){
-                myData.setValue("--", forKey: "T3")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T3")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T3")
-            }
-            else {
-                myData.setValue(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]), forKey: "T3")
-            }
-            
-//            if Float(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MaxTempValue || Float(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T3")
-//            }
-//            else{
-//                myData.setValue(self.getCelsius(x1: myDataArray[13], x2: myDataArray[14]), forKey: "T3")
-//            }
-            
-            if (byte7[0] == "1"){
-                myData.setValue("--", forKey: "T4")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T4")
-            }
-            else if Float(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T4")
-            }
-            else {
-                myData.setValue(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]), forKey: "T4")
-            }
-            
-//            if Float(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MaxTempValue || Float(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T4")
-//            }
-//            else{
-//                myData.setValue(self.getCelsius(x1: myDataArray[15], x2: myDataArray[16]), forKey: "T4")
-//            }
-        }
-        else
-        {
             myData.setValue("F", forKey: "scale")
-            //self.tempType = "F"
             
-            if (byte7[3] == "1"){
-                myData.setValue("--", forKey: "T1")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T1")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T1")
-            }
-            else {
-                myData.setValue(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), forKey: "T1")
-            }
+        }else if scale == "K" {
             
+            // T(K) = T(°C) + 273.15
+            newT1 = String(format: "%.1f",(Float(newT1)! + 273.15))
+            newT2 = String(format:"%.1f",(Float(newT2)! + 459.67) * (5/9))
             
-//            if Float(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MaxTempValue || Float(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T1")
-//            }
-//            else{
-//                myData.setValue(self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), forKey: "T1")
-//            }
-            
-            if (byte7[2] == "1"){
-                myData.setValue("--", forKey: "T2")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T2")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T2")
-            }
-            else {
-                myData.setValue(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), forKey: "T2")
-            }
-            
-//            if Float(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MaxTempValue || Float(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T2")
-//            }
-//            else{
-//                myData.setValue(self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), forKey: "T2")
-//            }
-            
-            if (byte7[1] == "1"){
-                myData.setValue("--", forKey: "T3")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T3")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T3")
-            }
-            else {
-                myData.setValue(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), forKey: "T3")
-            }
-            
-//            if Float(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MaxTempValue || Float(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T3")
-//            }
-//            else{
-//                myData.setValue(self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), forKey: "T3")
-//            }
-            
-            if (byte7[0] == "1"){
-                myData.setValue("--", forKey: "T4")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                myData.setValue("OL", forKey: "T4")
-            }
-            else if Float(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]) as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                myData.setValue("-OL", forKey: "T4")
-            }
-            else {
-                myData.setValue(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]), forKey: "T4")
-            }
-            
-//            if Float(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MaxTempValue || Float(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]) as String)! > MinTempValue {
-//                myData.setValue("--", forKey: "T4")
-//            }
-//            else{
-//                myData.setValue(self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]), forKey: "T4")
-//            }
+            myData.setValue("K", forKey: "scale")
         }
-
         
+        
+        if (byte7[3] == "1"){
+           
+            myData.setValue("--", forKey: "RH")
+        }
+        else if Float(RH as String)! > 100 {
+           
+            myData.setValue("OL", forKey: "RH")
+        }
+        else if Float(RH as String)! < 0 {
+            
+            myData.setValue("-OL", forKey: "RH")
+        }
+        else {
+            
+            myData.setValue(RH, forKey: "RH")
+        }
+    
+        
+        if (byte7[2] == "1"){
+            
+            myData.setValue("--", forKey: "T1")
+        }
+        else if Float(newT1 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
+            myData.setValue("OL", forKey: "T1")
+        }
+        else if Float(newT1 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
+            myData.setValue("-OL", forKey: "T1")
+        }
+        else {
+            
+            myData.setValue(newT1, forKey: "T1")
+        }
+        
+        
+        if (byte7[1] == "1"){
+            
+            myData.setValue("--", forKey: "T2")
+        }
+        else if Float(newT2 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
+            
+            myData.setValue("OL", forKey: "T2")
+        }
+        else if Float(newT2 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: scale, deviceType: myDeviceType){
+            
+            myData.setValue("-OL", forKey: "T2")
+        }
+        else {
+            
+            myData.setValue(newT2, forKey: "T2")
+            
+        }
+        
+
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd"
-        //let result = formatter.string(from: date)
-        //myData.setValue(result, forKey: "date")
     
         let calendar = NSCalendar.current
         let hour = calendar.component(.hour, from: date as Date)
         let minutes = calendar.component(.minute, from: date as Date)
         let seconds = calendar.component(.second, from: date as Date)
-    
+        
         let currentDate = calendar.component(.day, from: date as Date)
         let currentMonth = calendar.component(.month, from: date as Date)
         let currentYear = calendar.component(.year, from: date as Date)
         myData.setValue(String(format:"%04d/%02d/%02d", currentYear, currentMonth, currentDate), forKey: "date")
         
         myData.setValue(String(format:"%02d:%02d:%02d", hour, minutes, seconds), forKey: "time")
-
+        
         if self.myRecords == nil {
             self.myRecords = NSMutableArray()
         }
@@ -1355,6 +1358,30 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         print("Data saved")
         
         self.myRecords.add(myData)
+    
+    }
+    
+    @objc func setSavedDataTrue() {
+
+        let byte42 = self.converToBinary(x1: myDataArray[42])
+
+        let byte43 = self.converToBinary(x1: myDataArray[43])
+
+        if (byte42[0] == "1"){ // This is for Wet Bulb
+            
+            sendDataForRecord(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[15], x2: myDataArray[16]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+        
+            
+        }else if (byte43[0] == "1") { // This is for Dew Point
+            
+            sendDataForRecord(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[17], x2: myDataArray[18]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+            
+        }else { // This is for Normal
+            
+            sendDataForRecord(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
+            
+        }
+     
     }
 
     @IBAction func btnCSVSavedClicked(_ sender: UIButton) {
@@ -1432,10 +1459,9 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                     dict = NSMutableDictionary()
                     dict["date"] = (myRecords[i] as AnyObject).value(forKey: "date")
                     dict["time"] = (myRecords[i] as AnyObject).value(forKey: "time")
+                    dict["RH"] = (myRecords[i] as AnyObject).value(forKey: "RH")
                     dict["t1"] = (myRecords[i] as AnyObject).value(forKey: "T1")
                     dict["t2"] = (myRecords[i] as AnyObject).value(forKey: "T2")
-                    dict["t3"] = (myRecords[i] as AnyObject).value(forKey: "T3")
-                    dict["t4"] = (myRecords[i] as AnyObject).value(forKey: "T4")
                     //dict["scale"] = "C"
                     dict["scale"] = (myRecords[i] as AnyObject).value(forKey: "scale")
                     myData.add(dict)
@@ -1452,14 +1478,13 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             }
             
             var stringToWrite = String()
-            stringToWrite += "Date,Time,T1,T2, T3,T4, Scale\n"
+            stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
             for i in 0..<myData.count {
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t1") as! String),"
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t2") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t3") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t4") as! String),"
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
             }
             //Moved this stuff out of the loop so that you write the complete string once and only once.
@@ -1511,16 +1536,18 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         UIView.animate(withDuration: 0.3, animations: {
                     
-                    self.viewPicker.frame=CGRect(x: self.viewPicker.frame.origin.x, y: self.view.frame.size.height + self.view.frame.origin.y - self.viewPicker.frame.size.height, width: self.viewPicker.frame.size.width, height: self.viewPicker.frame.size.height)
+                    //self.viewPicker.frame=CGRect(x: self.viewPicker.frame.origin.x, y: self.view.frame.size.height + self.view.frame.origin.y - self.viewPicker.frame.size.height, width: self.viewPicker.frame.size.width, height: self.viewPicker.frame.size.height)
+                    self.nslcViewPickerBottom.constant = 0
                     
                     
                 })
     }
     
     @IBAction func cancelPicker(sender:AnyObject){
+        
         UIView.animate(withDuration: 0.3) {
             
-            self.viewPicker.frame=CGRect(x: self.viewPicker.frame.origin.x, y: self.view.frame.size.height + self.view.frame.origin.y, width: self.viewPicker.frame.size.width, height: self.viewPicker.frame.size.height)
+            self.nslcViewPickerBottom.constant = -200
             
         }
     }
@@ -1536,7 +1563,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
         UIView.animate(withDuration: 0.3, animations: {
             
-            self.viewPicker.frame=CGRect(x: self.viewPicker.frame.origin.x, y: self.view.frame.size.height + self.view.frame.origin.y, width: self.viewPicker.frame.size.width, height: self.viewPicker.frame.size.height)
+            self.nslcViewPickerBottom.constant = -200
             
         })
         
@@ -1608,23 +1635,16 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
                 if (characteristic.uuid.description == "49535343-1E4D-4BD9-BA61-23C647249616")
                 {
-                    //var text = ""
+                    
+                    if (value.count == 64){
+                        
+                        
+                       self.myDataArray = byteArray
+                        
+                    }
                     
                     
-                    
-                    self.myDataArray = byteArray
-                    
-//                    let byte3 = self.converToBinary(x1: byteArray[2])
-//                    if (byte3[0] == "1")
-//                    {
-//                        //self.tempType = "C"
-//                        self.setDataCount(t1: self.getCelsius(x1: byteArray[9], x2: byteArray[10]), t2: self.getCelsius(x1: byteArray[11], x2: byteArray[12]), t3: self.getCelsius(x1: byteArray[13], x2: byteArray[14]), t4: self.getCelsius(x1: byteArray[15], x2: byteArray[16]), scale: "C")
-//                    }
-//                    else
-//                    {
-//                        //self.tempType = "F"
-//                        self.setDataCount(t1: self.getFahrenheit(x1: byteArray[9], x2: byteArray[10]), t2: self.getFahrenheit(x1: byteArray[11], x2: byteArray[12]), t3: self.getFahrenheit(x1: byteArray[13], x2: byteArray[14]), t4: self.getFahrenheit(x1: byteArray[15], x2: byteArray[16]), scale: "F")
-//                    }
+
                 }
             }
             
@@ -1645,15 +1665,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             print("写入 characteristics 时 \(peripheral.name) 报错 \(error?.localizedDescription)")
             return
         }
-        //Commented by Meet
-        //        if (characteristic.value != nil){
-        //
-        //            print("characteristic.value:", characteristic.value ?? "123")
-        //
-        //            lastString = NSString(data: characteristic.value!, encoding: String.Encoding.utf8.rawValue)!
-        //
-        //            print("lastString:" + (lastString as String))
-        //        }
+   
     }
     
     func viewController(characteristic: CBCharacteristic,value : Data ) -> () {
@@ -1668,95 +1680,10 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         }
     }
     
-    // MARK: - Button Action Methods
-    @IBAction func btncommandC(){
-        
-        //[  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   C Command
-        //[  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   P Command
-        let commandCbyte : [UInt8] = [  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-        let data2 = Data(bytes:commandCbyte)
-        
-        if self.btServices.count > 1 {
-            let charItems = self.btServices[1].characteristics
-            for characteristic in charItems {
-                peripheral.readValue(for: characteristic)
-                
-                //设置 characteristic 的 notifying 属性 为 true ， 表示接受广播
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-            
-            //for characteristic in self.currentBTServiceInfo.characteristics {
-            for characteristic in charItems {
-                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse){
-                    //设置为  写入有反馈
-                    self.peripheral.writeValue(data2, for: characteristic, type: .withResponse)
-                    //print("写入withoutResponse~")
-                }else{
-                    print("写入不可用~")
-                }
-            }
-        }
-    }
-    
-    @IBAction func btncommandP(){
-        
-        //[  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   C Command
-        //[  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   P Command
-        let commandCbyte : [UInt8] = [  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-        let data2 = Data(bytes:commandCbyte)
-        
-        if self.btServices.count > 1 {
-            let charItems = self.btServices[1].characteristics
-            for characteristic in charItems {
-                peripheral.readValue(for: characteristic)
-                
-                //设置 characteristic 的 notifying 属性 为 true ， 表示接受广播
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-            
-            //for characteristic in self.currentBTServiceInfo.characteristics {
-            for characteristic in charItems {
-                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse){
-                    //设置为  写入有反馈
-                    self.peripheral.writeValue(data2, for: characteristic, type: .withResponse)
-                    //print("写入withoutResponse~")
-                }else{
-                    print("写入不可用~")
-                }
-            }
-        }
-    }
-    
-    @IBAction func btncommandRepeatP(){
-        
-        //[  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   C Command
-        //[  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   P Command
-        let commandCbyte : [UInt8] = [  0x02 , 0x70 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-        let data2 = Data(bytes:commandCbyte)
-        
-        if self.btServices.count > 1 {
-            let charItems = self.btServices[1].characteristics
-            for characteristic in charItems {
-                peripheral.readValue(for: characteristic)
-                
-                //设置 characteristic 的 notifying 属性 为 true ， 表示接受广播
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-            
-            //for characteristic in self.currentBTServiceInfo.characteristics {
-            for characteristic in charItems {
-                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse){
-                    //设置为  写入有反馈
-                    self.peripheral.writeValue(data2, for: characteristic, type: .withResponse)
-                    //print("写入withoutResponse~")
-                }else{
-                    print("写入不可用~")
-                }
-            }
-        }
-    }
-    
-    @IBAction func btncommandA(){
+    // MARK: - Command A Call Methods
+
+
+    @objc func commandA(){
         
         if !self.checkingStates() {
             return
@@ -1779,26 +1706,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             }
         }
     }
-    
-    @IBAction func btncommandWrongCommand(){
-        let commandAbyte : [UInt8] = [  0x02 , 0x6e , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-        let data1 = Data(bytes:commandAbyte)
-        
-        if self.btServices.count > 1 {
-            let charItems = self.btServices[1].characteristics
-            for characteristic in charItems {
-                peripheral.readValue(for: characteristic)
-                
-                //设置 characteristic 的 notifying 属性 为 true ， 表示接受广播
-                peripheral.setNotifyValue(true, for: characteristic)
-                
-            }
-            
-            for characteristic in charItems {
-                self.viewController(characteristic: characteristic, value: data1)
-            }
-        }
-    }
+  
 
     // MARK: - Other Methods
     

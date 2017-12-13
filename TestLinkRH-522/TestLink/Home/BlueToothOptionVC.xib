@@ -207,7 +207,7 @@ Graph</string>
                                     <color key="textColor" red="0.027450980390000001" green="0.4549019608" blue="0.77647058820000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b8d-xv-KjL">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b8d-xv-KjL">
                                     <rect key="frame" x="33" y="8.5" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnRTGCliked:" destination="-1" eventType="touchUpInside" id="Gvp-3S-uwl"/>
@@ -243,7 +243,7 @@ Graph</string>
                                     <color key="textColor" red="0.027450980390000001" green="0.4549019608" blue="0.77647058820000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U2h-6s-uNu">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U2h-6s-uNu">
                                     <rect key="frame" x="33" y="8.5" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnFOliked:" destination="-1" eventType="touchUpInside" id="UTa-iy-V2f"/>

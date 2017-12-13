@@ -179,7 +179,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
    
     }else{
         
-        lblCurrentPoint.text = "T"
+        lblCurrentPoint.text = ""
         self.slider.value = 50
 
     }
@@ -792,6 +792,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
             }
             else{
+                
                 USERDEFAULT.set(false, forKey: "isRH")
                 USERDEFAULT.synchronize()
                 
@@ -799,6 +800,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 lblRHMin.isHidden = true
                 lblRHAlarmStatus.isHidden = false
                 
+                SetData()
             }
         }
         else if sender.tag == 22{
@@ -818,6 +820,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 lblT1Min.isHidden = true
                 lblT1AlarmStatus.isHidden = false
                 
+                SetData()
             }
             
         }
@@ -836,6 +839,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 lblT2Min.isHidden = true
                 lblT2AlarmStatus.isHidden = false
                 
+                SetData()
             }
             
         }
@@ -929,7 +933,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                     
                     lblRHMax.isHidden = false
                     lblRHMin.isHidden = false
-                    lblRHAlarmStatus.isHidden = true
+                    //lblRHAlarmStatus.isHidden = true
                     
                     lblRHMin.text = "MIN \(txtMinTemp.text!)"
                     lblRHMax.text = "MAX \(txtMaxTemp.text!)"
@@ -948,6 +952,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                     USERDEFAULT.set(self.rangeData, forKey: "temperatureData")
                     USERDEFAULT.synchronize()
                     
+                    SetData()
                     viewAlarmTemp.removeFromSuperview()
                 }
             }
@@ -986,7 +991,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                         
                         lblT1Max.isHidden = false
                         lblT1Min.isHidden = false
-                        lblT1AlarmStatus.isHidden = true
+                        //lblT1AlarmStatus.isHidden = true
                         
                         lblT1Min.text = "MIN \(txtMinTemp.text!)"
                         lblT1Max.text = "MAX \(txtMaxTemp.text!)"
@@ -1020,7 +1025,7 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                         
                         lblT2Max.isHidden = false
                         lblT2Min.isHidden = false
-                        lblT2AlarmStatus.isHidden = true
+                        //lblT2AlarmStatus.isHidden = true
                         
                         lblT2Min.text = "MIN \(txtMinTemp.text!)"
                         lblT2Max.text = "MAX \(txtMaxTemp.text!)"
@@ -1039,6 +1044,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                     
                     USERDEFAULT.set(self.rangeData, forKey: "temperatureData")
                     USERDEFAULT.synchronize()
+                    
+                    SetData()
                     
                     viewAlarmTemp.removeFromSuperview()
                 }
