@@ -24,8 +24,10 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
   var index:Int!
   
   @IBOutlet var lblNoData: UILabel!
-  
-  
+    @IBOutlet var topView: UIView!
+    
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    
   override func viewDidLoad() {
     super.viewDidLoad()
     csvFilename = ""
@@ -46,6 +48,11 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     // Do any additional setup after loading the view.
   }
   
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
+    
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -491,13 +498,12 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
           myData.setValue(myIndexObject[0], forKey: "date")
           myData.setValue(myIndexObject[1], forKey: "time")
           
-          var t1 = myIndexObject[2] as! String
-          var t2 = myIndexObject[3] as! String
-          var t3 = myIndexObject[4] as! String
-          var t4 = myIndexObject[5] as! String
-          var scale = myIndexObject[6] as! String
+          let RH = myIndexObject[2] as! String
+          let t1 = myIndexObject[3] as! String
+          let t2 = myIndexObject[4] as! String
+          let scale = myIndexObject[5] as! String
           
-          if ( scale == "C" && MainCenteralManager.sharedInstance().data.cOrF == "F"){
+         /* if ( scale == "C" && MainCenteralManager.sharedInstance().data.cOrF == "F"){
             // c to f
             t1 =  String(format: "%.1f", (Float(t1)! * 1.8) + 32)
             t2 =  String(format: "%.1f", (Float(t2)! * 1.8) + 32)
@@ -512,11 +518,10 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
             t4 =  String(format: "%.1f",(Float(t4)! - 32) / 1.8)
             scale =  "C"
           }
-          
+          */
+          myData.setValue(RH, forKey: "RH")
           myData.setValue(t1, forKey: "T1")
           myData.setValue(t2, forKey: "T2")
-          myData.setValue(t3, forKey: "T3")
-          myData.setValue(t4, forKey: "T4")
           myData.setValue(scale, forKey: "scale")
         
           print(myData)

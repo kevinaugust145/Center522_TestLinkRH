@@ -41,7 +41,9 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
   @IBOutlet var txtMinTemp :UITextField!
   @IBOutlet var txtMaxTemp :UITextField!
   
-  
+    @IBOutlet var viewRHData: UIView!
+    
+    @IBOutlet var viewT2Data: UIView!
     @IBOutlet var lblCurrentPoint: UILabel!
     
     @IBOutlet var lblT1: UILabel!
@@ -69,7 +71,9 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var lblDataType: UILabel!
     
-  var rangeData = NSMutableArray()
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
+    var rangeData = NSMutableArray()
   var rangeDict = NSMutableDictionary()
     
     
@@ -81,6 +85,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     var isCelsius = false
     var isKelvin = false
   
+    var isSlidingStart : Bool = false
+    
   var indexID:Int!
   
   var viewAlertOutRange = viewAlertOutRangeViewController()
@@ -89,6 +95,19 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     
    
     viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+    
+    viewRHData.layer.shadowColor = UIColor(red: 226/255, green: 226/255, blue: 226/255, alpha: 1.0).cgColor
+    viewRHData.layer.shadowOffset =  CGSize(width: 0.0, height: 2.0)
+    viewRHData.layer.shadowOpacity = 1.0
+    viewRHData.layer.shadowRadius = 0.0
+    viewRHData.layer.masksToBounds = false
+    
+    viewT2Data.layer.shadowColor = UIColor(red: 226/255, green: 226/255, blue: 226/255, alpha: 1.0).cgColor
+    viewT2Data.layer.shadowOffset =  CGSize(width: 0.0, height: 2.0)
+    viewT2Data.layer.shadowOpacity = 1.0
+    viewT2Data.layer.shadowRadius = 0.0
+    viewT2Data.layer.masksToBounds = false
+ 
     
     if USERDEFAULT.value(forKey: "temperatureData") != nil
     {
@@ -145,13 +164,54 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     }
     
     self.addTapGestureInOurView()
-    slider.isUserInteractionEnabled = false
+    //slider.isUserInteractionEnabled = false
     //self.SetData()
    
     //self.playSound()
+    
+    slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
   }
   
     
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
+    
+    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+            case .began:
+                 print(slider.value)
+                print("began")
+                
+            // handle drag began
+            case .moved:
+                 print(slider.value)
+                 isSlidingStart = true
+                print("moved")
+            // handle drag moved
+            case .ended:
+                print(slider.value)
+                isSlidingStart = false
+                if slider.value >= 0 && slider.value <= 33.0 {
+                    self.btnWetBulb_Tapped(slider)
+                    break
+                }else if slider.value > 33.0 && slider.value <= 66.0 {
+                    self.btnNormal_Tapped(slider)
+                    break
+                }else if slider.value > 66.0 && slider.value <= 100.0 {
+                    self.btnDewBulb_Tapped(slider)
+                    break
+                }
+                print("ended")
+            // handle drag ended
+            default:
+                break
+            }
+        }
+    }
+
   
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,6 +221,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        USERDEFAULT.set("", forKey: "tempType")
+        USERDEFAULT.synchronize()
     }
   func SetData() {
     
@@ -170,17 +232,24 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     if MainCenteralManager.sharedInstance().data.isWetBulb {
 
         lblCurrentPoint.text = "Tw"
-        self.slider.value = 0
- 
+        if !isSlidingStart {
+            self.slider.value = 0
+        }
+    
     }else if MainCenteralManager.sharedInstance().data.isDewPoint {
 
         lblCurrentPoint.text = "Td"
-        self.slider.value = 100
-   
+        if !isSlidingStart {
+             self.slider.value = 100
+        }
+      
     }else{
         
         lblCurrentPoint.text = ""
-        self.slider.value = 50
+        if !isSlidingStart {
+            self.slider.value = 50
+        }
+        
 
     }
     
@@ -462,8 +531,15 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
 
     }
     
+    if isKelvin {
+        
+        lblT1.text = "\( T1Value ) \(tempType)"
+        
+    }else{
+        
+        lblT1.text = "\( T1Value ) \u{00B0}\(tempType)"
+    }
     
-    lblT1.text = "\( T1Value ) \u{00B0} \(tempType)"
     
     if let minVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "minValue") as? String{
         var minimumValue = minVal
@@ -540,7 +616,14 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     
     // Set data to T2
     
-    lblT2.text = "\( T2Value ) \u{00B0} \(tempType)"
+    if isKelvin {
+        
+        lblT2.text = "\( T2Value ) \(tempType)"
+        
+    }else{
+        
+        lblT2.text = "\( T2Value ) \u{00B0}\(tempType)"
+    }
     
     if let minVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "minValue") as? String{
         var minimumValue = minVal
@@ -706,14 +789,22 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
             
         }else if MainCenteralManager.sharedInstance().data.isDewPoint {
 
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+            })
+ 
             
         }else{
       
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+            })
+          
         }
         
         let notificationName = Notification.Name("settingDataNotification")
@@ -724,14 +815,23 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         
         if MainCenteralManager.sharedInstance().data.isWetBulb {
 
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+                
+            })
+   
             
         }else if MainCenteralManager.sharedInstance().data.isDewPoint {
   
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+            })
+           
             
         }else{
 
@@ -744,17 +844,24 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         
         if MainCenteralManager.sharedInstance().data.isWetBulb {
 
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
             
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+            })
             
         }else if MainCenteralManager.sharedInstance().data.isDewPoint {
 
         }else{
             
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandC()
-            MainCenteralManager.sharedInstance().CommandA()
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandC()
+                MainCenteralManager.sharedInstance().CommandA()
+            })
+           
         }
         
         let notificationName = Notification.Name("settingDataNotification")
@@ -1361,6 +1468,9 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
 extension RealTImeReadingVC : MainCenteralManagerDelegate{
   func ReceiveCommand(){
     self.CheckingTemperature()
-    self.SetData()
+    
+    if !isSlidingStart {
+        self.SetData()
+    }
   }
 }

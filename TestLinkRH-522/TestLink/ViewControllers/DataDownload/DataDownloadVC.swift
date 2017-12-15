@@ -22,7 +22,9 @@ class DataDownloadVC: UIViewController{
   @IBOutlet var btnGraph: UIButton!
   @IBOutlet var btnText: UIButton!
   
-  var myDownloadedData : NSMutableArray = NSMutableArray()
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
+    var myDownloadedData : NSMutableArray = NSMutableArray()
   var mySavedData:Bool!
   var myFinishCommandCalled:Bool!
   
@@ -56,6 +58,10 @@ class DataDownloadVC: UIViewController{
     MainCenteralManager.sharedInstance().mainCenteralManagerForCommandPDelegate = self
   }
   
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
   
   func GetData() {
     
@@ -128,17 +134,18 @@ class DataDownloadVC: UIViewController{
   }
   
   func addLoadingIndicatiorOnFooterOnTableViewStore(){
+    
     let spinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     spinner.startAnimating()
-    spinner.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+    spinner.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44)
     
     //tableDD.tableFooterView = spinner
     
-    myProgressLabel = UILabel.init(frame: CGRect(x: 0, y: 44, width: 320, height: 30))
+    myProgressLabel = UILabel.init(frame: CGRect(x: 0, y: 44, width: UIScreen.main.bounds.size.width, height: 30))
     myProgressLabel.text = "0% Progress Completed"
     myProgressLabel.textAlignment = .center
     
-    let myFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 320, height: 74))
+    let myFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 74))
     myFooterView.addSubview(myProgressLabel)
     myFooterView.addSubview(spinner)
     
@@ -1145,8 +1152,6 @@ class DataDownloadVC: UIViewController{
     
     var myDownloadedData =  MainCenteralManager.sharedInstance().dataP.myDownloadedData
     var myFinalDataArray = MainCenteralManager.sharedInstance().dataP.myFinalDataArray
-    
-    
     
     print("data is \(myDownloadedData)") 
     

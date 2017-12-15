@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -13,6 +13,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeVC">
             <connections>
+                <outlet property="nslcTopView" destination="G8E-9S-BWK" id="rc0-tP-rvH"/>
+                <outlet property="topView" destination="x0M-8o-QZb" id="Uy2-LE-rRQ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -25,7 +27,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Header" translatesAutoresizingMaskIntoConstraints="NO" id="EVa-A9-Mtw">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                            <rect key="frame" x="0.0" y="-25" width="320" height="89"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Tcc-ZD-dcv">
                             <rect key="frame" x="0.0" y="20" width="320" height="44"/>
@@ -47,7 +49,7 @@
                     </subviews>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
-                        <constraint firstItem="EVa-A9-Mtw" firstAttribute="top" secondItem="x0M-8o-QZb" secondAttribute="top" id="57o-WP-jYH"/>
+                        <constraint firstItem="EVa-A9-Mtw" firstAttribute="top" secondItem="x0M-8o-QZb" secondAttribute="top" constant="-25" id="57o-WP-jYH"/>
                         <constraint firstAttribute="trailing" secondItem="Tcc-ZD-dcv" secondAttribute="trailing" id="E2k-yW-dOa"/>
                         <constraint firstItem="Tcc-ZD-dcv" firstAttribute="leading" secondItem="x0M-8o-QZb" secondAttribute="leading" id="IYE-S3-eab"/>
                         <constraint firstItem="EVa-A9-Mtw" firstAttribute="leading" secondItem="x0M-8o-QZb" secondAttribute="leading" id="cm7-fU-vXY"/>
@@ -95,18 +97,17 @@ bluetooth device </string>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="PUb-AO-1JA" firstAttribute="top" secondItem="x0M-8o-QZb" secondAttribute="top" constant="20" id="G8E-9S-BWK"/>
                 <constraint firstItem="fqq-OS-nUB" firstAttribute="centerX" secondItem="3DW-oe-BkH" secondAttribute="centerX" id="I8N-od-G3v"/>
                 <constraint firstItem="7vQ-FI-7dx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="X3V-Ud-eGP"/>
                 <constraint firstItem="3DW-oe-BkH" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="fs8-Sc-YL9"/>
-                <constraint firstItem="x0M-8o-QZb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gAg-D9-D0z"/>
                 <constraint firstItem="3DW-oe-BkH" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" multiplier="0.9" id="gEu-AX-PaL"/>
                 <constraint firstItem="fqq-OS-nUB" firstAttribute="top" secondItem="3DW-oe-BkH" secondAttribute="bottom" constant="15" id="jkl-bU-DlN"/>
-                <constraint firstAttribute="bottom" secondItem="7vQ-FI-7dx" secondAttribute="bottom" id="leB-6W-2YR"/>
-                <constraint firstItem="x0M-8o-QZb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mYA-6v-7jS"/>
-                <constraint firstAttribute="trailing" secondItem="x0M-8o-QZb" secondAttribute="trailing" id="xAt-Eh-l0H"/>
+                <constraint firstItem="PUb-AO-1JA" firstAttribute="bottom" secondItem="7vQ-FI-7dx" secondAttribute="bottom" id="leB-6W-2YR"/>
+                <constraint firstItem="PUb-AO-1JA" firstAttribute="trailing" secondItem="x0M-8o-QZb" secondAttribute="trailing" id="sx5-7v-CoP"/>
+                <constraint firstItem="PUb-AO-1JA" firstAttribute="leading" secondItem="x0M-8o-QZb" secondAttribute="leading" id="tv7-BX-lK1"/>
                 <constraint firstAttribute="trailing" secondItem="7vQ-FI-7dx" secondAttribute="trailing" id="y4e-kX-B6V"/>
             </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="PUb-AO-1JA"/>
             <point key="canvasLocation" x="-48" y="32"/>
         </view>

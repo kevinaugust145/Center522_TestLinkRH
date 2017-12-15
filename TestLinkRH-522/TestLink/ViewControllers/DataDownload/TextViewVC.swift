@@ -14,7 +14,9 @@ class TextViewVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIW
   
   @IBOutlet var myWebView: UIWebView!
   
-  var filePath:String!
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
+    var filePath:String!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -32,6 +34,11 @@ class TextViewVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIW
     // Do any additional setup after loading the view.
   }
   
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
+    
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.

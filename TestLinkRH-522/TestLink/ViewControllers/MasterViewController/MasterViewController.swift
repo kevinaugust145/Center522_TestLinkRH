@@ -21,11 +21,17 @@ import CoreBluetooth
     
     @IBOutlet var tableView:UITableView!
     
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
       
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
     override func viewWillAppear(_ animated: Bool) {
         
       myCenteralManager = CBCentralManager(delegate: self, queue: nil)

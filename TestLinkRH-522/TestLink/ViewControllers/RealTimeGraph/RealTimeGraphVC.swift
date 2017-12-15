@@ -126,6 +126,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     @IBOutlet var RHLineChartView: LineChartView!
     
     @IBOutlet var saveDataBtn: UIButton!
+    
+    
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
+    
     //0774C6 , R7 G116 B198
     
     var dataSets:NSMutableArray!
@@ -168,6 +173,9 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewWriteCSV.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
         
         yVals1 = NSMutableArray()
         yVals2 = NSMutableArray()
@@ -248,6 +256,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
       
@@ -263,6 +276,9 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         if mySavedDataTimer != nil {
             mySavedDataTimer.invalidate()
+        }
+        if myMapDataTimer != nil {
+            myMapDataTimer.invalidate()
         }
     }
 
@@ -540,7 +556,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
             }else if scale == "K" {
                 
-                self.lblT1Text.text =  "\(TOrWOrD) \( newT1 ) \u{00B0}\("K")"
+                self.lblT1Text.text =  "\( newT1 ) \("K")"
                 
             }
             
@@ -577,7 +593,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 
             }else if scale == "K" {
                 
-                self.lblT2Text.text =  "\( newT2 ) \u{00B0}\("K")"
+                self.lblT2Text.text =  "\( newT2 ) \("K")"
                 
             }
             
@@ -593,13 +609,17 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             print("Unplug")
         }
         else {
+            
             xAxisCount = xAxisCount + 1
+            if isData1 {
+                RHgraphSetup()
+            }
             self.graphSetup()
         }
         
     }
     
-    func graphSetup() {
+    func RHgraphSetup() {
         
         
         if RHLineChartView.data?.dataSetCount != nil {
@@ -639,6 +659,8 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 self.RHLineChartView.moveViewToX(Double(xAxisCount - 1))
             }
         }
+    }
+    func graphSetup() {
         
         
         if self.lineChartView.data?.dataSetCount != nil {
@@ -795,70 +817,110 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         var myAlertMsg:String = ""
         
-        
-        if RHdataSets.contains(set1!) {
-         
-            let values1 = self.set1?.values
-            //print("values : ", values)
-            let index1 = values1?.index(where: {$0.x == highlight.x})  // search index
-            print("index1 : ", index1 ?? "ABC")
-            if index1 != nil {
-                let myChartDataEntry1:ChartDataEntry = values1![index1!]
-                print("values1[index1] - 1st set : ", myChartDataEntry1)
-                print("myChartDataEntry.y - 1st set : ", myChartDataEntry1.y)
-                
-                if myAlertMsg == "" {
-                    myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index1!] as! String) \(APPDELEGATE.xAxisValuesFinal[index1!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
-                }
-                else {
-                    myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
-                }
-            }
-        }
-        
-        if dataSets.contains(set2!) {
-
-            let values2 = self.set2?.values
-            //print("values : ", values)
-            let index2 = values2?.index(where: {$0.x == highlight.x})  // search index
-            print("index2 : ", index2 ?? "ABC")
+        if chartView == RHLineChartView {
             
-            if index2 != nil {
-                let myChartDataEntry2:ChartDataEntry = values2![index2!]
-                print("values2[index2] - 2nd set : ", myChartDataEntry2)
-                print("myChartDataEntry2.y - 2nd set : ", myChartDataEntry2.y)
+            if RHdataSets.contains(set1!) {
                 
-                if myAlertMsg == "" {
-                    myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index2!] as! String) \(APPDELEGATE.xAxisValuesFinal[index2!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
-                }
-                else {
-                    myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                let values1 = self.set1?.values
+                //print("values : ", values)
+                let index1 = values1?.index(where: {$0.x == highlight.x})  // search index
+                print("index1 : ", index1 ?? "ABC")
+                if index1 != nil {
+                    let myChartDataEntry1:ChartDataEntry = values1![index1!]
+                    print("values1[index1] - 1st set : ", myChartDataEntry1)
+                    print("myChartDataEntry.y - 1st set : ", myChartDataEntry1.y)
+                    
+                    if myAlertMsg == "" {
+                        myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index1!] as! String) \(APPDELEGATE.xAxisValuesFinal[index1!] as! String)"
+                        myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
+                    }
+                    else {
+                        myAlertMsg = myAlertMsg+"\nRH = \(myChartDataEntry1.y) \("%")"
+                    }
                 }
             }
         }
         
-        if dataSets.contains(set3!) {
-
-            let values3 = self.set3?.values
-            //print("values : ", values)
-            let index3 = values3?.index(where: {$0.x == highlight.x})  // search index
-            print("index3 : ", index3 ?? "ABC")
-            if index3 != nil {
-                let myChartDataEntry3:ChartDataEntry = values3![index3!]
-                print("values3[index3] - 3rd set : ", myChartDataEntry3)
-                print("myChartDataEntry3.y - 3rd set : ", myChartDataEntry3.y)
+        if chartView == lineChartView {
+            
+            if dataSets.contains(set2!) {
                 
-                if myAlertMsg == "" {
-                    myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index3!] as! String) \(APPDELEGATE.xAxisValuesFinal[index3!] as! String)"
-                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                let values2 = self.set2?.values
+                //print("values : ", values)
+                let index2 = values2?.index(where: {$0.x == highlight.x})  // search index
+                print("index2 : ", index2 ?? "ABC")
+                
+                if index2 != nil {
+                    let myChartDataEntry2:ChartDataEntry = values2![index2!]
+                    print("values2[index2] - 2nd set : ", myChartDataEntry2)
+                    print("myChartDataEntry2.y - 2nd set : ", myChartDataEntry2.y)
+                    
+                    if myAlertMsg == "" {
+                        myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index2!] as! String) \(APPDELEGATE.xAxisValuesFinal[index2!] as! String)"
+                        if APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String == "K" {
+                            
+                            myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y) \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                            
+                        }else{
+                            
+                            myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                        }
+                        
+                    }
+                    else {
+                        if APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String == "K" {
+                            
+                            myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y) \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                        }else{
+                            
+                            myAlertMsg = myAlertMsg+"\nT1 = \(myChartDataEntry2.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index2!] as! String)"
+                            
+                        }
+                        
+                    }
                 }
-                else {
-                    myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+            }
+            
+            if dataSets.contains(set3!) {
+                
+                let values3 = self.set3?.values
+                //print("values : ", values)
+                let index3 = values3?.index(where: {$0.x == highlight.x})  // search index
+                print("index3 : ", index3 ?? "ABC")
+                if index3 != nil {
+                    let myChartDataEntry3:ChartDataEntry = values3![index3!]
+                    print("values3[index3] - 3rd set : ", myChartDataEntry3)
+                    print("myChartDataEntry3.y - 3rd set : ", myChartDataEntry3.y)
+                    
+                    if myAlertMsg == "" {
+                        myAlertMsg = "\(APPDELEGATE.xAxisDatesValuesFinal[index3!] as! String) \(APPDELEGATE.xAxisValuesFinal[index3!] as! String)"
+                        
+                        if APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String == "K" {
+                            
+                            myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y) \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                            
+                        }else{
+                            
+                            myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                        }
+                        
+                    }
+                    else {
+                        
+                        if APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String == "K" {
+                            
+                            myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y) \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                            
+                        }else{
+                            
+                            myAlertMsg = myAlertMsg+"\nT2 = \(myChartDataEntry3.y)\u{00B0} \(APPDELEGATE.xAxisScaleValuesFinal[index3!] as! String)"
+                        }
+                        
+                    }
                 }
             }
         }
+       
         
         
         //APPDELEGATE.window.makeToast(myAlertMsg)
@@ -956,10 +1018,10 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         if dataSets == nil {
             return
         }
-        
+    
         if sender.tag == 10 {
             
-            //if set1 != nil {
+            if RHdataSets != nil {
                 if RHdataSets.contains(set1!) {
                     RHdataSets.remove(set1!)
                     sender.backgroundColor = UIColor.gray
@@ -973,7 +1035,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                         sender.backgroundColor = UIColor(red: 235/255, green: 168/255, blue: 0/255, alpha:  1.0)
                     }
                 }
-            //}
+            }
         }
         else if sender.tag == 11 {
             if dataSets.contains(set2!) {
@@ -981,8 +1043,8 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 sender.backgroundColor = UIColor.gray
             }
             else{
-                dataSets.add(set2!)
                 
+                dataSets.add(set2!)
                 if #available(iOS 10.0, *) {
                     sender.backgroundColor = UIColor(displayP3Red: 72/255, green: 180/255, blue: 148/255, alpha: 1.0)
                 } else {
@@ -1013,27 +1075,29 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         var myCount:Int = 0
         var myCountRH:Int = 0
         
-        if RHdataSets.contains(set1!) && yVals1.count == 0 {
-            myCountRH += 1
-        }
-        
-        if RHdataSets.count == 0 || RHdataSets.count == myCountRH {
-            print("dataSets are blank.")
-            self.lblNoRecord.isHidden = false
-            self.RHLineChartView.isHidden = true
-            //"No chart data available."
-        }
-        else{
-            self.lblNoRecord.isHidden = true
-            self.RHLineChartView.isHidden = false
+        if RHdataSets != nil {
             
-            myLineGraphdata = LineChartData.init(dataSets: NSArray(array: RHdataSets!) as? [IChartDataSet])
-            myLineGraphdata.setValueTextColor(UIColor.white)
-            self.RHLineChartView.data = myLineGraphdata
-            self.RHLineChartView.data?.notifyDataChanged()
-            self.RHLineChartView.notifyDataSetChanged()
+            if RHdataSets.contains(set1!) && yVals1.count == 0 {
+                myCountRH += 1
+            }
+            
+            if RHdataSets.count == 0 || RHdataSets.count == myCountRH {
+                print("dataSets are blank.")
+                self.lblNoRecord.isHidden = false
+                self.RHLineChartView.isHidden = true
+                //"No chart data available."
+            }
+            else{
+                self.lblNoRecord.isHidden = true
+                self.RHLineChartView.isHidden = false
+                
+                myLineGraphdata = LineChartData.init(dataSets: NSArray(array: RHdataSets!) as? [IChartDataSet])
+                myLineGraphdata.setValueTextColor(UIColor.white)
+                self.RHLineChartView.data = myLineGraphdata
+                self.RHLineChartView.data?.notifyDataChanged()
+                self.RHLineChartView.notifyDataSetChanged()
+            }
         }
-        
      
         if dataSets.contains(set2!) && yVals2.count == 0 {
             myCount += 1
@@ -1242,7 +1306,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             
             self.setDataCount(RH: self.getFahrenheit(x1: myDataArray[9], x2: myDataArray[10]), t1: self.getFahrenheit(x1: myDataArray[11], x2: myDataArray[12]), t2: self.getFahrenheit(x1: myDataArray[13], x2: myDataArray[14]), scale: cOrFOrK, seventhByte: myDataArray[6])
             
-            TOrWOrD = "T"
+            TOrWOrD = ""
             self.isNormal = true
             self.isDewPoint = false
             self.isWetBulb = false

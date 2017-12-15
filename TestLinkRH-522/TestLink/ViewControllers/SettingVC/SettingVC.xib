@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -12,6 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingVC" customModule="TestLink" customModuleProvider="target">
             <connections>
+                <outlet property="nslcTopView" destination="Lkp-zK-Sje" id="TRv-mx-OKp"/>
+                <outlet property="topView" destination="1Cr-x1-f7Z" id="3X1-Sq-gXN"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewAlarmTemp" destination="B1l-Pl-8V4" id="6gc-cN-WYg"/>
             </connections>
@@ -24,21 +26,26 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Cr-x1-f7Z">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Header.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ejf-ea-PpJ">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Header" translatesAutoresizingMaskIntoConstraints="NO" id="Ejf-ea-PpJ">
+                            <rect key="frame" x="0.0" y="-25" width="320" height="89"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BIJ-If-0lz">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BIJ-If-0lz">
                             <rect key="frame" x="8" y="24" width="30" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="J23-iH-HEh"/>
+                                <constraint firstAttribute="height" constant="30" id="dNw-jH-9CG"/>
+                            </constraints>
                             <state key="normal" image="back.png"/>
                             <connections>
                                 <action selector="btnBackliked:" destination="-1" eventType="touchUpInside" id="I1I-r2-w68"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhQ-HU-WgV">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhQ-HU-WgV">
                             <rect key="frame" x="50" y="29" width="140" height="20"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="140" id="1Rb-LZ-8VX"/>
+                                <constraint firstAttribute="height" constant="20" id="Xue-lg-zjm"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -47,6 +54,14 @@
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="64" id="8u8-G8-mLM"/>
+                        <constraint firstItem="Ejf-ea-PpJ" firstAttribute="leading" secondItem="1Cr-x1-f7Z" secondAttribute="leading" id="CPg-vC-r7m"/>
+                        <constraint firstAttribute="bottom" secondItem="dhQ-HU-WgV" secondAttribute="bottom" constant="15" id="HUP-LB-VJp"/>
+                        <constraint firstItem="dhQ-HU-WgV" firstAttribute="leading" secondItem="BIJ-If-0lz" secondAttribute="trailing" constant="12" id="a1Q-OW-TZq"/>
+                        <constraint firstAttribute="trailing" secondItem="Ejf-ea-PpJ" secondAttribute="trailing" id="fMi-EH-qvs"/>
+                        <constraint firstItem="Ejf-ea-PpJ" firstAttribute="top" secondItem="1Cr-x1-f7Z" secondAttribute="top" constant="-25" id="g77-cG-5y7"/>
+                        <constraint firstItem="BIJ-If-0lz" firstAttribute="leading" secondItem="1Cr-x1-f7Z" secondAttribute="leading" constant="8" id="ivW-dF-Slu"/>
+                        <constraint firstAttribute="bottom" secondItem="Ejf-ea-PpJ" secondAttribute="bottom" id="y64-r1-TSH"/>
+                        <constraint firstAttribute="bottom" secondItem="BIJ-If-0lz" secondAttribute="bottom" constant="10" id="yip-Lu-c6L"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set Alarm Temp." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L0y-tX-jcb">
@@ -118,7 +133,7 @@
                 <constraint firstItem="g9Z-WA-xtI" firstAttribute="trailing" secondItem="1Cr-x1-f7Z" secondAttribute="trailing" id="ATs-w0-mQk"/>
                 <constraint firstItem="EjL-TO-JEm" firstAttribute="top" secondItem="eBy-xT-DMx" secondAttribute="bottom" constant="7" id="G7e-4a-uDK"/>
                 <constraint firstItem="g9Z-WA-xtI" firstAttribute="trailing" secondItem="EjL-TO-JEm" secondAttribute="trailing" id="LCk-Xr-gmh"/>
-                <constraint firstItem="g9Z-WA-xtI" firstAttribute="top" secondItem="1Cr-x1-f7Z" secondAttribute="top" constant="20" id="Lkp-zK-Sje"/>
+                <constraint firstItem="g9Z-WA-xtI" firstAttribute="top" secondItem="1Cr-x1-f7Z" secondAttribute="top" priority="750" constant="20" id="Lkp-zK-Sje"/>
                 <constraint firstItem="EjL-TO-JEm" firstAttribute="leading" secondItem="g9Z-WA-xtI" secondAttribute="leading" id="Nse-cV-cM1"/>
                 <constraint firstItem="eyI-wr-2H6" firstAttribute="top" secondItem="1Cr-x1-f7Z" secondAttribute="bottom" constant="8" id="TDI-ks-epQ"/>
                 <constraint firstItem="eBy-xT-DMx" firstAttribute="top" secondItem="LCm-0A-tn7" secondAttribute="bottom" constant="7" id="YNa-zj-xBt"/>
@@ -226,7 +241,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Header.png" width="320" height="64"/>
+        <image name="Header" width="720" height="100"/>
         <image name="back.png" width="20" height="20"/>
     </resources>
 </document>

@@ -48,6 +48,8 @@ import CoreBluetooth
     @IBOutlet var txtMinTemp :UITextField!
     @IBOutlet var txtMaxTemp :UITextField!
     
+    @IBOutlet var nslcTopView: NSLayoutConstraint!
+    @IBOutlet var topView: UIView!
     var indexID:Int!
     
     var rangeData = NSMutableArray()
@@ -83,6 +85,11 @@ import CoreBluetooth
         viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
     }
   
+    override func viewDidLayoutSubviews() {
+        
+        Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
        MainCenteralManager.sharedInstance().mainCenteralManagerDelegate = self

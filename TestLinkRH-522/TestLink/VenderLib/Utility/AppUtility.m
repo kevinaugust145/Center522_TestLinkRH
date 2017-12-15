@@ -86,11 +86,6 @@ static Reachability* reach;
 }
 
 
-
-
-
-
-
 #pragma mark - Time-Date Methods
 
 +(NSString*)getCurrentDateInFormat:(NSString*)format{

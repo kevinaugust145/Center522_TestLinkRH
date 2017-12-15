@@ -34,6 +34,20 @@
 //    thirdRadioBtnImage.image = [UIImage imageNamed: @"btn_radio_off_holo_light.png"];
 //}
 
++(void) set_TopLayout_VesionRelated :(NSLayoutConstraint* )topLayoutConstraint :(UIView*) topView :(UIViewController*)Controller {
+    ;
+    if (@available(iOS 11, *)) {
+        // safe area constraints already set
+    }
+    else {
+        if (topLayoutConstraint) {
+            topLayoutConstraint = [topView.topAnchor constraintEqualToAnchor:Controller.topLayoutGuide.topAnchor];
+            [topLayoutConstraint setActive:YES];
+        }
+    }
+    
+}
+
 #pragma mark email validation
 
 +(BOOL)validateEmail:(NSString*)email{

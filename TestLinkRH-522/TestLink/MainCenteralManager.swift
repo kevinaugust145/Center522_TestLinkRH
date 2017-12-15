@@ -459,17 +459,10 @@ extension MainCenteralManager : CBPeripheralDelegate{
         _ = self.getMaxValue(temperatureType: "", deviceType: "")
         _ = self.getMinValue(temperatureType: "", deviceType: "")
         
-        
         let byte42 = self.converToBinary(x1: byteArray[42])
-        print(byte42)
-        print(byte42[0])
-        
-        
-         let byte43 = self.converToBinary(x1: byteArray[43])
-        print(byte43)
-        print(byte43[0])
-        
-        
+   
+        let byte43 = self.converToBinary(x1: byteArray[43])
+
         if (byte42[0] == "1"){ // This is for Wet Bulb
             
             self.setTextForTemperatures(RH: self.getFahrenheit(x1: byteArray[9], x2: byteArray[10]), t1: self.getFahrenheit(x1: byteArray[15], x2: byteArray[16]), t2: self.getFahrenheit(x1: byteArray[13], x2: byteArray[14]))

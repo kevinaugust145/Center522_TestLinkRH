@@ -37,6 +37,7 @@
 //#pragma mark - TableView Setting
 //-(void)shareActionToOtherApp;
 
++(void) set_TopLayout_VesionRelated :(NSLayoutConstraint* )topLayoutConstraint :(UIView*) topView :(UIViewController*)Controller;
 
 #pragma mark - Currency Format
 +(NSString*)convertGlobalCurrencyFormat:(double)value;

@@ -22,7 +22,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Constant.h"
-
+#import "Utility.h"
 
 
 @interface HomeVC () <ChartViewDelegate>
@@ -32,6 +32,9 @@
 @property (nonatomic, strong) IBOutlet UISlider *sliderY;
 @property (nonatomic, strong) IBOutlet UITextField *sliderTextX;
 @property (nonatomic, strong) IBOutlet UITextField *sliderTextY;
+@property (retain, nonatomic) IBOutlet UIView *topView;
+
+@property (retain, nonatomic) IBOutlet NSLayoutConstraint *nslcTopView;
 
 @end
 
@@ -48,6 +51,11 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+-(void)viewDidLayoutSubviews
+{
+ 
+    [Utility set_TopLayout_VesionRelated:_nslcTopView :self.topView :self];
 }
 
 -(void)chartSettingsMethod {
@@ -137,4 +145,10 @@
 //    }
 }
 
+- (void)dealloc {
+    [_topView release];
+    [_nslcTopView release];
+    [_topView release];
+    [super dealloc];
+}
 @end
