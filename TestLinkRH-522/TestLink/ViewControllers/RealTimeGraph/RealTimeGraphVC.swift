@@ -433,7 +433,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 xAxisCount = myRecords.count
                 
                 print("xAxisCount : ", xAxisCount)
-                
+                self.RHgraphSetup()
                 self.graphSetup()
             }
         }

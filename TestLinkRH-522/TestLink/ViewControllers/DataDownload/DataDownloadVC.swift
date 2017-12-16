@@ -49,13 +49,12 @@ class DataDownloadVC: UIViewController{
     super.viewDidLoad()
     
     self.generalSettings()
-    
-    
-    
-    
+
     self.GetData()
     
     MainCenteralManager.sharedInstance().mainCenteralManagerForCommandPDelegate = self
+    
+    viewWriteCSV.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
   }
   
     override func viewDidLayoutSubviews() {
@@ -213,15 +212,14 @@ class DataDownloadVC: UIViewController{
     }
     
     var stringToWrite = String()
-    stringToWrite += "Date,Time,T1,T2, T3,T4, Scale\n"
+    stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
     
     for i in 0..<myData.count {
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String),"
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T3") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T4") as! String),"
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
     }
     
@@ -316,13 +314,17 @@ class DataDownloadVC: UIViewController{
         let byte3 = MainCenteralManager.sharedInstance().converToBinary(x1: UInt8("\((myRecords[13] as AnyObject).value(forKey: "Int") as! String)")!)
         
         var myScale:String = "C"
-        if (MainCenteralManager.sharedInstance().data.cOrF == "C")
+        if (MainCenteralManager.sharedInstance().data.cOrFOrK == "C")
         {
-          myScale = "C"
+            myScale = "C"
+            
+        }else if (MainCenteralManager.sharedInstance().data.cOrFOrK == "F"){
+            
+            myScale = "F"
         }
         else
         {
-          myScale = "F"
+          myScale = "K"
         }
         
         //Fetching date
@@ -402,103 +404,69 @@ class DataDownloadVC: UIViewController{
             dict["time"] = timeOnly
             dict["date"] = dateOnly
             
-            let t1 = Float(MainCenteralManager.sharedInstance().getFahrenheit(x1: byte1, x2: byte2))!
+            let RH = Float(MainCenteralManager.sharedInstance().getFahrenheit(x1: byte1, x2: byte2))!
             
-            if (myScale == "C"){
-                if t1 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                    dict["T1"] = "OL"
-                }
-                else if t1 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                    dict["T1"] = "-OL"
-                }
-                else {
-                    dict["T1"] = MainCenteralManager.sharedInstance().getCelsius(x1: byte1, x2: byte2)
-                }
+           
+            if RH > 100 {
+                dict["RH"] = "OL"
+            }
+            else if RH < 0 {
+                dict["RH"] = "-OL"
             }
             else {
-                if t1 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                    dict["T1"] = "OL"
-                }
-                else if t1 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                    dict["T1"] = "-OL"
-                }
-                else {
-                    dict["T1"] = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte1, x2: byte2)
-                }
+                dict["RH"] = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte1, x2: byte2)
             }
-            let t2 = Float(MainCenteralManager.sharedInstance().getFahrenheit(x1: byte3, x2: byte4))!
             
-            if (myScale == "C"){
-                if t2 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                    dict["T2"] = "OL"
-                }
-                else if t2 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                    dict["T2"] = "-OL"
-                }
-                else {
-                    dict["T2"] = MainCenteralManager.sharedInstance().getCelsius(x1: byte3, x2: byte4)
-                }
+ 
+            let t1 = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte3, x2: byte4)
+            let t2 = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte5, x2: byte6)
+            
+            var newT1 = t1
+            var newT2 = t2
+            
+            if myScale == "C" {
+                
+                // T(°C) = (T(°F) - 32) / 1.8
+                newT2 = String(format: "%.1f", (Float(t2)! - 32) / 1.8)
+         
+            }else if myScale == "F" {
+                
+                // T(°F) = T(°C) × 1.8 + 32
+                newT1 = String(format: "%.1f",(Float(newT1)! * 1.8) + 32)
+            
+            }else if myScale == "K" {
+                
+                // T(K) = T(°C) + 273.15
+                newT1 = String(format: "%.1f",(Float(newT1)! + 273.15))
+                newT2 = String(format:"%.1f",(Float(newT2)! + 459.67) * (5/9))
+        
+            }
+
+          
+            if Float(newT1 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: myScale, deviceType: myDeviceType) {
+                
+                dict["T1"] = "OL"
+            }
+            else if  Float(newT1 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: myScale, deviceType: myDeviceType){
+                
+                dict["T1"] = "-OL"
             }
             else {
-                if t2 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                    dict["T2"] = "OL"
-                }
-                else if t2 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                    dict["T2"] = "-OL"
-                }
-                else {
-                    dict["T2"] = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte3, x2: byte4)
-                }
+                dict["T1"] = newT1
             }
-            
-            
-            let t3 = Float(MainCenteralManager.sharedInstance().getFahrenheit(x1: byte5, x2: byte6))!
-            
-            if (myScale == "C"){
-                if t3 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                    dict["T3"] = "OL"
-                }
-                else if t3 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                    dict["T3"] = "-OL"
-                }
-                else {
-                    dict["T3"] = MainCenteralManager.sharedInstance().getCelsius(x1: byte5, x2: byte6)
-                }
+
+         
+            if Float(newT2 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: myScale, deviceType: myDeviceType) {
+                
+                dict["T2"] = "OL"
+            }
+            else if Float(newT2 as String)! < MainCenteralManager.sharedInstance().getMinValue(temperatureType: myScale, deviceType: myDeviceType){
+                    
+                dict["T2"] = "-OL"
             }
             else {
-                if t3 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                    dict["T3"] = "OL"
-                }
-                else if t3 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                    dict["T3"] = "-OL"
-                }
-                else {
-                    dict["T3"] = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte5, x2: byte6)
-                }
-            }
-            let t4 = Float(MainCenteralManager.sharedInstance().getFahrenheit(x1: byte7, x2: byte8))!
-            
-            if (myScale == "C"){
-                if t4 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "C", deviceType: myDeviceType) {
-                    dict["T4"] = "OL"
-                }
-                else if t4 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "C", deviceType: myDeviceType){
-                    dict["T4"] = "-OL"
-                }
-                else {
-                    dict["T4"] =  MainCenteralManager.sharedInstance().getCelsius(x1: byte7, x2: byte8)
-                }
-            }
-            else {
-                if t4 > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: "F", deviceType: myDeviceType) {
-                    dict["T4"] = "OL"
-                }
-                else if t4 < MainCenteralManager.sharedInstance().getMinValue(temperatureType: "F", deviceType: myDeviceType){
-                    dict["T4"] = "-OL"
-                }
-                else {
-                    dict["T4"] = MainCenteralManager.sharedInstance().getFahrenheit(x1: byte7, x2: byte8)
-                }
+                
+                dict["T2"] = newT2
             }
 
             dict["scale"] = myScale
@@ -575,103 +543,7 @@ class DataDownloadVC: UIViewController{
       }
       
       self.saveDataInArray()
-      
-      //            if index != nil
-      //            {
-      //                DispatchQueue.global().sync {
-      //                    var dict = NSMutableDictionary()
-      //                    self.myData = NSMutableArray()
-      //
-      //                    //"\((mySingleFileData[0] as AnyObject).value(forKey: "Hexa") as! String)"
-      //
-      //                    let myRecords : NSMutableArray = self.myFinalDataArray[self.index] as! NSMutableArray
-      //
-      //                    var hourInterval:Int = 13
-      //                    var minutesInterval:Int = 05
-      //                    var secondsInterval:Int = 05
-      //
-      //                    let byte3 = self.converToBinary(x1: UInt8("\((myRecords[13] as AnyObject).value(forKey: "Int") as! String)")!)
-      //                    var myScale:String = "C"
-      //                    if (byte3[0] == "1")
-      //                    {
-      //                        myScale = "C"
-      //                    }
-      //                    else
-      //                    {
-      //                        myScale = "F"
-      //                    }
-      //
-      //                    var i:Int = 16
-      //
-      //                    while i < myRecords.count {
-      //
-      //                        if myRecords.count >= i+8{
-      //
-      //                            //self.getCelsius(x1: byteArray[9], x2: byteArray[10])
-      //
-      //                            let byte1:UInt8 = UInt8("\((myRecords[i] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte2:UInt8 = UInt8("\((myRecords[i+1] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte3:UInt8 = UInt8("\((myRecords[i+2] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte4:UInt8 = UInt8("\((myRecords[i+3] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte5:UInt8 = UInt8("\((myRecords[i+4] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte6:UInt8 = UInt8("\((myRecords[i+5] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte7:UInt8 = UInt8("\((myRecords[i+6] as AnyObject).value(forKey: "Int") as! String)")!
-      //                            let byte8:UInt8 = UInt8("\((myRecords[i+7] as AnyObject).value(forKey: "Int") as! String)")!
-      //
-      //                            dict = NSMutableDictionary()
-      //                            dict["date"] = "2017/05/05"//(myRecords[i] as AnyObject).value(forKey: "date")
-      //
-      //                            secondsInterval = secondsInterval + 5
-      //
-      //                            if secondsInterval > 60 {
-      //
-      //                                minutesInterval = minutesInterval + (secondsInterval/60)
-      //                                secondsInterval = (secondsInterval%60)
-      //                            }
-      //
-      //                            if minutesInterval > 60 {
-      //                                hourInterval = hourInterval + (minutesInterval/60)
-      //                                minutesInterval = (minutesInterval%60)
-      //                            }
-      //
-      //                            dict["time"] = "\(String(format: "%02d", hourInterval)):\(String(format: "%02d", minutesInterval)):\(String(format: "%02d", secondsInterval))"
-      //
-      //                            //dict["time"] = "\(hourInterval):\(minutesInterval):\(secondsInterval)"//(myRecords[i] as AnyObject).value(forKey: "time")
-      //
-      //                            if Float(self.getFahrenheit(x1: byte1, x2: byte2))! > MaxTempValue {
-      //                                dict["t1"] = "--"
-      //                            }else{
-      //                                dict["t1"] = self.getFahrenheit(x1: byte1, x2: byte2)
-      //                            }
-      //
-      //                            if Float(self.getFahrenheit(x1: byte3, x2: byte4))! > MaxTempValue {
-      //                                dict["t2"] = "--"
-      //                            }else{
-      //                                dict["t2"] = self.getFahrenheit(x1: byte3, x2: byte4)
-      //                            }
-      //
-      //                            if Float(self.getFahrenheit(x1: byte5, x2: byte6))! > MaxTempValue {
-      //                                dict["t3"] = "--"
-      //                            }else{
-      //                                dict["t3"] = self.getFahrenheit(x1: byte5, x2: byte6)
-      //                            }
-      //
-      //                            if Float(self.getFahrenheit(x1: byte7, x2: byte8))! > MaxTempValue {
-      //                                dict["t4"] = "--"
-      //                            }else{
-      //                                dict["t4"] = self.getFahrenheit(x1: byte7, x2: byte8)
-      //                            }
-      //
-      //                            dict["scale"] = myScale
-      //                            self.myData.add(dict)
-      //                        }
-      //                        i = i + 8
-      //                    }
-      //
-      //                    print("myData myData myData ", self.myData)
-      //
-      //                }
-      //            }
+    
       
       let fileManager = FileManager.default
       if fileManager.fileExists(atPath: self.dataFilePath1()) {
@@ -684,15 +556,14 @@ class DataDownloadVC: UIViewController{
       }
       
       var stringToWrite = String()
-      stringToWrite += "Date,Time,T1,T2, T3,T4, Scale\n"
+      stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
       
       for i in 0..<myData.count {
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String),"
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T3") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T4") as! String),"
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
       }
       
@@ -763,388 +634,12 @@ class DataDownloadVC: UIViewController{
     }
   }
   
-  //    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-  //        for serviceObj in peripheral.services! {
-  //            let service:CBService = serviceObj
-  //            let isServiceIncluded = self.btServices.filter({ (item: BTServiceInfo) -> Bool in
-  //                return item.service.uuid == service.uuid
-  //            }).count
-  //            if isServiceIncluded == 0 {
-  //                btServices.append(BTServiceInfo(service: service, characteristics: []))
-  //            }
-  //            peripheral.discoverCharacteristics(nil, for: service)
-  //        }
-  //    }
-  
-  //    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-  //
-  //        print("NAME:" + peripheral.name! )
-  //        print("RSSI:" + RSSI.description )
-  //
-  //        if (peripheral.state == CBPeripheralState.connected){
-  //            print("isConnected: connected")
-  //        }else{
-  //            print("isConnected: disconnected")
-  //        }
-  //
-  //        print("advertisementData:" + advertisementData.description)
-  //
-  //
-  ////        if (peripheral.services != nil ){
-  ////
-  ////        }
-  //
-  //    }
-  
-  //    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-  //
-  //    }
-  
-  //    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-  //        let serviceCharacteristics = service.characteristics
-  //        for item in btServices {
-  //            if item.service.uuid == service.uuid {
-  //                item.characteristics = serviceCharacteristics!
-  //                let charitem = serviceCharacteristics?.first
-  //                self.peripheral.setNotifyValue(true, for: charitem!)
-  //                break
-  //            }
-  //        }
-  //
-  //    }
   
   func getIntValueFromArray(index: Int) -> Int {
     return ((myDownloadedData.object(at: index) as! NSMutableDictionary).value(forKey: "Int")) as! Int
   }
   
   var isGetData : Bool = false
-  
-  //    func set32Byte(byteArray: Array<UInt8>)
-  //    {
-  //        DispatchQueue.global().async {
-  //
-  //            var checkSum: Int = 0
-  //
-  //            //-----------**********Removing repeating data--------------////
-  //            var isSavedData : Bool = true
-  //
-  //            if self.lastSavedDataArray == [] {
-  //                self.lastSavedDataArray = byteArray
-  //                isSavedData = true
-  //            }
-  //            else {
-  //                if self.lastSavedDataArray == byteArray {
-  //                    isSavedData = false
-  //                }
-  //                else {
-  //                    self.lastSavedDataArray = byteArray
-  //                    isSavedData = true
-  //                }
-  //            }
-  //
-  //            self.lastSavedDataArray = byteArray
-  //
-  //            if isSavedData {
-  //                print("Data are not same : ")
-  //                //-----------**********Removing repeating data--------------////
-  //
-  //                self.totalBytesReceived += 32;
-  //                print("TotalBytesReceived: \(self.totalBytesReceived) Total Bytes: \(self.totalBytes)")
-  //
-  //                DispatchQueue.main.async {
-  //
-  //                    if Int(self.totalBytes) != 0 {
-  //                        var myProgress:Int = 0
-  //                        myProgress = (Int(self.totalBytesReceived) * 100) / Int(self.totalBytes)
-  //                        self.myProgressLabel!.text = "\(myProgress)% Progress Completed"
-  //                        //var myProgress:Float = 0
-  //                        //myProgress = (Float(self.totalBytesReceived) * 100) / Float(self.totalBytes)
-  //                        //self.myProgressLabel!.text = "\(String(format:"%02.2f", myProgress))% Progress Completed"
-  //                    }
-  //                }
-  //
-  //                for i in 0 ..< 32  {
-  //
-  //                    // Total Check Sum Value
-  //                    checkSum = checkSum + Int(byteArray[i])
-  //
-  //                    // Add Data to array
-  //                    let myData : NSMutableDictionary = NSMutableDictionary()
-  //                    myData.setValue(String(format:"%02X", byteArray[i]), forKey: "Hexa")
-  //                    myData.setValue("\(byteArray[i])", forKey: "Int")
-  //                    //myData.setValue("\(Int(byteArray[i]))", forKey: "Int")
-  //                    myData.setValue("\(self.converToBinary(x1: byteArray[i]))", forKey: "Binary")
-  //                    myData.setValue("\(Int8(bitPattern: byteArray[i]))", forKey: "Decimal")
-  //                    self.myDownloadedData.add(myData)
-  //
-  //                }
-  //            }
-  //            else{
-  //                for i in 0 ..< 32  {
-  //                    // Total Check Sum Value
-  //                    checkSum = checkSum + Int(byteArray[i])
-  //                }
-  //                print("Data are same : ")
-  //            }
-  //
-  //
-  //            if (Int((byteArray[34] & 0xFF)) == (checkSum & 0xFF) && byteArray[35] == 5) {
-  //                self.btncommandRepeatP()
-  //            }
-  //            else {
-  //                self.btncommandWrongCommand()
-  //            }
-  //
-  //            //self.saveAsFileAction()
-  //
-  //        }
-  //    }
-  
-  //    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-  //
-  //        print("Called00000")
-  //
-  //        if (characteristic.value != nil){
-  //            let resultStr = NSString(data: characteristic.value!, encoding: String.Encoding.utf8.rawValue)
-  //
-  ////            if resultStr == nil {
-  ////                return
-  ////            }
-  //
-  //            print("Called1111")
-  //
-  //            if let value = characteristic.value {
-  //
-  //
-  //                let byteArray:Array<UInt8> = [UInt8](value)
-  //
-  //            print("Called22222")
-  //
-  //                guard value.count == 36 else {
-  //                    return
-  //                }
-  //
-  //                print("characteristic uuid:\(characteristic.uuid) \n value:\(resultStr)")
-  //                let log = "read: \(value)"
-  //                print(log)
-  //
-  //                print("Called3333")
-  //                if (characteristic.uuid.description == "49535343-1E4D-4BD9-BA61-23C647249616"){
-  //
-  //                    print("byteArray : ", byteArray)
-  //
-  //                    if myCalledCommand == commandFinished {
-  //                        print("Finished Command Response")
-  //                        if !self.mySavedData {
-  //                            self.saveAsFileAction()
-  //                        }
-  //
-  //                        return;
-  //                    }
-  //
-  //                    if myCalledCommand == commandP {
-  //
-  //                        totalBytes = (Int((byteArray[10] & 0xFF)) * 65536) + (Int((byteArray[11] & 0xFF)) * 256) + (Int((byteArray[12] & 0xFF)) + 1);
-  //
-  //                        if (totalBytes > 0x40000 || totalBytes < 256) {
-  //                            totalBytes = 0x40000;
-  //                        }
-  //
-  //                        if totalBytes == 0 {
-  //                            APPDELEGATE.window.makeToast("Getting zero bytes")
-  //                            return
-  //                        }
-  //
-  //                        if (totalBytes % 32 == 0) {
-  //                            totalBytes = totalBytes - totalBytes % 32 + 32;
-  //                        }
-  //
-  //                        totalBytesReceived = 0;
-  //                        totalBytes -= 32;
-  //                        self.set32Byte(byteArray: byteArray)
-  //                        //isFirsttime = false;
-  //                    }
-  //                    else {
-  //
-  //                        if (totalBytesReceived > totalBytes)
-  //                        {
-  //                            self.btncommandFinishCommand()
-  //                            return;
-  //                        }
-  //
-  //                        if (byteArray.count >= 36) {
-  //
-  //                            self.set32Byte(byteArray: byteArray)
-  //
-  //                        } else {
-  //                            if (myCalledCommand == commandWrong) {
-  //                                self.btncommandRepeatP()
-  //                            } else {
-  //                                self.btncommandWrongCommand()
-  //                            }
-  //                        }
-  //                    }
-  //                }
-  //            }
-  //
-  //            if lastString == resultStr{
-  //                return;
-  //            }
-  //
-  //            // 操作的characteristic 保存
-  //            self.savedCharacteristic = characteristic
-  //        }
-  //    }
-  
-  //    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-  //
-  //        if error != nil{
-  //            print("写入 characteristics 时 \(peripheral.name) 报错 \(error?.localizedDescription)")
-  //            return
-  //        }
-  //    }
-  
-  //    func viewController(characteristic: CBCharacteristic, value : Data ) -> () {
-  //
-  //        print("Called555555")
-  //
-  //
-  //        //只有 characteristic.properties 有write的权限才可以写入
-  //        if characteristic.properties.contains(CBCharacteristicProperties.write){
-  //            //设置为  写入有反馈
-  //            print("Write Command: \(value)")
-  //            self.peripheral.writeValue(value, for: characteristic, type: .withResponse)
-  //
-  //        }else{
-  //            print("写入不可用~")
-  //        }
-  //    }
-  
-  // MARK: - Button Action Methods
-  //    @IBAction func btncommandC(){
-  //
-  //        //[  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   C Command
-  //        //[  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]   P Command
-  //        let commandCbyte : [UInt8] = [  0x02 , 0x43 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-  //        let data2 = Data(bytes:commandCbyte)
-  //
-  //        if self.btServices.count > 1 {
-  //            let charItems = self.btServices[1].characteristics
-  //            for characteristic in charItems {
-  //                peripheral.readValue(for: characteristic)
-  //
-  //                //设置 characteristic 的 notifying 属性 为 true ， 表示接受广播
-  //                peripheral.setNotifyValue(true, for: characteristic)
-  //            }
-  //
-  //            //for characteristic in self.currentBTServiceInfo.characteristics {
-  //            for characteristic in charItems {
-  //                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse){
-  //                    //设置为  写入有反馈
-  //                    self.peripheral.writeValue(data2, for: characteristic, type: .withResponse)
-  //                    //print("写入withoutResponse~")
-  //                }else{
-  //                    print("写入不可用~")
-  //                }
-  //            }
-  //        }
-  //    }
-  
-  
-  // MARK: - Send P Command to Notifiy Start Downloading.
-  //    func btncommandP(){
-  //
-  //        self.addLoadingIndicatiorOnFooterOnTableViewStore()
-  //
-  //        //myCalledCommand = commandP
-  //        //print("\n\nP Command called -  ", myCalledCommand)
-  //        let commandCbyte : [UInt8] = [  0x02 , 0x50 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-  //        self.sendCommandToDevice(command: commandCbyte)
-  //    }
-  
-  // MARK: - Send Repeat P Command to Continue Downloading next data.
-  //    @IBAction func btncommandRepeatP(){
-  //        myCalledCommand = commandRepeatP
-  //
-  //        print("\n\nRepeat P Command called -  ", myCalledCommand)
-  //
-  //        let commandCbyte : [UInt8] = [  0x02 , 0x70 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-  
-  //        self.sendCommandToDevice(command: commandCbyte)
-  //    }
-  
-  //    func sendCommandToDevice(characteristic: CBCharacteristic,value : Data ) -> () {
-  //
-  //        //只有 characteristic.properties 有write的权限才可以写入
-  //        if characteristic.properties.contains(CBCharacteristicProperties.write){
-  //            //设置为  写入有反馈
-  //            self.peripheral.writeValue(value, for: characteristic, type: .withResponse)
-  //
-  //        }else{
-  //            print("写入不可用~")
-  //        }
-  //    }
-  
-  
-  
-  // MARK: - Send Wrong Command to Notify previous Command is Failed.
-  //    @IBAction func btncommandWrongCommand(){
-  //        myCalledCommand = commandWrong
-  //        print("\n\nWrong P Command called -  ", myCalledCommand)
-  //
-  //        let commandWbyte : [UInt8] = [  0x02 , 0x6e , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-  //        self.sendCommandToDevice(command: commandWbyte)
-  //    }
-  
-  // MARK: - Send Finish Command for End Downloading Process.
-  //    @IBAction func btncommandFinishCommand() {
-  //
-  //        if self.myFinishCommandCalled == false {
-  //
-  //            self.myFinishCommandCalled = true
-  //
-  //            myCalledCommand = commandFinished
-  //            print("\n\nFinished Command called -  ", myCalledCommand)
-  //
-  //            let commandFbyte : [UInt8] = [  0x02 , 0x71 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-  //            self.sendCommandToDevice(command: commandFbyte)
-  //        }
-  //    }
-  
-  // MARK: - Send Command To Device
-  //    func sendCommandToDevice(command: [UInt8]) -> Void {
-  //        let data3 = Data(bytes:command)
-  //
-  //        // If service count is greater then Zero.
-  //        if self.btServices.count > 1 {
-  //            let charItems = self.btServices[1].characteristics
-  //            for characteristic in charItems {
-  //                peripheral.readValue(for: characteristic)
-  //                peripheral.setNotifyValue(true, for: characteristic)
-  //            }
-  //
-  ////            for characteristic in charItems {
-  ////                self.viewController(characteristic: characteristic, value: data3)
-  ////            }
-  //
-  //
-  //            for characteristic in charItems {
-  //
-  //                print("Called66666")
-  //                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse) {
-  //                //if characteristic.uuid.description == "49535343-8841-43F4-A8D4-ECBE34729BB3" {
-  //                    print("write: \(characteristic.uuid.description)")
-  //                    self.peripheral.writeValue(data3, for: characteristic, type: .withResponse)
-  //                    //break;
-  //                }
-  //                else{
-  //                    print("写入不可用~")
-  //                }
-  //            }
-  //        }
-  //    }
-  
-  
   
   // MARK: - Create CSV File Methods
   
@@ -1232,69 +727,6 @@ class DataDownloadVC: UIViewController{
     return filePath!
     
   }
-  
-  //@IBAction func saveAsFileAction() {
-  //
-  //        self.mySavedData = true
-  //
-  //        if myProgressLabel != nil {
-  //            myProgressLabel.text = "Loading Files"
-  //        }
-  //
-  //        //self.myDownloadedDataMethod()
-  //        //return
-  //
-  //        var dict = NSMutableDictionary()
-  //        var myData = NSMutableArray()
-  //
-  //        myData = NSMutableArray()
-  //
-  //
-  //
-  //        let fileManager = FileManager.default
-  //        if fileManager.fileExists(atPath: self.dataFilePath()) {
-  //            print("FILE AVAILABLE")
-  //        } else {
-  //            FileManager.default.createFile(atPath: self.dataFilePath(), contents: nil, attributes: nil)
-  //        }
-  //
-  //
-  //        var stringToWrite = String()
-  //
-  //        stringToWrite += "Hexa\n\n"//"Hexa,Int,Binary,Decimal\n\n"
-  //        for i in 1..<myDownloadedData.count+1 {
-  //            stringToWrite += "\((myDownloadedData[i-1] as AnyObject).value(forKey: "Hexa") as! String),"
-  ////            stringToWrite += "\((myDownloadedData[i] as AnyObject).value(forKey: "Int") as! String),"
-  ////            //stringToWrite += "\((myDownloadedData[i] as AnyObject).value(forKey: "Binary") as! String),"
-  ////            stringToWrite += "\((myDownloadedData[i] as AnyObject).value(forKey: "Decimal") as! String),\n"
-  //
-  //            if i % 16 == 0 {
-  //                stringToWrite += "\n"
-  //            }
-  //        }
-  //        //Moved this stuff out of the loop so that you write the complete string once and only once.
-  //        print("writeString :\(stringToWrite)")
-  //        var handle: FileHandle?
-  //
-  //
-  //        handle = FileHandle(forWritingAtPath: self.dataFilePath())
-  //
-  //        print("Path :->\(self.dataFilePath())")
-  //        //say to handle where's the file fo write
-  //        handle?.truncateFile(atOffset: (handle?.seekToEndOfFile())!)
-  //        //position handle cursor to the end of file
-  //        handle?.write(stringToWrite.data(using: String.Encoding.utf8)!)
-  //
-  //}
-  
-  //    @IBAction func shareButtonPressed(_ sender: UIButton) {
-  //        //NSString *str = [[NSBundle mainBundle] pathForResource:@"BLS Report_2016-10-11_11-33-40" ofType:@"pdf"];
-  //        //    NSString *str = [[NSBundle mainBundle] pathForResource:@"myfile" ofType:@"csv"];
-  //        //    NSArray *activityItems = @[[NSURL fileURLWithPath:str]];
-  //        let activityItems: [Any] = [URL(fileURLWithPath: self.dataFilePath())]
-  //        let shareScreen = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-  //        self.present(shareScreen, animated: true, completion: { _ in })
-  //    }
   
 }
 
