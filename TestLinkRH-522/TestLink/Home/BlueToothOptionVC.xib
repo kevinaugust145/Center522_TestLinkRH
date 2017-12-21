@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -51,20 +51,20 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jCt-6K-E0x">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Header" translatesAutoresizingMaskIntoConstraints="NO" id="b9F-1c-fQ6">
-                            <rect key="frame" x="0.0" y="-25" width="375" height="89"/>
+                            <rect key="frame" x="0.0" y="-25" width="320" height="89"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Qth-ia-dpD">
-                            <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7oS-ci-GMV">
-                            <rect key="frame" x="340" y="24" width="30" height="30"/>
+                            <rect key="frame" x="280" y="24" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="30" id="iiE-Im-Fze"/>
                                 <constraint firstAttribute="height" constant="30" id="yL9-l3-Hxk"/>
@@ -88,12 +88,12 @@
                         <constraint firstAttribute="trailing" secondItem="b9F-1c-fQ6" secondAttribute="trailing" id="ZJ1-tf-sWt"/>
                         <constraint firstItem="b9F-1c-fQ6" firstAttribute="leading" secondItem="jCt-6K-E0x" secondAttribute="leading" id="amb-qy-ttW"/>
                         <constraint firstAttribute="bottom" secondItem="b9F-1c-fQ6" secondAttribute="bottom" id="g1o-TH-ntf"/>
-                        <constraint firstAttribute="trailing" secondItem="7oS-ci-GMV" secondAttribute="trailing" constant="5" id="iUe-6k-C9H"/>
+                        <constraint firstAttribute="trailing" secondItem="7oS-ci-GMV" secondAttribute="trailing" constant="10" id="iUe-6k-C9H"/>
                         <constraint firstItem="Qth-ia-dpD" firstAttribute="leading" secondItem="jCt-6K-E0x" secondAttribute="leading" id="wCW-sz-WIv"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wzM-BX-1PO">
-                    <rect key="frame" x="0.0" y="64" width="375" height="60"/>
+                    <rect key="frame" x="0.0" y="64" width="320" height="60"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_white" translatesAutoresizingMaskIntoConstraints="NO" id="EFO-F6-lKW">
                             <rect key="frame" x="10" y="10" width="20" height="20"/>
@@ -122,7 +122,7 @@ bluetooth device </string>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3b-3P-M4w">
-                            <rect key="frame" x="250" y="9.5" width="115" height="41"/>
+                            <rect key="frame" x="195" y="9.5" width="115" height="41"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="41" id="1sw-20-Opn"/>
                                 <constraint firstAttribute="width" constant="115" id="JHC-I6-L7Q"/>
@@ -151,16 +151,16 @@ bluetooth device </string>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nd3-qy-TSI">
-                    <rect key="frame" x="18.5" y="200" width="338" height="333.5"/>
+                    <rect key="frame" x="16" y="170.5" width="288" height="284"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0y-KD-Wp5">
-                            <rect key="frame" x="0.0" y="0.0" width="169" height="167"/>
+                            <rect key="frame" x="0.0" y="0.0" width="144" height="142"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rtd.png" translatesAutoresizingMaskIntoConstraints="NO" id="heM-Ph-5uZ">
-                                    <rect key="frame" x="55" y="15" width="59" height="58.5"/>
+                                    <rect key="frame" x="47" y="15" width="50" height="49.5"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUf-Xs-EM0">
-                                    <rect key="frame" x="45" y="88.5" width="78" height="39"/>
+                                    <rect key="frame" x="32.5" y="79.5" width="78" height="39"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="39" id="J5s-Qv-Y16"/>
                                         <constraint firstAttribute="width" constant="78" id="dGI-1C-OWX"/>
@@ -172,7 +172,7 @@ Reading</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wbv-ar-dY6">
-                                    <rect key="frame" x="33" y="8" width="103" height="150"/>
+                                    <rect key="frame" x="33" y="8" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnRTRCliked:" destination="-1" eventType="touchUpInside" id="hWm-xw-ywT"/>
                                     </connections>
@@ -192,13 +192,13 @@ Reading</string>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="upn-fY-e1g">
-                            <rect key="frame" x="169" y="0.0" width="169" height="167"/>
+                            <rect key="frame" x="144" y="0.0" width="144" height="142"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rtg.png" translatesAutoresizingMaskIntoConstraints="NO" id="s1t-fc-pG6">
-                                    <rect key="frame" x="54.5" y="15" width="58.5" height="58.5"/>
+                                    <rect key="frame" x="47" y="15" width="50" height="49.5"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zpj-v0-TNM">
-                                    <rect key="frame" x="45.5" y="88.5" width="78" height="39"/>
+                                    <rect key="frame" x="33" y="79.5" width="78" height="39"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="39" id="ghV-q9-Nhm"/>
                                         <constraint firstAttribute="width" constant="78" id="zWg-rZ-n4l"/>
@@ -210,7 +210,7 @@ Graph</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b8d-xv-KjL">
-                                    <rect key="frame" x="33" y="8" width="103" height="150"/>
+                                    <rect key="frame" x="33" y="8" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnRTGCliked:" destination="-1" eventType="touchUpInside" id="Gvp-3S-uwl"/>
                                     </connections>
@@ -230,13 +230,13 @@ Graph</string>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eIk-26-1QH">
-                            <rect key="frame" x="169" y="167" width="169" height="166.5"/>
+                            <rect key="frame" x="144" y="142" width="144" height="142"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fo.png" translatesAutoresizingMaskIntoConstraints="NO" id="N5Z-PQ-Zdb">
-                                    <rect key="frame" x="54.5" y="25" width="58.5" height="57.5"/>
+                                    <rect key="frame" x="47" y="25" width="50" height="49"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File Open" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZG-9g-mXl">
-                                    <rect key="frame" x="45.5" y="97.5" width="78" height="39"/>
+                                    <rect key="frame" x="33" y="89" width="78" height="39"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="78" id="I4f-1w-hKj"/>
                                         <constraint firstAttribute="height" constant="39" id="ie8-FE-nTQ"/>
@@ -245,8 +245,8 @@ Graph</string>
                                     <color key="textColor" red="0.027450980390000001" green="0.4549019608" blue="0.77647058820000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U2h-6s-uNu">
-                                    <rect key="frame" x="33" y="8" width="103" height="149.5"/>
+                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U2h-6s-uNu">
+                                    <rect key="frame" x="33" y="8" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnFOliked:" destination="-1" eventType="touchUpInside" id="UTa-iy-V2f"/>
                                     </connections>
@@ -266,27 +266,27 @@ Graph</string>
                             </constraints>
                         </view>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Line_Vertical" translatesAutoresizingMaskIntoConstraints="NO" id="rM6-b2-LKt">
-                            <rect key="frame" x="168" y="0.0" width="1" height="333.5"/>
+                            <rect key="frame" x="143" y="0.0" width="1" height="284"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="1" id="UK3-5p-3Ml"/>
                             </constraints>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Line_Horizontal" translatesAutoresizingMaskIntoConstraints="NO" id="cd8-lt-wNm">
-                            <rect key="frame" x="0.0" y="166" width="338" height="1"/>
+                            <rect key="frame" x="0.0" y="141" width="288" height="1"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="1" id="bYC-HN-e2G"/>
                             </constraints>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1D-Ug-CJU">
-                            <rect key="frame" x="0.0" y="167" width="169" height="166.5"/>
+                            <rect key="frame" x="0.0" y="142" width="144" height="142"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dd.png" translatesAutoresizingMaskIntoConstraints="NO" id="mO5-TZ-SgY">
-                                    <rect key="frame" x="55" y="25" width="59" height="57.5"/>
+                                    <rect key="frame" x="47" y="25" width="50" height="49"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Download" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q3g-eh-pMD">
-                                    <rect key="frame" x="45" y="97.5" width="78" height="39"/>
+                                    <rect key="frame" x="32.5" y="89" width="78" height="39"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="78" id="fWY-WM-boc"/>
                                         <constraint firstAttribute="height" constant="39" id="ya8-Wv-Eww"/>
@@ -296,7 +296,7 @@ Graph</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MUh-jd-jkg">
-                                    <rect key="frame" x="33" y="8" width="103" height="149.5"/>
+                                    <rect key="frame" x="33" y="8" width="78" height="125"/>
                                     <connections>
                                         <action selector="btnDDCliked:" destination="-1" eventType="touchUpInside" id="wHb-Wt-IjU"/>
                                     </connections>

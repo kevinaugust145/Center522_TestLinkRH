@@ -127,6 +127,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
     @IBOutlet var saveDataBtn: UIButton!
     
+    @IBOutlet var currentDataType: UILabel!
     
     @IBOutlet var nslcTopView: NSLayoutConstraint!
     @IBOutlet var topView: UIView!
@@ -176,6 +177,8 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         viewWriteCSV.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
         viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        
+        currentDataType.text = ""
         
         yVals1 = NSMutableArray()
         yVals2 = NSMutableArray()
@@ -309,7 +312,6 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         l.textColor = UIColor.white
         l.horizontalAlignment = .left
         l.verticalAlignment = .top
-        //l.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.f];
         l.orientation = .horizontal
         l.drawInside = true
         
@@ -323,6 +325,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         xAxis.valueFormatter = XAxisValueFormatter()
         xAxis.labelRotationAngle = -45
         //xAxis.enabled = false   It will enable or disable axis
+       
         
         // Modify My Martin
         let leftAxis : YAxis = self.lineChartView.leftAxis
@@ -332,6 +335,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         leftAxis.drawZeroLineEnabled = false
         leftAxis.granularityEnabled = false
         leftAxis.labelPosition = .outsideChart
+        //leftAxis.labelFont.withSize(18)
         
         //leftAxis.valueFormatter = YAxisValueFormatter()
         
@@ -340,7 +344,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         self.lineChartView.rightAxis.axisLineColor = UIColor.clear
         
         self.lineChartView.animate(xAxisDuration: 2.5)
-        
+
+        //This will change the font of chart X Axis and Y Axis
+        lineChartView.legend.font = UIFont(name: "Roboto-Regular", size: 12)!
+        lineChartView.leftAxis.labelFont = UIFont(name: "Roboto-Regular", size: 12)!
+        lineChartView.xAxis.labelFont = UIFont(name: "Roboto-Regular", size: 12)!
         
         //Chart for RH value
         
@@ -358,9 +366,9 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         RHl.textColor = UIColor.white
         RHl.horizontalAlignment = .left
         RHl.verticalAlignment = .top
-        //l.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11.f];
         RHl.orientation = .horizontal
         RHl.drawInside = true
+        
         
         let RHxAxis : XAxis = self.RHLineChartView.xAxis
         RHxAxis.labelTextColor = UIColor.black
@@ -384,6 +392,10 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         self.RHLineChartView.rightAxis.axisLineColor = UIColor.clear
         self.RHLineChartView.animate(xAxisDuration: 2.5)
 
+        //This will change the font of chart X Axis and Y Axis
+        RHLineChartView.legend.font = UIFont(name: "Roboto-Regular", size: 12)!
+        RHLineChartView.leftAxis.labelFont = UIFont(name: "Roboto-Regular", size: 12)!
+        RHLineChartView.xAxis.labelFont = UIFont(name: "Roboto-Regular", size: 12)!
         
         //If we are coming from FILE OPEN SCREEN
         if isFromDataDownload {
@@ -534,6 +546,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         if (byte7[2] == "1"){
             isData2 = false
             self.lblT1Text.text = "Unplug"
+            self.currentDataType.text = ""
         }
         else if Float(newT1 as String)! > MainCenteralManager.sharedInstance().getMaxValue(temperatureType: scale, deviceType: myDeviceType) {
             isData2 = false
@@ -548,15 +561,18 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             isData2 = true
             if scale == "C" {
                 
-                self.lblT1Text.text = "\(TOrWOrD) \( newT1 ) \u{00B0}\("C")"
+                self.lblT1Text.text = "\( newT1 ) \u{00B0}\("C")"
+                self.currentDataType.text = TOrWOrD
                 
             }else if scale == "F" {
   
-                self.lblT1Text.text =  "\(TOrWOrD) \( newT1 ) \u{00B0}\("F")"
+                self.lblT1Text.text =  "\( newT1 ) \u{00B0}\("F")"
+                self.currentDataType.text = TOrWOrD
                 
             }else if scale == "K" {
                 
                 self.lblT1Text.text =  "\( newT1 ) \("K")"
+                self.currentDataType.text = TOrWOrD
                 
             }
             
@@ -1168,8 +1184,6 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
                 mySavedDataTimer.invalidate()
             }
             
-            //N
-            
             self.saveDataBtn.isEnabled = false
             self.saveDataBtn.backgroundColor = UIColor.darkGray
 
@@ -1199,7 +1213,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             
             //N
             self.saveDataBtn.isEnabled = true
-            self.saveDataBtn.backgroundColor = UIColor(red: 0.027, green: 0.455, blue: 0.776, alpha: 1)
+            self.saveDataBtn.backgroundColor = UIColor(red: 0.027, green: 0.455, blue: 0.776, alpha: 0.75)
         }
     }
     

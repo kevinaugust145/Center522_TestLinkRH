@@ -314,7 +314,7 @@ class DataDownloadVC: UIViewController{
         let byte3 = MainCenteralManager.sharedInstance().converToBinary(x1: UInt8("\((myRecords[13] as AnyObject).value(forKey: "Int") as! String)")!)
         
         var myScale:String = "C"
-        if (MainCenteralManager.sharedInstance().data.cOrFOrK == "C")
+        /*if (MainCenteralManager.sharedInstance().data.cOrFOrK == "C")
         {
             myScale = "C"
             
@@ -325,7 +325,7 @@ class DataDownloadVC: UIViewController{
         else
         {
           myScale = "K"
-        }
+        }*/
         
         //Fetching date
         let myDate:String = "\((myRecords[0] as AnyObject).value(forKey: "Hexa") as! String)\((myRecords[1] as AnyObject).value(forKey: "Hexa") as! String)/\((myRecords[2] as AnyObject).value(forKey: "Hexa") as! String)/\((myRecords[3] as AnyObject).value(forKey: "Hexa") as! String)"
@@ -343,6 +343,28 @@ class DataDownloadVC: UIViewController{
         
         print("myRecords[9] = ", myRecords[9])
         
+        //00-F,01-C,10-K
+        
+        
+        let byte9 : UInt8 = UInt8("\((myRecords[9] as AnyObject).value(forKey: "Decimal") as! String)")!
+        let b9 = converToBinary(x1: byte9)
+        
+       /* let byte9 : String = (myRecords[9] as AnyObject).value(forKey: "Binary") as! String
+        let b9 = byte9.components(separatedBy: ",") as [String]
+        print("Byte 11 2 value = ",b9[2] )
+        print("Byte 11 3 value = ",b9[3])*/
+        
+        if b9[2] == "0" && b9[3] == "0" {
+            print("======================= Temp is Faherenheit =======================")
+             myScale = "F"
+        }else if b9[2] == "0" && b9[3] == "1" {
+            
+             print("======================= Temp is Celsius ==========================")
+             myScale = "C"
+        }else if b9[2] == "1" && b9[3] == "0" {
+             print("======================= Temp is Kelvin ===========================")
+             myScale = "K"
+        }
         var myDeviceType = ""
         
         myDeviceType = MainCenteralManager.sharedInstance().getDeviceType(value: UInt8("\((myRecords[9] as AnyObject).value(forKey: "Int") as! String)")!)
@@ -482,6 +504,14 @@ class DataDownloadVC: UIViewController{
     }
   }
   
+    func converToBinary(x1:UInt8) -> [String] {
+        var str = String(x1, radix: 2)
+        while str.characters.count % 8 != 0 {
+            str = "0" + str
+        }
+        return str.characters.map { String($0) }
+    }
+    
   @IBAction func btnCSVSavedClicked(_ sender: UIButton) {
     
     if txtCSVName.text == ""{

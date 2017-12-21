@@ -18,6 +18,7 @@ class viewAlertOutRangeViewController: UIViewController {
   
   var alertMsg : String = ""
   var alertTemperature : String = ""
+    var dataType : String = ""
   var player: AVAudioPlayer?
   
    var transitioner : CAVTransitioner
@@ -32,11 +33,11 @@ class viewAlertOutRangeViewController: UIViewController {
     self.transitioningDelegate = self.transitioner
   }
   
-  init(AlertMsg :String , AlertTemperature:String) {
+    init(AlertMsg :String , AlertTemperature:String , dataType:String) {
     self.transitioner = CAVTransitioner()
     self.alertMsg = AlertMsg
     self.alertTemperature = AlertTemperature
-    
+    self.dataType = dataType
     super.init(nibName: nil, bundle: nil)
     
     self.modalPresentationStyle = .custom
@@ -58,8 +59,15 @@ class viewAlertOutRangeViewController: UIViewController {
       self.alertTemperature = String(format: "%.1f",  Float(self.alertTemperature)!)
     }
 
+    if dataType == "RH" {
+        
+        self.viewAlertTemperature.text = self.alertTemperature + " %"
+        
+    }else{
+        
+        self.viewAlertTemperature.text = self.alertTemperature + " " + MainCenteralManager.sharedInstance().data.cOrFOrK
+    }
     
-    self.viewAlertTemperature.text = self.alertTemperature + MainCenteralManager.sharedInstance().data.cOrF
     
   }
   

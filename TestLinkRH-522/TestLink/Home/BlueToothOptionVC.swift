@@ -61,6 +61,8 @@ import CoreBluetooth
     var isFahSelected = false
     var isKelvin = false
     
+    var isChangingTemp = false
+    
   var temperatureRHAlertBool:Bool = true
   var temperatureT1AlertBool:Bool = true
   var temperatureT2AlertBool:Bool = true
@@ -83,6 +85,10 @@ import CoreBluetooth
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("deviceDisconnected"), object: nil)
         
         viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        
+        btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
     }
   
     override func viewDidLayoutSubviews() {
@@ -497,9 +503,43 @@ import CoreBluetooth
     
     @IBAction func switchedButtonAction(_ sender:UIButton){
        
+         isChangingTemp = true
         if sender.tag == 101 {
           
-            if !isCelSelected {
+            btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            USERDEFAULT.set(true, forKey: "isCelsius")
+            USERDEFAULT.set(false, forKey: "isFahrenheit")
+            USERDEFAULT.set(false, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            self.currentScale.text = "Current Scale : Celsius"
+            
+            if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+                
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        isChangingTemp = false
+                        MainCenteralManager.sharedInstance().CommandA()
+                        
+                    }
+                    
+                }
+                
+            }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    isChangingTemp = false
+                    MainCenteralManager.sharedInstance().CommandA()
+                    
+                }
+                
+            }
+            /*if !isCelSelected {
                 
                 btnCelsius.setImage(#imageLiteral(resourceName: "check"), for: .normal)
                 btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
@@ -511,11 +551,41 @@ import CoreBluetooth
                 self.currentScale.text = "Current Scale : Celsius"
                 SetData()
                 setSettingData()
-            }
+            }*/
             
         }else if sender.tag == 102 {
             
-            if !isFahSelected {
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            USERDEFAULT.set(false, forKey: "isCelsius")
+            USERDEFAULT.set(true, forKey: "isFahrenheit")
+            USERDEFAULT.set(false, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            
+            if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        isChangingTemp = false
+                        MainCenteralManager.sharedInstance().CommandA()
+                    }
+                    
+                }
+                
+                
+            }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    isChangingTemp = false
+                    MainCenteralManager.sharedInstance().CommandA()
+                }
+                
+            }
+            /*if !isFahSelected {
                 
                 btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
                 btnFahrenheit.setImage(#imageLiteral(resourceName: "check"), for: .normal)
@@ -527,11 +597,41 @@ import CoreBluetooth
                 self.currentScale.text = "Current Scale : Fahrenheit"
                 SetData()
                 setSettingData()
-            }
+            }*/
             
         }else if sender.tag == 103 {
             
-            if !isKelvin {
+            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+            btnKelvin.setImage(#imageLiteral(resourceName: "check"), for: .normal)
+            USERDEFAULT.set(false, forKey: "isCelsius")
+            USERDEFAULT.set(false, forKey: "isFahrenheit")
+            USERDEFAULT.set(true, forKey: "isKelvin")
+            USERDEFAULT.synchronize()
+            self.currentScale.text = "Current Scale : Kelvin"
+            
+            if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        isChangingTemp = false
+                        MainCenteralManager.sharedInstance().CommandA()
+                    }
+                }
+                
+            }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    isChangingTemp = false
+                    MainCenteralManager.sharedInstance().CommandA()
+                }
+                
+            }
+
+            /*if !isKelvin {
                 
                 btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
                 btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
@@ -543,7 +643,7 @@ import CoreBluetooth
                 self.currentScale.text = "Current Scale : Kelvin"
                 SetData()
                 setSettingData()
-            }
+            }*/
         }
     }
     
@@ -902,7 +1002,7 @@ import CoreBluetooth
                 
                 if RHIntValue! < minIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
               
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -916,7 +1016,7 @@ import CoreBluetooth
                 }
                 else if RHIntValue! > maxIntValue! {
                     if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -979,7 +1079,7 @@ import CoreBluetooth
                            minVal = celToKel(degree: minVal!)
                         }
                         
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
                         
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -1002,7 +1102,7 @@ import CoreBluetooth
                             maxVal = celToKel(degree: maxVal!)
                         }
                         
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -1064,7 +1164,7 @@ import CoreBluetooth
                             minVal = FehToKel(degree: minVal!)
                         }
                         
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -1086,7 +1186,7 @@ import CoreBluetooth
                             
                             maxVal = FehToKel(degree: maxVal!)
                         }
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)")
+                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
                        
                         if self.view.isDescendant(of: viewAlertOutRange.view) {
                             
@@ -1152,38 +1252,37 @@ import CoreBluetooth
   
   func SetData() {
     
-    
-    let deviceTempType = USERDEFAULT.string(forKey: "tempType")//USERDEFAULT.value(forKey: "tempType")
-    if  deviceTempType == MainCenteralManager.sharedInstance().data.cOrFOrK {
-        
-        
-    }else{
-        
-        USERDEFAULT.set(MainCenteralManager.sharedInstance().data.cOrFOrK, forKey: "tempType")
-        USERDEFAULT.synchronize()
-        
-        if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+    if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
             
             USERDEFAULT.set(true, forKey: "isCelsius")
             USERDEFAULT.set(false, forKey: "isKelvin")
             USERDEFAULT.set(false, forKey: "isFahrenheit")
             USERDEFAULT.synchronize()
             
-        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+    }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
             
             USERDEFAULT.set(true, forKey: "isFahrenheit")
             USERDEFAULT.set(false, forKey: "isCelsius")
             USERDEFAULT.set(false, forKey: "isKelvin")
             USERDEFAULT.synchronize()
             
-        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+    }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
             
             USERDEFAULT.set(true, forKey: "isKelvin")
             USERDEFAULT.set(false, forKey: "isFahrenheit")
             USERDEFAULT.set(false, forKey: "isCelsius")
             USERDEFAULT.synchronize()
-        }
+    }else {
+        
+        btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        isKelvin = false
+        isFahSelected = false
+        isCelSelected = false
+        self.currentScale.text = "Current Scale : -- "
     }
+    
     
     if USERDEFAULT.value(forKey: "isFahrenheit") as? Bool == true {
         
@@ -1227,7 +1326,7 @@ import CoreBluetooth
         //MainCenteralManager.sharedInstance().data.kel = "K"
         self.currentScale.text = "Current Scale : Kelvin"
     }
-    else{
+   /* else{
         
         if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
             
@@ -1266,18 +1365,9 @@ import CoreBluetooth
             isCelSelected = false
             self.currentScale.text = "Current Scale : Kelvin"
             
-        }else {
-            
-            btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-            btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-            btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
-            isKelvin = false
-            isFahSelected = false
-            isCelSelected = false
-            self.currentScale.text = "Current Scale : -- "
         }
     }
-    
+    */
 
     
     /*
@@ -1351,8 +1441,13 @@ import CoreBluetooth
 
 extension BlueToothOptionVC : MainCenteralManagerDelegate{
   func ReceiveCommand(){
-    self.CheckingTemperature()
-    self.SetData()
-    self.setSettingData()
+    
+    if !isChangingTemp {
+        
+        self.CheckingTemperature()
+        self.SetData()
+        self.setSettingData()
+    }
+    
   }
 }

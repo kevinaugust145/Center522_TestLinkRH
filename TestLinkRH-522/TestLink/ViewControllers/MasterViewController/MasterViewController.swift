@@ -130,11 +130,6 @@ import CoreBluetooth
         
         let item = self.BTPeripheral[indexPath.row]
         
-//        let startSessionVC = DetailViewController(nibName: "DetailViewController", bundle: nil)
-//        startSessionVC.peripheral = item
-//        startSessionVC.centralManager = self.myCenteralManager
-//        self.navigationController?.pushViewController(startSessionVC, animated: true)
-        
         let obj = BlueToothOptionVC()
         //let obj = DetailViewController()
       MainCenteralManager.sharedInstance().SetObject(centralManager: self.myCenteralManager!, peripheral: item)
@@ -143,25 +138,5 @@ import CoreBluetooth
         self.navigationController?.pushViewController(obj, animated: true)
     }
 
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "DetailIdentifier" {
-//            let item = self.BTPeripheral[sender as! Int]
-//            let targetVC = segue.destination as! DetailViewController
-//            targetVC.peripheral = item
-//            targetVC.centralManager = self.myCenteralManager
-//        }
-//    }
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

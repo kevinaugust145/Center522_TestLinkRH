@@ -136,6 +136,37 @@ class MainCenteralManager: NSObject{
         }
     }
     
+    
+ 
+    func CommandF(finished: () -> Void){
+        
+        timer.invalidate()
+        
+        //檢查裝置是否連線中
+        if !self.checkingStates() {
+            return
+        }
+
+        let commandCbyte : [UInt8] = [  0x02 , 0x46 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
+        let data2 = Data(bytes:commandCbyte)
+        
+        if self.btServices.count > 1 {
+            let charItems = self.btServices[1].characteristics
+            for characteristic in charItems {
+                if characteristic.properties.contains(CBCharacteristicProperties.writeWithoutResponse){
+                    //设置为  写入有反馈
+                    self.peripheral!.writeValue(data2, for: characteristic, type: .withResponse)
+                    //print("写入withoutResponse~")
+                    finished()
+                }else{
+                    print("CommandC 写入不可用~")
+                }
+            }
+            
+        }
+    }
+    
+    
     func SwitchCommandA() {
         timer.invalidate()
         self.managerType = .Temperature
@@ -512,12 +543,7 @@ extension MainCenteralManager : CBPeripheralDelegate{
             self.data.isCels = ""
             self.data.isKel = ""
             self.data.cOrFOrK = "F"
-            if USERDEFAULT.string(forKey: "tempType") == "" || USERDEFAULT.string(forKey: "tempType") == nil {
-                USERDEFAULT.set("F", forKey: "tempType")
-                USERDEFAULT.synchronize()
-            }
-            
-            
+   
         }else if (byte3[2] == "0" && byte3[3] == "1"){ //01 Celsius
             
             self.data.isCels = "C"
@@ -525,25 +551,14 @@ extension MainCenteralManager : CBPeripheralDelegate{
             self.data.isKel = ""
             self.data.cOrFOrK = "C"
             
-            if USERDEFAULT.string(forKey: "tempType") == "" || USERDEFAULT.string(forKey: "tempType") == nil {
-                USERDEFAULT.set("C", forKey: "tempType")
-                USERDEFAULT.synchronize()
-            }
-           
-            
         }else{ //10 Kelvin T(K) = 20°C + 273.15 = 293.15 K
             
             self.data.isKel = "K"
             self.data.isCels = ""
             self.data.isFeh = ""
             self.data.cOrFOrK = "K"
-            if USERDEFAULT.string(forKey: "tempType") == "" || USERDEFAULT.string(forKey: "tempType") == nil {
-                USERDEFAULT.set("K", forKey: "tempType")
-                USERDEFAULT.synchronize()
-            }
-            
+           
         }
-        
         
         self.settingBetryImg(betryStatus: byteArray[1])
         self.mainCenteralManagerDelegate?.ReceiveCommand()
@@ -644,6 +659,27 @@ extension MainCenteralManager : CBPeripheralDelegate{
                 default:
                     return 2500
                 }
+            }else if temperatureType == "K" {
+                
+                switch myDeviceType {
+                case "K":
+                    return 1645
+                case "J":
+                    return 1273
+                case "E":
+                    return 1023
+                case "T":
+                    return 673
+                case "N":
+                    return 1573
+                case "R":
+                    return 2040
+                case "S":
+                    return 2040
+                default:
+                    return 2500
+                }
+                
             }
             else {
                 switch myDeviceType {
@@ -667,7 +703,7 @@ extension MainCenteralManager : CBPeripheralDelegate{
             }
         }
         else {
-            if self.data.cOrF == "F" {
+            if self.data.cOrFOrK == "F" {
                 switch myDeviceType {
                 case "K":
                     self.data.deviceMaxValueRange = 2501
@@ -689,6 +725,33 @@ extension MainCenteralManager : CBPeripheralDelegate{
                     break
                 case "S":
                     self.data.deviceMaxValueRange = 3212
+                    break
+                default:
+                    self.data.deviceMaxValueRange = 2500
+                    break
+                }
+            }else if self.data.cOrFOrK == "K" {
+                switch myDeviceType {
+                case "K":
+                    self.data.deviceMaxValueRange = 1645
+                    break
+                case "J":
+                    self.data.deviceMaxValueRange = 1273
+                    break
+                case "E":
+                    self.data.deviceMaxValueRange = 1023
+                    break
+                case "T":
+                    self.data.deviceMaxValueRange = 673
+                    break
+                case "N":
+                    self.data.deviceMaxValueRange = 1573
+                    break
+                case "R":
+                    self.data.deviceMaxValueRange = 2040
+                    break
+                case "S":
+                    self.data.deviceMaxValueRange = 2040
                     break
                 default:
                     self.data.deviceMaxValueRange = 2500
@@ -760,6 +823,25 @@ extension MainCenteralManager : CBPeripheralDelegate{
                 default:
                     return -328
                 }
+            }else if temperatureType == "K" {
+                switch myDeviceType {
+                case "K":
+                    return 73
+                case "J":
+                    return 73
+                case "E":
+                    return 73
+                case "T":
+                    return 73
+                case "N":
+                    return 73
+                case "R":
+                    return 273
+                case "S":
+                    return 273
+                default:
+                    return 73
+                }
             }
             else {
                 switch myDeviceType {
@@ -784,7 +866,7 @@ extension MainCenteralManager : CBPeripheralDelegate{
         }
         else
         {
-            if self.data.cOrF == "F" {
+            if self.data.cOrFOrK == "F" {
                 switch myDeviceType {
                 case "K":
                     self.data.deviceMinValueRange = -328
@@ -809,6 +891,33 @@ extension MainCenteralManager : CBPeripheralDelegate{
                     break
                 default:
                     self.data.deviceMinValueRange = -328
+                    break
+                }
+            }else if self.data.cOrFOrK == "K" {
+                switch myDeviceType {
+                case "K":
+                    self.data.deviceMinValueRange = 73
+                    break
+                case "J":
+                    self.data.deviceMinValueRange = 73
+                    break
+                case "E":
+                    self.data.deviceMinValueRange = 73
+                    break
+                case "T":
+                    self.data.deviceMinValueRange = 73
+                    break
+                case "N":
+                    self.data.deviceMinValueRange = 73
+                    break
+                case "R":
+                    self.data.deviceMinValueRange = 273
+                    break
+                case "S":
+                    self.data.deviceMinValueRange = 273
+                    break
+                default:
+                    self.data.deviceMinValueRange = 73
                     break
                 }
             }

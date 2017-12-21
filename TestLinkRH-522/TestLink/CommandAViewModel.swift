@@ -28,7 +28,7 @@ class CommandAViewModel: NSObject {
     
     var cOrFOrK = ""
     
-    var cOrF = ""
+    //var cOrF = ""
     
     var deviceMaxValueRange:Float = 2500
     var deviceMinValueRange:Float = -200

@@ -18,9 +18,7 @@
 		153C71581EE0121F001C0BB3 /* on@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 153C71541EE0121F001C0BB3 /* on@3x.png */; };
 		155076FC1E40AED1007C673F /* customer.wav in Resources */ = {isa = PBXBuildFile; fileRef = 155076FB1E40AED1007C673F /* customer.wav */; };
 		155076FE1E40B310007C673F /* merchant.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 155076FD1E40AFA5007C673F /* merchant.m4a */; };
-		155D15211E3093EE00834491 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155D15201E3093EE00834491 /* DetailViewController.swift */; };
 		155D15231E3094DA00834491 /* BTServiceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155D15221E3094DA00834491 /* BTServiceInfo.swift */; };
-		155D15251E30975000834491 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 155D15241E30975000834491 /* DetailViewController.xib */; };
 		15C210571E3F72090032630A /* Battery1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C210531E3F72090032630A /* Battery1@2x.png */; };
 		15C210581E3F72090032630A /* Battery2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C210541E3F72090032630A /* Battery2@2x.png */; };
 		15C210591E3F72090032630A /* BatteryFull@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15C210551E3F72090032630A /* BatteryFull@2x.png */; };
@@ -62,12 +60,9 @@
 		21DFB23A1DFBCE0200B5D325 /* bluetooth@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2391DFBCE0100B5D325 /* bluetooth@3x.png */; };
 		21DFB23D1DFBD0E900B5D325 /* bluetooth@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB23B1DFBD0E900B5D325 /* bluetooth@1x.png */; };
 		21DFB23E1DFBD0E900B5D325 /* bluetooth@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB23C1DFBD0E900B5D325 /* bluetooth@2x.png */; };
-		21DFB2441DFBD38600B5D325 /* BlueToothOptionVC_1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2421DFBD38600B5D325 /* BlueToothOptionVC_1.xib */; };
 		21DFB2461DFBD45F00B5D325 /* setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2451DFBD45F00B5D325 /* setting@2x.png */; };
-		21DFB24C1DFBDAC100B5D325 /* RealTImeReadingVC_1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB24A1DFBDAC100B5D325 /* RealTImeReadingVC_1.xib */; };
 		21DFB24F1DFBDB7600B5D325 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB24E1DFBDB7600B5D325 /* back@2x.png */; };
 		21DFB2541DFBDC1800B5D325 /* clock@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2531DFBDC1800B5D325 /* clock@3x.png */; };
-		21DFB2591DFBDD3F00B5D325 /* RealTimeReadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2571DFBDD3F00B5D325 /* RealTimeReadingCell.xib */; };
 		21DFB25F1DFBE0D400B5D325 /* DataDownloadVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB25D1DFBE0D400B5D325 /* DataDownloadVC.xib */; };
 		21DFB2651DFBE51F00B5D325 /* FileOpenVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2631DFBE51F00B5D325 /* FileOpenVC.xib */; };
 		21DFB26A1DFBE9B800B5D325 /* saveDataToDevice.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21DFB2681DFBE9B800B5D325 /* saveDataToDevice.xib */; };
@@ -139,13 +134,10 @@
 		E3278A2A1E3C92370097359D /* InterfaceUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = E3278A231E3C92370097359D /* InterfaceUtility.m */; };
 		E3278A2B1E3C92370097359D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E3278A251E3C92370097359D /* Reachability.m */; };
 		E3278A2C1E3C92370097359D /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = E3278A271E3C92370097359D /* Utility.m */; };
-		E3C8FE391E371A0500DC5372 /* RealTImeReadingVC_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE381E371A0500DC5372 /* RealTImeReadingVC_1.swift */; };
-		E3C8FE3B1E371CAA00DC5372 /* RealTimeReadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE3A1E371CAA00DC5372 /* RealTimeReadingCell.swift */; };
 		E3C8FE3D1E374D4D00DC5372 /* RealTimeGraphVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE3C1E374D4D00DC5372 /* RealTimeGraphVC.swift */; };
 		E3C8FE3F1E374D7100DC5372 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE3E1E374D7100DC5372 /* TableViewCell.swift */; };
 		E3C8FE411E375E6600DC5372 /* FileOpenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE401E375E6600DC5372 /* FileOpenVC.swift */; };
 		E3C8FE431E3762AB00DC5372 /* DataDownloadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE421E3762AB00DC5372 /* DataDownloadVC.swift */; };
-		E3C8FE451E37664000DC5372 /* BlueToothOptionVC_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE441E37664000DC5372 /* BlueToothOptionVC_1.swift */; };
 		E3C8FE471E376BA400DC5372 /* saveDataToDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE461E376BA400DC5372 /* saveDataToDevice.swift */; };
 		E3C8FE491E376EA600DC5372 /* TexiViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE481E376EA600DC5372 /* TexiViewCell.swift */; };
 		E3C8FE4B1E376EF600DC5372 /* TextViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C8FE4A1E376EF600DC5372 /* TextViewVC.swift */; };
@@ -182,8 +174,6 @@
 		E55AF4061EF6C4280092232B /* RealTImeReadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55AF4041EF6C4280092232B /* RealTImeReadingVC.swift */; };
 		E55AF4071EF6C4280092232B /* RealTImeReadingVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E55AF4051EF6C4280092232B /* RealTImeReadingVC.xib */; };
 		E55AF4091EF6CCD10092232B /* CommandAViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55AF4081EF6CCD10092232B /* CommandAViewModel.swift */; };
-		E5CD4FD81EF82B3D000DE0D8 /* DataDownloadVC_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CD4FD61EF82B3D000DE0D8 /* DataDownloadVC_1.swift */; };
-		E5CD4FD91EF82B3D000DE0D8 /* DataDownloadVC_1.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5CD4FD71EF82B3D000DE0D8 /* DataDownloadVC_1.xib */; };
 		E5CD4FDC1EF95E79000DE0D8 /* CommandPViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CD4FDB1EF95E79000DE0D8 /* CommandPViewModel.swift */; };
 		E5D3F0E11EF5894E0059E6C1 /* MainCenteralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D3F0E01EF5894E0059E6C1 /* MainCenteralManager.swift */; };
 /* End PBXBuildFile section */
@@ -200,9 +190,7 @@
 		153C71541EE0121F001C0BB3 /* on@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "on@3x.png"; sourceTree = "<group>"; };
 		155076FB1E40AED1007C673F /* customer.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = customer.wav; sourceTree = "<group>"; };
 		155076FD1E40AFA5007C673F /* merchant.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = merchant.m4a; sourceTree = "<group>"; };
-		155D15201E3093EE00834491 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		155D15221E3094DA00834491 /* BTServiceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTServiceInfo.swift; sourceTree = "<group>"; };
-		155D15241E30975000834491 /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		159304E71EB8683E00E5130D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		15C210531E3F72090032630A /* Battery1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Battery1@2x.png"; sourceTree = "<group>"; };
 		15C210541E3F72090032630A /* Battery2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Battery2@2x.png"; sourceTree = "<group>"; };
@@ -250,12 +238,9 @@
 		21DFB2391DFBCE0100B5D325 /* bluetooth@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluetooth@3x.png"; sourceTree = "<group>"; };
 		21DFB23B1DFBD0E900B5D325 /* bluetooth@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluetooth@1x.png"; sourceTree = "<group>"; };
 		21DFB23C1DFBD0E900B5D325 /* bluetooth@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluetooth@2x.png"; sourceTree = "<group>"; };
-		21DFB2421DFBD38600B5D325 /* BlueToothOptionVC_1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BlueToothOptionVC_1.xib; path = Home/BlueToothOptionVC_1.xib; sourceTree = "<group>"; };
 		21DFB2451DFBD45F00B5D325 /* setting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting@2x.png"; sourceTree = "<group>"; };
-		21DFB24A1DFBDAC100B5D325 /* RealTImeReadingVC_1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RealTImeReadingVC_1.xib; path = ViewControllers/RealTimeReading/RealTImeReadingVC_1.xib; sourceTree = "<group>"; };
 		21DFB24E1DFBDB7600B5D325 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		21DFB2531DFBDC1800B5D325 /* clock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clock@3x.png"; sourceTree = "<group>"; };
-		21DFB2571DFBDD3F00B5D325 /* RealTimeReadingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RealTimeReadingCell.xib; path = ViewControllers/RealTimeReading/RealTimeReadingCell.xib; sourceTree = "<group>"; };
 		21DFB25D1DFBE0D400B5D325 /* DataDownloadVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DataDownloadVC.xib; path = ViewControllers/DataDownload/DataDownloadVC.xib; sourceTree = "<group>"; };
 		21DFB2631DFBE51F00B5D325 /* FileOpenVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FileOpenVC.xib; path = ViewControllers/FileOpen/FileOpenVC.xib; sourceTree = "<group>"; };
 		21DFB2681DFBE9B800B5D325 /* saveDataToDevice.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = saveDataToDevice.xib; path = ViewControllers/DataDownload/saveDataToDevice.xib; sourceTree = "<group>"; };
@@ -353,13 +338,10 @@
 		E3278A251E3C92370097359D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		E3278A261E3C92370097359D /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		E3278A271E3C92370097359D /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
-		E3C8FE381E371A0500DC5372 /* RealTImeReadingVC_1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RealTImeReadingVC_1.swift; path = ViewControllers/RealTimeReading/RealTImeReadingVC_1.swift; sourceTree = "<group>"; };
-		E3C8FE3A1E371CAA00DC5372 /* RealTimeReadingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RealTimeReadingCell.swift; path = ViewControllers/RealTimeReading/RealTimeReadingCell.swift; sourceTree = "<group>"; };
 		E3C8FE3C1E374D4D00DC5372 /* RealTimeGraphVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealTimeGraphVC.swift; sourceTree = "<group>"; };
 		E3C8FE3E1E374D7100DC5372 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		E3C8FE401E375E6600DC5372 /* FileOpenVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileOpenVC.swift; path = ViewControllers/FileOpen/FileOpenVC.swift; sourceTree = "<group>"; };
 		E3C8FE421E3762AB00DC5372 /* DataDownloadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataDownloadVC.swift; path = ViewControllers/DataDownload/DataDownloadVC.swift; sourceTree = "<group>"; };
-		E3C8FE441E37664000DC5372 /* BlueToothOptionVC_1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlueToothOptionVC_1.swift; sourceTree = "<group>"; };
 		E3C8FE461E376BA400DC5372 /* saveDataToDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = saveDataToDevice.swift; path = ViewControllers/DataDownload/saveDataToDevice.swift; sourceTree = "<group>"; };
 		E3C8FE481E376EA600DC5372 /* TexiViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TexiViewCell.swift; path = ViewControllers/DataDownload/TexiViewCell.swift; sourceTree = "<group>"; };
 		E3C8FE4A1E376EF600DC5372 /* TextViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextViewVC.swift; path = ViewControllers/DataDownload/TextViewVC.swift; sourceTree = "<group>"; };
@@ -405,8 +387,6 @@
 		E55AF4041EF6C4280092232B /* RealTImeReadingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RealTImeReadingVC.swift; path = ViewControllers/RealTimeReading/RealTImeReadingVC.swift; sourceTree = "<group>"; };
 		E55AF4051EF6C4280092232B /* RealTImeReadingVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RealTImeReadingVC.xib; path = ViewControllers/RealTimeReading/RealTImeReadingVC.xib; sourceTree = "<group>"; };
 		E55AF4081EF6CCD10092232B /* CommandAViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandAViewModel.swift; sourceTree = "<group>"; };
-		E5CD4FD61EF82B3D000DE0D8 /* DataDownloadVC_1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataDownloadVC_1.swift; path = ViewControllers/DataDownload/DataDownloadVC_1.swift; sourceTree = "<group>"; };
-		E5CD4FD71EF82B3D000DE0D8 /* DataDownloadVC_1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DataDownloadVC_1.xib; path = ViewControllers/DataDownload/DataDownloadVC_1.xib; sourceTree = "<group>"; };
 		E5CD4FDA1EF95A21000DE0D8 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E5CD4FDB1EF95E79000DE0D8 /* CommandPViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandPViewModel.swift; sourceTree = "<group>"; };
 		E5D3F0E01EF5894E0059E6C1 /* MainCenteralManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCenteralManager.swift; sourceTree = "<group>"; };
@@ -453,10 +433,8 @@
 			isa = PBXGroup;
 			children = (
 				155D15221E3094DA00834491 /* BTServiceInfo.swift */,
-				155D15201E3093EE00834491 /* DetailViewController.swift */,
 				15EF4A651E2F87480068FBDA /* MasterViewController.swift */,
 				15EF4A621E2F80300068FBDA /* MasterViewController.xib */,
-				155D15241E30975000834491 /* DetailViewController.xib */,
 			);
 			name = MasterViewController;
 			path = ViewControllers/MasterViewController;
@@ -581,8 +559,6 @@
 				E3C8FE5A1E377CDF00DC5372 /* HomeVC.h */,
 				E3C8FE5B1E377CDF00DC5372 /* HomeVC.m */,
 				21DFB2311DFBC95600B5D325 /* HomeVC.xib */,
-				E3C8FE441E37664000DC5372 /* BlueToothOptionVC_1.swift */,
-				21DFB2421DFBD38600B5D325 /* BlueToothOptionVC_1.xib */,
 				E554619F1EFFA74300025F24 /* viewAlertOutRangeViewController.swift */,
 				E55461A01EFFA74300025F24 /* viewAlertOutRangeViewController.xib */,
 				E52873961F0D261A00725227 /* CustomAlertViewTransitioner.swift */,
@@ -626,10 +602,6 @@
 			children = (
 				E55AF4041EF6C4280092232B /* RealTImeReadingVC.swift */,
 				E55AF4051EF6C4280092232B /* RealTImeReadingVC.xib */,
-				E3C8FE381E371A0500DC5372 /* RealTImeReadingVC_1.swift */,
-				21DFB24A1DFBDAC100B5D325 /* RealTImeReadingVC_1.xib */,
-				E3C8FE3A1E371CAA00DC5372 /* RealTimeReadingCell.swift */,
-				21DFB2571DFBDD3F00B5D325 /* RealTimeReadingCell.xib */,
 			);
 			name = RealTimeReading;
 			sourceTree = "<group>";
@@ -703,8 +675,6 @@
 		21DFB25A1DFBE0A800B5D325 /* DataDownload */ = {
 			isa = PBXGroup;
 			children = (
-				E5CD4FD61EF82B3D000DE0D8 /* DataDownloadVC_1.swift */,
-				E5CD4FD71EF82B3D000DE0D8 /* DataDownloadVC_1.xib */,
 				E3C8FE421E3762AB00DC5372 /* DataDownloadVC.swift */,
 				21DFB25D1DFBE0D400B5D325 /* DataDownloadVC.xib */,
 				E3C8FE461E376BA400DC5372 /* saveDataToDevice.swift */,
@@ -990,7 +960,6 @@
 				153C71561EE0121F001C0BB3 /* off@3x.png in Resources */,
 				E55461A21EFFA74300025F24 /* viewAlertOutRangeViewController.xib in Resources */,
 				2180187F1DFE787E000B940A /* Roboto-LightItalic.ttf in Resources */,
-				155D15251E30975000834491 /* DetailViewController.xib in Resources */,
 				151392AA1E49CF6100D7C7A3 /* share@2x.png in Resources */,
 				E3E82F721E151D1200070750 /* back@3x.png in Resources */,
 				21DFB28C1DFBF0E300B5D325 /* bluetooth white@2x.png in Resources */,
@@ -999,7 +968,6 @@
 				218018741DFE787E000B940A /* digital-7 (italic).ttf in Resources */,
 				218018791DFE787E000B940A /* Roboto-Black.ttf in Resources */,
 				44AF19D51E0D044B006B9462 /* alertBkg@2x.png in Resources */,
-				E5CD4FD91EF82B3D000DE0D8 /* DataDownloadVC_1.xib in Resources */,
 				15C210581E3F72090032630A /* Battery2@2x.png in Resources */,
 				E3E82FA31E15319A00070750 /* stop@3x.png in Resources */,
 				21DFB2951DFBF1D500B5D325 /* dd@2x.png in Resources */,
@@ -1052,7 +1020,6 @@
 				E3E82F911E152FEC00070750 /* TableViewCell.xib in Resources */,
 				21DFB2961DFBF1D500B5D325 /* dd@3x.png in Resources */,
 				21DFB28D1DFBF0E300B5D325 /* bluetooth white@3x.png in Resources */,
-				21DFB24C1DFBDAC100B5D325 /* RealTImeReadingVC_1.xib in Resources */,
 				21DFB2711DFBEF2900B5D325 /* Header.png in Resources */,
 				21DFB2331DFBC95600B5D325 /* HomeVC.xib in Resources */,
 				21DFB2991DFBF1D500B5D325 /* fo@3x.png in Resources */,
@@ -1068,7 +1035,6 @@
 				21DFB2941DFBF1D500B5D325 /* dd.png in Resources */,
 				21DFB2721DFBEF2900B5D325 /* Header@2x.png in Resources */,
 				21DFB2A41DFBF1DC00B5D325 /* gear@2x.png in Resources */,
-				21DFB2441DFBD38600B5D325 /* BlueToothOptionVC_1.xib in Resources */,
 				21DFB25F1DFBE0D400B5D325 /* DataDownloadVC.xib in Resources */,
 				E3E82F9B1E15319A00070750 /* record.png in Resources */,
 				2180187D1DFE787E000B940A /* Roboto-Italic.ttf in Resources */,
@@ -1087,7 +1053,6 @@
 				218018871DFE787E000B940A /* RobotoCondensed-Italic.ttf in Resources */,
 				15EF4A631E2F80300068FBDA /* MasterViewController.xib in Resources */,
 				21DFB2731DFBEF2900B5D325 /* Header@3x.png in Resources */,
-				21DFB2591DFBDD3F00B5D325 /* RealTimeReadingCell.xib in Resources */,
 				21DFB23D1DFBD0E900B5D325 /* bluetooth@1x.png in Resources */,
 				44AF19D41E0D044B006B9462 /* alertBkg.png in Resources */,
 				21DFB2751DFBEF2900B5D325 /* logo header@2x.png in Resources */,
@@ -1169,7 +1134,6 @@
 				E3E82F871E152F0700070750 /* UUBar.m in Sources */,
 				44AF19DE1E0D044B006B9462 /* MFi_DeviceListController.m in Sources */,
 				E3278A1B1E3C91A20097359D /* FileOpenTableVC.swift in Sources */,
-				E3C8FE451E37664000DC5372 /* BlueToothOptionVC_1.swift in Sources */,
 				44AF19DB1E0D044B006B9462 /* ISDataPath.m in Sources */,
 				E3C8FE4D1E37710600DC5372 /* SettingVC.swift in Sources */,
 				44AF19D81E0D044B006B9462 /* ISBLEDataPath.m in Sources */,
@@ -1182,14 +1146,12 @@
 				E3278A281E3C92370097359D /* AppUtility.m in Sources */,
 				E3C8FE4B1E376EF600DC5372 /* TextViewVC.swift in Sources */,
 				E3E82F881E152F0700070750 /* UUBarChart.m in Sources */,
-				155D15211E3093EE00834491 /* DetailViewController.swift in Sources */,
 				44AF19DD1E0D044B006B9462 /* ISSCTableAlertView.m in Sources */,
 				E55461A11EFFA74300025F24 /* viewAlertOutRangeViewController.swift in Sources */,
 				15EF4A611E2F7B8C0068FBDA /* FileController.swift in Sources */,
 				E3E82F891E152F0700070750 /* UUChart.m in Sources */,
 				15DF97501EC57DC000EF8A8B /* UITextView+Placeholder.m in Sources */,
 				E3278A181E3C51030097359D /* Constant_Swift.swift in Sources */,
-				E3C8FE391E371A0500DC5372 /* RealTImeReadingVC_1.swift in Sources */,
 				E3C8FE3F1E374D7100DC5372 /* TableViewCell.swift in Sources */,
 				44AF19E11E0D044B006B9462 /* MFi_SPPAboutViewController.m in Sources */,
 				44AF19DC1E0D044B006B9462 /* ISMFiDataPath.m in Sources */,
@@ -1201,7 +1163,6 @@
 				44AF19E91E0D044B006B9462 /* UIAlertView+BlockExtensions.m in Sources */,
 				E3278A2C1E3C92370097359D /* Utility.m in Sources */,
 				E3C8FE431E3762AB00DC5372 /* DataDownloadVC.swift in Sources */,
-				E3C8FE3B1E371CAA00DC5372 /* RealTimeReadingCell.swift in Sources */,
 				E3E82F8B1E152F0700070750 /* UUChartLabel.m in Sources */,
 				E5D3F0E11EF5894E0059E6C1 /* MainCenteralManager.swift in Sources */,
 				44AF19D71E0D044B006B9462 /* README.md in Sources */,
@@ -1214,7 +1175,6 @@
 				E3C8FE3D1E374D4D00DC5372 /* RealTimeGraphVC.swift in Sources */,
 				E55AF4091EF6CCD10092232B /* CommandAViewModel.swift in Sources */,
 				44AF19D91E0D044B006B9462 /* ISChatViewController.m in Sources */,
-				E5CD4FD81EF82B3D000DE0D8 /* DataDownloadVC_1.swift in Sources */,
 				E554619D1EFFA07400025F24 /* BlueToothOptionVC.swift in Sources */,
 				44AF19D01E0D044B006B9462 /* ISSCButton.m in Sources */,
 				44AF19DA1E0D044B006B9462 /* ISControlManager.m in Sources */,
