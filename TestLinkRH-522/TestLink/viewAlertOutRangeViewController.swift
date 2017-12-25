@@ -87,6 +87,7 @@ class viewAlertOutRangeViewController: UIViewController {
       try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
       try AVAudioSession.sharedInstance().setActive(true)
       
+      player?.numberOfLoops = -1
       player?.prepareToPlay()
       player?.play()
     } catch let error {

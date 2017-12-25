@@ -67,6 +67,17 @@ import CoreBluetooth
   var temperatureT1AlertBool:Bool = true
   var temperatureT2AlertBool:Bool = true
   
+    var RHTimer = Timer()
+    var RHCount = 0
+    var isRHAlarmActive = true
+    
+    var T1Timer = Timer()
+    var T1Count = 0
+    var isT1AlarmActive = true
+    
+    var T2Timer = Timer()
+    var T2Count = 0
+    var isT2AlarmActive = true
     
     var viewAlertOutRange = viewAlertOutRangeViewController()
     @IBOutlet var temperatureButton:UIButton!
@@ -522,9 +533,8 @@ import CoreBluetooth
                     
                     MainCenteralManager.sharedInstance().CommandF {
                         
-                        isChangingTemp = false
                         MainCenteralManager.sharedInstance().CommandA()
-                        
+                        isChangingTemp = false
                     }
                     
                 }
@@ -533,9 +543,8 @@ import CoreBluetooth
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
-                    
+                    isChangingTemp = false
                 }
                 
             }
@@ -568,20 +577,17 @@ import CoreBluetooth
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandF {
-                        
-                        isChangingTemp = false
+  
                         MainCenteralManager.sharedInstance().CommandA()
+                        isChangingTemp = false
                     }
-                    
                 }
-                
-                
             }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
+                     isChangingTemp = false
                 }
                 
             }
@@ -616,8 +622,8 @@ import CoreBluetooth
                     
                     MainCenteralManager.sharedInstance().CommandF {
                         
-                        isChangingTemp = false
                         MainCenteralManager.sharedInstance().CommandA()
+                        isChangingTemp = false
                     }
                 }
                 
@@ -625,8 +631,8 @@ import CoreBluetooth
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
+                    isChangingTemp = false
                 }
                 
             }
@@ -662,8 +668,6 @@ import CoreBluetooth
             
             lblMinMaxTemp.text = "Please enter value between 73.15 K to 1643.15 K."
         }
-       
-        
 
          if sender.tag == 21{
             if sender.isOn{
@@ -721,9 +725,7 @@ import CoreBluetooth
                 lblT2Unset.isHidden = false
 
             }
-            
         }
-
     }
     
     @IBAction func btnAlarmSetClicked(_ sender:UIButton){
@@ -785,6 +787,11 @@ import CoreBluetooth
                 }
                 else
                 {
+                    
+                    RHCount = 10
+                    isRHAlarmActive = false
+                    RHTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateRHCount), userInfo: nil, repeats: true)
+                    
                     USERDEFAULT.set(true, forKey: "isRH")
                     USERDEFAULT.synchronize()
                     
@@ -832,6 +839,10 @@ import CoreBluetooth
                     
                     if indexID == 22{
                         
+                        T1Count = 10
+                        isT1AlarmActive = false
+                        T1Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT1Count), userInfo: nil, repeats: true)
+                        
                         if isFahSelected {
                             minTemp = String((Float(minTemp)! - 32) / 1.8)
                             maxTemp = String((Float(maxTemp)! - 32) / 1.8)
@@ -864,6 +875,10 @@ import CoreBluetooth
                         }
                     }
                     else if indexID == 23{
+                        
+                        T2Count = 10
+                        isT2AlarmActive = false
+                        T2Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT2Count), userInfo: nil, repeats: true)
                         
                         if isCelSelected {
                   
@@ -983,231 +998,282 @@ import CoreBluetooth
     }
     
     
+    if isRHAlarmActive {
     
-    if let RH = USERDEFAULT.value(forKey: "isRH") as? Bool{
-
-        if  RH == true{
-            
-            var minVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "minValue") as? String
-            var maxVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "maxValue") as? String
-            
-            minVal = String(format: "%.1f",  Float(minVal!)!)
-            maxVal = String(format: "%.1f",  Float(maxVal!)!)
- 
-            let minIntValue = Float(minVal!)
-            let maxIntValue = Float(maxVal!)
-            let RHIntValue = Float(MainCenteralManager.sharedInstance().data.RHtemperature as String)
-            
-            if RHIntValue != nil {
-                
-                if RHIntValue! < minIntValue! {
-                    if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
-              
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                    
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                        }
-                        temperatureRHAlertBool = false
-                        print("Play sound")
-                    }
-                }
-                else if RHIntValue! > maxIntValue! {
-                    if temperatureRHAlertBool == true {
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
-                       
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                            
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                        }
-                        
-                        temperatureRHAlertBool = false
-                        print("Play sound")
-                    }
-                }
-                else{
-                    temperatureRHAlertBool = true
-                    print("Stop Playing")
-                }
-            }
-        }
-    }
-    
-    
-    if let t1 = USERDEFAULT.value(forKey: "isT1") as? Bool{
         
-        if  t1 == true{
-            var minVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "minValue") as? String
-            var maxVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "maxValue") as? String
+        if let RH = USERDEFAULT.value(forKey: "isRH") as? Bool{
             
-            /*if isFahrenheit {
+            if  RH == true{
                 
-                minVal = String((Float(minVal!)! * 1.8) + 32)
-                maxVal = String((Float(maxVal!)! * 1.8) + 32)
-            }else if isKelvin {
-                
-                minVal = String(Float(minVal!)! + 273.15)
-                maxVal = String(Float(maxVal!)! + 273.15)
-            }else{
+                var minVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "minValue") as? String
+                var maxVal = (rangeData.object(at: 0) as AnyObject).value(forKey: "maxValue") as? String
                 
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }*/
-            
-            minVal = String(format: "%.1f",  Float(minVal!)!)
-            maxVal = String(format: "%.1f",  Float(maxVal!)!)
-            
-            let minIntValue = Float(minVal!)
-            let maxIntValue = Float(maxVal!)
-            let t1IntValue = Float(MainCenteralManager.sharedInstance().data.temperatureT1 as String)
-            
-            if t1IntValue != nil {
+                let minIntValue = Float(minVal!)
+                let maxIntValue = Float(maxVal!)
+                let RHIntValue = Float(MainCenteralManager.sharedInstance().data.RHtemperature as String)
                 
-                if t1IntValue! < minIntValue! {
-                    if temperatureT1AlertBool == true {
-                        
-                        if isFahrenheit {
+                if RHIntValue != nil {
+                    
+                    if RHIntValue! < minIntValue! {
+                        if temperatureRHAlertBool == true {
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
                             
-                            minVal = celToFeh(degree: minVal!)
-                        }else if isKelvin {
-                            
-                           minVal = celToKel(degree: minVal!)
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                            }
+                            temperatureRHAlertBool = false
+                            print("Play sound")
                         }
-                        
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
-                        
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                           
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                        }
-                        temperatureT1AlertBool = false
-                        print("Play sound")
                     }
-                }
-                else if t1IntValue! > maxIntValue! {
-                    if temperatureT1AlertBool == true {
-                        
-                        if isFahrenheit {
+                    else if RHIntValue! > maxIntValue! {
+                        if temperatureRHAlertBool == true {
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
                             
-                            maxVal = celToFeh(degree: maxVal!)
-                        }else if isKelvin {
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                            }
                             
-                            maxVal = celToKel(degree: maxVal!)
+                            temperatureRHAlertBool = false
+                            print("Play sound")
                         }
-                        
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
-                       
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                           
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                        }
-                        
-                        temperatureT1AlertBool = false
-                        print("Play sound")
                     }
-                }
-                else{
-                    temperatureT1AlertBool = true
-                    print("Stop Playing")
+                    else{
+                        temperatureRHAlertBool = true
+                        print("Stop Playing")
+                    }
                 }
             }
         }
     }
     
     
-    
-    if let t2 = USERDEFAULT.value(forKey: "isT2") as? Bool{
-        if  t2 == true{
-            var minVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "minValue") as? String
-            var maxVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "maxValue") as? String
+    if isT1AlarmActive {
+        
+        
+        if let t1 = USERDEFAULT.value(forKey: "isT1") as? Bool{
             
-            /*if isFahrenheit {
+            if  t1 == true{
+                var minVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "minValue") as? String
+                var maxVal = (rangeData.object(at: 1) as AnyObject).value(forKey: "maxValue") as? String
                 
-                minVal = String((Float(minVal!)! * 1.8) + 32)
-                maxVal = String((Float(maxVal!)! * 1.8) + 32)
-            }else if isKelvin {
-                
-                minVal = String(Float(minVal!)! + 273.15)
-                maxVal = String(Float(maxVal!)! + 273.15)
-            }else{
+                /*if isFahrenheit {
+                 
+                 minVal = String((Float(minVal!)! * 1.8) + 32)
+                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
+                 }else if isKelvin {
+                 
+                 minVal = String(Float(minVal!)! + 273.15)
+                 maxVal = String(Float(maxVal!)! + 273.15)
+                 }else{
+                 
+                 minVal = String(format: "%.1f",  Float(minVal!)!)
+                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
+                 
+                 }*/
                 
                 minVal = String(format: "%.1f",  Float(minVal!)!)
                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
                 
-            }*/
-            minVal = String(format: "%.1f",  Float(minVal!)!)
-            maxVal = String(format: "%.1f",  Float(maxVal!)!)
-            
-            let minIntValue = Float(minVal!)
-            let maxIntValue = Float(maxVal!)
-            
-            let t2IntValue = Float(MainCenteralManager.sharedInstance().data.temperatureT2 as String)
-            
-            if t2IntValue != nil {
-                if t2IntValue! < minIntValue! {
-                    if temperatureT2AlertBool == true {
-                        
-                        if isCelsius {
+                let minIntValue = Float(minVal!)
+                let maxIntValue = Float(maxVal!)
+                let t1IntValue = Float(MainCenteralManager.sharedInstance().data.temperatureT1 as String)
+                
+                if t1IntValue != nil {
+                    
+                    if t1IntValue! < minIntValue! {
+                        if temperatureT1AlertBool == true {
                             
-                            minVal = FehToCel(degree: minVal!)
-                        }else if isKelvin {
+                            if isFahrenheit {
+                                
+                                minVal = celToFeh(degree: minVal!)
+                            }else if isKelvin {
+                                
+                                minVal = celToKel(degree: minVal!)
+                            }
                             
-                            minVal = FehToKel(degree: minVal!)
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
+                            
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                            }
+                            temperatureT1AlertBool = false
+                            print("Play sound")
                         }
-                        
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
-                       
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                            
-                        }
-                        temperatureT2AlertBool = false
-                        print("Play sound")
                     }
-                }
-                else if t2IntValue! > maxIntValue! {
-                    if temperatureT2AlertBool == true {
-                        
-                        if isCelsius {
+                    else if t1IntValue! > maxIntValue! {
+                        if temperatureT1AlertBool == true {
                             
-                            maxVal = FehToCel(degree: maxVal!)
-                        }else if isKelvin {
+                            if isFahrenheit {
+                                
+                                maxVal = celToFeh(degree: maxVal!)
+                            }else if isKelvin {
+                                
+                                maxVal = celToKel(degree: maxVal!)
+                            }
                             
-                            maxVal = FehToKel(degree: maxVal!)
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
+                            
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                            }
+                            
+                            temperatureT1AlertBool = false
+                            print("Play sound")
                         }
-                        viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
-                       
-                        if self.view.isDescendant(of: viewAlertOutRange.view) {
-                            
-                        } else {
-                            self.present(viewAlertOutRange, animated: false, completion: nil)
-                            
-                        }
-                        temperatureT2AlertBool = false
-                        print("Play sound")
                     }
-                }
-                else{
-                    temperatureT2AlertBool = true
-                    print("Stop Playing")
+                    else{
+                        temperatureT1AlertBool = true
+                        print("Stop Playing")
+                    }
                 }
             }
         }
     }
+    
+    
+    if isT2AlarmActive {
+        
+        
+        if let t2 = USERDEFAULT.value(forKey: "isT2") as? Bool{
+            if  t2 == true{
+                var minVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "minValue") as? String
+                var maxVal = (rangeData.object(at: 2) as AnyObject).value(forKey: "maxValue") as? String
+                
+                /*if isFahrenheit {
+                 
+                 minVal = String((Float(minVal!)! * 1.8) + 32)
+                 maxVal = String((Float(maxVal!)! * 1.8) + 32)
+                 }else if isKelvin {
+                 
+                 minVal = String(Float(minVal!)! + 273.15)
+                 maxVal = String(Float(maxVal!)! + 273.15)
+                 }else{
+                 
+                 minVal = String(format: "%.1f",  Float(minVal!)!)
+                 maxVal = String(format: "%.1f",  Float(maxVal!)!)
+                 
+                 }*/
+                minVal = String(format: "%.1f",  Float(minVal!)!)
+                maxVal = String(format: "%.1f",  Float(maxVal!)!)
+                
+                let minIntValue = Float(minVal!)
+                let maxIntValue = Float(maxVal!)
+                
+                let t2IntValue = Float(MainCenteralManager.sharedInstance().data.temperatureT2 as String)
+                
+                if t2IntValue != nil {
+                    if t2IntValue! < minIntValue! {
+                        if temperatureT2AlertBool == true {
+                            
+                            if isCelsius {
+                                
+                                minVal = FehToCel(degree: minVal!)
+                            }else if isKelvin {
+                                
+                                minVal = FehToKel(degree: minVal!)
+                            }
+                            
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
+                            
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                                
+                            }
+                            temperatureT2AlertBool = false
+                            print("Play sound")
+                        }
+                    }
+                    else if t2IntValue! > maxIntValue! {
+                        if temperatureT2AlertBool == true {
+                            
+                            if isCelsius {
+                                
+                                maxVal = FehToCel(degree: maxVal!)
+                            }else if isKelvin {
+                                
+                                maxVal = FehToKel(degree: maxVal!)
+                            }
+                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
+                            
+                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                
+                            } else {
+                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                                
+                            }
+                            temperatureT2AlertBool = false
+                            print("Play sound")
+                        }
+                    }
+                    else{
+                        temperatureT2AlertBool = true
+                        print("Stop Playing")
+                    }
+                }
+            }
+        }
+    }
+    
     
   }
   
+    @objc func updateRHCount()  {
+        
+        if(RHCount > 0)
+        {
+            isRHAlarmActive = false
+            RHCount -= 1
+            
+        } else {
+            
+            isRHAlarmActive = true
+            RHTimer.invalidate()
+        }
+    }
+    @objc func updateT1Count()  {
+        
+        if(T1Count > 0)
+        {
+            isT1AlarmActive = false
+            T1Count -= 1
+            
+        } else {
+            
+            isT1AlarmActive = true
+            T1Timer.invalidate()
+        }
+    }
+    @objc func updateT2Count()  {
+        
+        if(T2Count > 0)
+        {
+            isT2AlarmActive = false
+            T2Count -= 1
+            
+        } else {
+            
+            isT2AlarmActive = true
+            T2Timer.invalidate()
+        }
+    }
+    
     func celToFeh(degree : String) -> String {
         
         return String(format:"%.1f",(Float(degree)! * 1.8) + 32)

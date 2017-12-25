@@ -758,8 +758,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
+                    isChangingTemp = false
                     
                 }
                 
@@ -769,8 +769,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
             
             MainCenteralManager.sharedInstance().CommandF {
             
-                isChangingTemp = false
                 MainCenteralManager.sharedInstance().CommandA()
+                isChangingTemp = false
                 
             }
             
@@ -801,8 +801,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
+                    isChangingTemp = false
                 }
                
             }
@@ -812,8 +812,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
             
             MainCenteralManager.sharedInstance().CommandF {
                 
-                isChangingTemp = false
                 MainCenteralManager.sharedInstance().CommandA()
+                isChangingTemp = false
             }
             
         }
@@ -844,8 +844,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
-                    isChangingTemp = false
                     MainCenteralManager.sharedInstance().CommandA()
+                    isChangingTemp = false
                 }
             }
  
@@ -853,8 +853,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
             
             MainCenteralManager.sharedInstance().CommandF {
                 
-                isChangingTemp = false
                 MainCenteralManager.sharedInstance().CommandA()
+                isChangingTemp = false
             }
             
         }
