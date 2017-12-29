@@ -68,11 +68,18 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var lblT2Min: UILabel!
     @IBOutlet var lblT2Max: UILabel!
     
+    @IBOutlet var btnClickHere: UIButton!
     
     @IBOutlet var lblDataType: UILabel!
     
     @IBOutlet var nslcTopView: NSLayoutConstraint!
     @IBOutlet var topView: UIView!
+    
+    
+    @IBOutlet var viewProgress: UIView!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    
+    
     var rangeData = NSMutableArray()
   var rangeDict = NSMutableDictionary()
     
@@ -108,6 +115,8 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     super.viewDidLoad()
     
    
+    viewProgress.isHidden = true
+    
     viewAlarmTemp.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
     
     viewRHData.layer.shadowColor = UIColor(red: 226/255, green: 226/255, blue: 226/255, alpha: 1.0).cgColor
@@ -184,6 +193,15 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     //self.playSound()
     
     slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
+    
+    
+   /* let animatedImageView = UIImageView(frame: btnClickHere.bounds)
+    animatedImageView.animationImages = [UIImage(named: "1.gif")!, UIImage(named: "2.gif")!, UIImage(named: "3.gif")!, UIImage(named: "4.gif")!, UIImage(named: "5.gif")!, UIImage(named: "6.gif")!, UIImage(named: "7.gif")!, UIImage(named: "8.gif")!, UIImage(named: "9.gif")!]
+    animatedImageView.animationDuration = 1.0
+    animatedImageView.animationRepeatCount = 0
+    animatedImageView.startAnimating()
+    btnClickHere.addSubview(animatedImageView)*/
+
   }
   
     
@@ -751,29 +769,42 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         USERDEFAULT.set(false, forKey: "isKelvin")
         USERDEFAULT.synchronize()
         
+       
+        
         if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
             
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
             
-            MainCenteralManager.sharedInstance().CommandF {
+            DispatchQueue.main.async(execute: {() -> Void in
+              
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        MainCenteralManager.sharedInstance().CommandA()
+                        self.isChangingTemp = false
+                      
+                    }
+                }
+            })
+
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+            
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
+            
+            DispatchQueue.main.async(execute: {() -> Void in
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandA()
-                    isChangingTemp = false
+                    self.isChangingTemp = false
+                    
                     
                 }
-                
-            }
+            })
 
-        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
-            
-            MainCenteralManager.sharedInstance().CommandF {
-            
-                MainCenteralManager.sharedInstance().CommandA()
-                isChangingTemp = false
-                
-            }
-            
         }
 
         //SetData()
@@ -797,25 +828,39 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         
         if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
             
-            MainCenteralManager.sharedInstance().CommandF {
+            
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
+           
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        MainCenteralManager.sharedInstance().CommandA()
+                        self.isChangingTemp = false
+                        
+                    }
+                }
+            })
+    
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+            
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
+            
+            DispatchQueue.main.async(execute: {() -> Void in
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandA()
-                    isChangingTemp = false
+                    self.isChangingTemp = false
+                   
                 }
-               
-            }
-            
-            
-        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
-            
-            MainCenteralManager.sharedInstance().CommandF {
                 
-                MainCenteralManager.sharedInstance().CommandA()
-                isChangingTemp = false
-            }
-            
+            })
+           
         }
 
         //SetData()
@@ -840,23 +885,39 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
         
         if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
             
-            MainCenteralManager.sharedInstance().CommandF {
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
+            
+            DispatchQueue.main.async(execute: {() -> Void in
+                
+                MainCenteralManager.sharedInstance().CommandF {
+                    
+                    MainCenteralManager.sharedInstance().CommandF {
+                        
+                        MainCenteralManager.sharedInstance().CommandA()
+                        self.isChangingTemp = false
+                       
+                    }
+                }
+                
+            })
+            
+        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+            
+            viewProgress.isHidden = false
+            activityIndicator.startAnimating()
+            
+            DispatchQueue.main.async(execute: {() -> Void in
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandA()
-                    isChangingTemp = false
+                    self.isChangingTemp = false
+                   
                 }
-            }
- 
-        }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
-            
-            MainCenteralManager.sharedInstance().CommandF {
                 
-                MainCenteralManager.sharedInstance().CommandA()
-                isChangingTemp = false
-            }
-            
+            })
+ 
         }
 
         //SetData()
@@ -1612,6 +1673,10 @@ extension RealTImeReadingVC : MainCenteralManagerDelegate{
     self.CheckingTemperature()
     
     if !isSlidingStart && !isChangingTemp {
+        
+        self.viewProgress.isHidden = true
+        self.activityIndicator.stopAnimating()
+        
         self.SetData()
     }
   }

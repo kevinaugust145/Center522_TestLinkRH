@@ -335,6 +335,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         leftAxis.drawZeroLineEnabled = false
         leftAxis.granularityEnabled = false
         leftAxis.labelPosition = .outsideChart
+        leftAxis.setLabelCount(6, force: false) // It shows only 6 lines on graph with any values on left axis
         //leftAxis.labelFont.withSize(18)
         
         //leftAxis.valueFormatter = YAxisValueFormatter()
@@ -387,6 +388,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         RHleftAxis.drawZeroLineEnabled = false
         RHleftAxis.granularityEnabled = false
         RHleftAxis.labelPosition = .outsideChart
+        RHleftAxis.setLabelCount(6, force: false)
         
         self.RHLineChartView.rightAxis.labelTextColor = UIColor.clear
         self.RHLineChartView.rightAxis.axisLineColor = UIColor.clear
@@ -667,8 +669,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             
             self.RHLineChartView.xAxis.axisMaximum = Double(xAxisCount)
             self.RHLineChartView.setVisibleXRangeMaximum(18)
-            self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left)
-            
+            //self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left) It will set max number of line in Y range axis
             //self.lineChartView.setVisibleYRangeMinimum(0, axis: .left)
             
             if xAxisCount > 0 {
@@ -737,7 +738,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             
             self.lineChartView.xAxis.axisMaximum = Double(xAxisCount)
             self.lineChartView.setVisibleXRangeMaximum(18)
-            self.lineChartView.setVisibleYRangeMaximum(10, axis: .left)
+            //self.lineChartView.setVisibleYRangeMaximum(10, axis: .left)
             
             //self.lineChartView.setVisibleYRangeMinimum(0, axis: .left)
             
@@ -777,7 +778,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         self.RHLineChartView.xAxis.axisMaximum = Double(xAxisCount)
         self.RHLineChartView.setVisibleXRangeMaximum(18)
-        self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left)
+        //self.RHLineChartView.setVisibleYRangeMaximum(10, axis: .left)
         
         if xAxisCount > 0 {
             self.RHLineChartView.moveViewToX(Double(xAxisCount - 1))
@@ -820,7 +821,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         
         self.lineChartView.xAxis.axisMaximum = Double(xAxisCount)
         self.lineChartView.setVisibleXRangeMaximum(18)
-        self.lineChartView.setVisibleYRangeMaximum(10, axis: .left)
+        //self.lineChartView.setVisibleYRangeMaximum(10, axis: .left)
   
         if xAxisCount > 0 {
             self.lineChartView.moveViewToX(Double(xAxisCount - 1))
@@ -1558,11 +1559,11 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             var stringToWrite = String()
             stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
             for i in 0..<myData.count {
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t1") as! String),"
-                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t2") as! String),"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String)   ,"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String)   ,"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String)   ,"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t1") as! String)   ,"
+                stringToWrite += "\((myData[i] as AnyObject).value(forKey: "t2") as! String)   ,"
                 stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
             }
             //Moved this stuff out of the loop so that you write the complete string once and only once.

@@ -215,11 +215,11 @@ class DataDownloadVC: UIViewController{
     stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
     
     for i in 0..<myData.count {
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String),"
-      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String),"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String)   ,"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String)   ,"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String)   ,"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String)   ,"
+      stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String)   ,"
       stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
     }
     
@@ -589,11 +589,11 @@ class DataDownloadVC: UIViewController{
       stringToWrite += "Date,Time,RH%,T1, T2, Scale\n"
       
       for i in 0..<myData.count {
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String),"
-        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String),"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "date") as! String)   ,"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "time") as! String)   ,"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "RH") as! String)   ,"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T1") as! String)   ,"
+        stringToWrite += "\((myData[i] as AnyObject).value(forKey: "T2") as! String)   ,"
         stringToWrite += "\((myData[i] as AnyObject).value(forKey: "scale") as! String)\n"
       }
       

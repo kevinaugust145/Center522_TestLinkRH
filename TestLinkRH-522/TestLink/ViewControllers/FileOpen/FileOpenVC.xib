@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,14 +24,14 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHT-2u-SOZ">
-                    <rect key="frame" x="0.0" y="24" width="375" height="64"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Header" translatesAutoresizingMaskIntoConstraints="NO" id="pXy-Ch-778">
-                            <rect key="frame" x="0.0" y="-25" width="375" height="89"/>
+                            <rect key="frame" x="0.0" y="-25" width="320" height="89"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Gh-9J-c27">
                             <rect key="frame" x="8" y="24" width="30" height="30"/>
@@ -55,7 +55,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j6C-4T-4md">
-                            <rect key="frame" x="337" y="24" width="25" height="25"/>
+                            <rect key="frame" x="282" y="24" width="25" height="25"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="25" id="hkQ-vN-0gR"/>
                                 <constraint firstAttribute="height" constant="25" id="sge-aF-RBp"/>
@@ -82,7 +82,7 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="eoS-4o-Es6">
-                    <rect key="frame" x="0.0" y="88" width="375" height="615"/>
+                    <rect key="frame" x="0.0" y="64" width="320" height="429"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="B2n-L8-ac6"/>
@@ -90,14 +90,14 @@
                     </connections>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="anR-Pl-cU9">
-                    <rect key="frame" x="0.0" y="718" width="375" height="60"/>
+                    <rect key="frame" x="0.0" y="508" width="320" height="60"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="17o-G6-tJG"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8e-6C-ZqX">
-                    <rect key="frame" x="137.66666666666666" y="734" width="100" height="28"/>
+                    <rect key="frame" x="110" y="524" width="100" height="28"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="hEk-Tk-0lx"/>
@@ -112,7 +112,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y27-xf-Dqz">
-                    <rect key="frame" x="237.66666666666663" y="734" width="100" height="28"/>
+                    <rect key="frame" x="210" y="524" width="100" height="28"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="06N-eO-kwX"/>
@@ -127,7 +127,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K0B-dh-LIX">
-                    <rect key="frame" x="37.666666666666657" y="734" width="100" height="28"/>
+                    <rect key="frame" x="10" y="524" width="100" height="28"/>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="28" id="OBj-We-57r"/>
@@ -142,7 +142,7 @@
                     </connections>
                 </button>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No CSV Files" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ob-Yn-GjQ">
-                    <rect key="frame" x="127.66666666666669" y="395.66666666666669" width="120" height="21"/>
+                    <rect key="frame" x="100" y="273.5" width="120" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="120" id="aUY-Fe-qFw"/>
                         <constraint firstAttribute="height" constant="21" id="kPT-F1-b9x"/>
@@ -179,6 +179,6 @@
     <resources>
         <image name="Header" width="720" height="100"/>
         <image name="back.png" width="20" height="20"/>
-        <image name="share.png" width="48" height="48"/>
+        <image name="share.png" width="50" height="50"/>
     </resources>
 </document>

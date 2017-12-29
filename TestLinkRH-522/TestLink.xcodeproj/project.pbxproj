@@ -924,7 +924,7 @@
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = ES9GRU2G45;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1320,9 +1320,9 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Suchit Patel (Q3T3EMEA33)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ES9GRU2G45;
 				INFOPLIST_FILE = TestLink/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1332,8 +1332,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.mores.centertek.testlinkrh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "cf26d98c-b824-4311-b062-843876322a7c";
+				PROVISIONING_PROFILE_SPECIFIER = TestlinkRH_Development;
 				SWIFT_OBJC_BRIDGING_HEADER = "TestLink/TestLink-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -1352,10 +1352,10 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Mores Technology Co., LTD. (ES9GRU2G45)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ES9GRU2G45;
 				INFOPLIST_FILE = TestLink/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1365,8 +1365,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.com.mores.centertek.testlinkrh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "e8fe1cd2-02c6-40d0-8eba-d67dbc0fb996";
+				PROVISIONING_PROFILE_SPECIFIER = TestlinkRH_Distribution;
 				SWIFT_OBJC_BRIDGING_HEADER = "TestLink/TestLink-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
