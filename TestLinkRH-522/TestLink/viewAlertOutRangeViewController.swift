@@ -68,7 +68,6 @@ class viewAlertOutRangeViewController: UIViewController {
         self.viewAlertTemperature.text = self.alertTemperature + " " + MainCenteralManager.sharedInstance().data.cOrFOrK
     }
     
-    
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -105,8 +104,10 @@ class viewAlertOutRangeViewController: UIViewController {
 //    viewAlertOutRange.view.removeFromSuperview()
     
     self.stopSound()
-    self.dismiss(animated: false, completion: nil)
+    //self.dismiss(animated: false, completion: nil)
+    self.navigationController?.popViewController(animated: false)
   }
   
+    
   
 }

@@ -206,7 +206,7 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     cell?.selectedBackgroundView = bgColorView
     
     //cell?.accessoryType = .checkmark
-    
+    cell?.accessoryType = .none
     return cell!
   }
   
@@ -306,6 +306,8 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
       showAlert(Appname, title: "Please Select CSV File")
     }
     else{
+    
+       
       self.readCSVData(fileName: csvFilename, goingToGraph: false)
       
     }
@@ -327,6 +329,7 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
       showAlert(Appname, title: "Please Select CSV File")
     }
     else{
+         print(csvFilename)
       self.removeCSV(fileName: csvFilename)
     }
   }
@@ -335,6 +338,8 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
   
   func getCSVFilesFromDocumentDirectory(){
     
+    fileData.removeAllObjects()
+    descriptionData.removeAllObjects()
     // Get the document directory url
     let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     

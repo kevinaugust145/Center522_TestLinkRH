@@ -44,10 +44,12 @@ import CoreBluetooth
     
     @IBOutlet var viewAlarmTemp: UIView!
     
+    @IBOutlet var lblAlarmPopUpTitle: UILabel!
     @IBOutlet var lblMinMaxTemp :UILabel!
     @IBOutlet var txtMinTemp :UITextField!
     @IBOutlet var txtMaxTemp :UITextField!
     
+    @IBOutlet var viewBGAlarmTemp: UIView!
     @IBOutlet var nslcTopView: NSLayoutConstraint!
     @IBOutlet var topView: UIView!
     var indexID:Int!
@@ -79,7 +81,28 @@ import CoreBluetooth
     var T2Count = 0
     var isT2AlarmActive = true
     
-    var viewAlertOutRange = viewAlertOutRangeViewController()
+    var arrViews : [Int] = []
+    
+    var isRHAlarmPlaying : Bool = false
+    var isT1AlarmPlaying : Bool = false
+    var isT2AlarmPlaying : Bool = false
+    
+    var objAlertView : AlertOutOfRangeView!
+    var objAlertViewT1 : AlertOutOfRangeViewT1!
+    var objAlertViewT2 : AlertOutOfRangeViewT2!
+    
+    var isViewDisappear : Bool = false
+    
+    var isRHMinActive : Bool = false
+    var isRHMaxActive : Bool = false
+    var isT1MinActive : Bool = false
+    var isT1MaxActive : Bool = false
+    var isT2MinActive : Bool = false
+    var isT2MaxActive : Bool = false
+    
+    
+    //var viewAlertOutRange = viewAlertOutRangeViewController() // This is global alert view for showing high/low temp alerts. This is now not used as we need to show all alerts of alarm. Also this is viewcontroller which was presenting modally. So we can not present same view controller multiple times.
+    
     @IBOutlet var temperatureButton:UIButton!
     
     override func viewDidLoad() {
@@ -100,16 +123,75 @@ import CoreBluetooth
         btnFahrenheit.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
         btnCelsius.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
         btnKelvin.setImage(#imageLiteral(resourceName: "uncheck"), for: .normal)
+        
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+        let minusButton = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(toggleMinus))
+        toolbar.items = [minusButton]
+        txtMaxTemp.inputAccessoryView = toolbar
+        
+        let toolbar1 = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: 44))
+        let minusButton1 = UIBarButtonItem(title: "-", style: .plain, target: self, action: #selector(toggleMinus1))
+        toolbar1.items = [minusButton1]
+        txtMinTemp.inputAccessoryView = toolbar1
+        
+        let tapOnAlramView = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
+        self.viewBGAlarmTemp.addGestureRecognizer(tapOnAlramView)
     }
   
+    
+    @objc func toggleMinus(){
+        
+        // Get text from text field
+        if var text = txtMaxTemp.text , text.isEmpty == false{
+            
+            // Toggle
+            if text.hasPrefix("-") {
+                text = text.replacingOccurrences(of: "-", with: "")
+            }
+            else
+            {
+                text = "-\(text)"
+            }
+            
+            // Set text in text field
+            txtMaxTemp.text = text
+            
+        }
+    }
+    @objc func toggleMinus1(){
+        
+        // Get text from text field
+        if var text = txtMinTemp.text , text.isEmpty == false{
+            
+            // Toggle
+            if text.hasPrefix("-") {
+                text = text.replacingOccurrences(of: "-", with: "")
+            }
+            else
+            {
+                text = "-\(text)"
+            }
+            
+            // Set text in text field
+            txtMinTemp.text = text
+            
+        }
+    }
+    
+    @objc func closeKeyboard()  {
+        self.viewAlarmTemp.endEditing(true)
+    }
     override func viewDidLayoutSubviews() {
         
         Utility.set_TopLayout_VesionRelated(nslcTopView, topView, self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-       MainCenteralManager.sharedInstance().mainCenteralManagerDelegate = self
+        
+      super.viewWillAppear(true)
+      isViewDisappear = false
+      MainCenteralManager.sharedInstance().mainCenteralManagerDelegate = self
+        
       self.settingDetails(connectedDeviceName: MainCenteralManager.sharedInstance().peripheral == nil ? "" : MainCenteralManager.sharedInstance().peripheral!.name! )
         if USERDEFAULT.value(forKey: "temperatureData") != nil
         {
@@ -161,6 +243,7 @@ import CoreBluetooth
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        isViewDisappear = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -334,13 +417,25 @@ import CoreBluetooth
             else{
                 var maxTemp:String = "\((temperatureData.object(at: 2) as AnyObject).value(forKey: "maxValue") as! String)"
                 
+                var val = ""
+                
                 if isCelsius {
-                    maxTemp = String(format: "%.1f", (Float(maxTemp)! - 32) / 1.8)
+                    
+                    val = ((Float(maxTemp)! - 32) / 1.8) >= 600 ? String(format: "%.1f", floor((Float(maxTemp)! - 32) / 1.8)) : String(format: "%.1f", (Float(maxTemp)! - 32) / 1.8)
+                    
+                    maxTemp = val
+                    //maxTemp = String(format: "%.1f", (Float(maxTemp)! - 32) / 1.8)
                 }else if isKelvin {
                     maxTemp = String(format: "%.1f", (Float(maxTemp)! + 459.67) * (5/9))
+                    val = maxTemp
+                }else{
+                    
+                    val = Float(maxTemp)! >= 1000 ? String(format: "%.1f", floor(Float(maxTemp)!)) :
+                        String(format: "%.1f", Float(maxTemp)!)
                 }
-                maxTemp = String(format: "%.1f",  Float(maxTemp)!)
-                lblT2Max.text = "MAX \(maxTemp)"
+                
+                //maxTemp = String(format: "%.1f",  Float(maxTemp)!)
+                lblT2Max.text = "MAX \(val)"
             }
             
         }
@@ -656,7 +751,7 @@ import CoreBluetooth
     @IBAction func switched(_ sender:UISwitch){
         
         
-        if isCelSelected {
+        /*if isCelSelected {
             
             lblMinMaxTemp.text = "Please enter value between -200 C to 1370 C."
             
@@ -667,12 +762,15 @@ import CoreBluetooth
         }else if isKelvin {
             
             lblMinMaxTemp.text = "Please enter value between 73.15 K to 1643.15 K."
-        }
+        }*/
 
          if sender.tag == 21{
             if sender.isOn{
                 
-                lblMinMaxTemp.text = "Please enter value between 0 to 100."
+                txtMaxTemp.placeholder = "Max RH"
+                txtMinTemp.placeholder = "Min RH"
+                lblAlarmPopUpTitle.text = "Set Alarm RH"
+                lblMinMaxTemp.text = "Please enter value between 0 % to 100 %."
                 indexID = sender.tag
                 txtMinTemp.text = ""
                 txtMaxTemp.text = ""
@@ -692,6 +790,22 @@ import CoreBluetooth
         else if sender.tag == 22{
             if sender.isOn{
                 
+                let minT1Temp = MainCenteralManager.sharedInstance().getT1MinValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK)
+                let maxT1Temp = MainCenteralManager.sharedInstance().getT1MaxValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK)
+                
+                let temp = MainCenteralManager.sharedInstance().data.cOrFOrK
+                if temp == "K" {
+                    
+                    lblMinMaxTemp.text = "Please enter value between " + String(minT1Temp) + " " + temp + " to " + String(maxT1Temp) + " " + temp + "."
+                    
+                }else{
+                    
+                    lblMinMaxTemp.text = "Please enter value between " + String(minT1Temp) + " °" + temp + " to " + String(maxT1Temp) + " °" + temp + "."
+                }
+                
+                txtMaxTemp.placeholder = "Max Temp"
+                txtMinTemp.placeholder = "Min Temp"
+                lblAlarmPopUpTitle.text = "Set Alarm Temp T1"
                 indexID = sender.tag
                 txtMinTemp.text = ""
                 txtMaxTemp.text = ""
@@ -711,6 +825,23 @@ import CoreBluetooth
         }
         else if sender.tag == 23{
             if sender.isOn{
+                
+                let minT2Temp = MainCenteralManager.sharedInstance().getMinValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK, deviceType: MainCenteralManager.sharedInstance().data.DeviceType)
+                let maxT2Temp = MainCenteralManager.sharedInstance().getMaxValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK, deviceType: MainCenteralManager.sharedInstance().data.DeviceType)
+                
+                let temp = MainCenteralManager.sharedInstance().data.cOrFOrK
+                if temp == "K" {
+                    
+                    lblMinMaxTemp.text = "Please enter value between " + String(minT2Temp) + " " + temp + " to " + String(maxT2Temp) + " " + temp + "."
+                    
+                }else{
+                    
+                    lblMinMaxTemp.text = "Please enter value between " + String(minT2Temp) + " °" + temp + " to " + String(maxT2Temp) + " °" + temp + "."
+                }
+                
+                txtMaxTemp.placeholder = "Max Temp"
+                txtMinTemp.placeholder = "Min Temp"
+                lblAlarmPopUpTitle.text = "Set Alarm Temp T2"
                 indexID = sender.tag
                 txtMinTemp.text = ""
                 txtMaxTemp.text = ""
@@ -743,30 +874,8 @@ import CoreBluetooth
             var maxTemp:String = txtMaxTemp.text!
         
 
-            var alertMsg = "Please enter value between -200 C to 1370 C."
-           /* var min : Float = 0
-            var max : Float = 0
-            
-            if isCelSelected {
-                
-                alertMsg = "Please enter value between -200 C to 1370 C."
-                max = -200
-                min = 1370
-                
-            }else if isFahSelected {
-                
-                alertMsg = "Please enter value between -328 F to 2498 F."
-                max = -328
-                min = 2498
-                
-
-            }else if isKelvin {
-                
-                alertMsg = "Please enter value between -73.15 K to 1643.15 K."
-                max = -73.15
-                min = 1643.15
-            }
-            */
+            var alertMsg = ""
+           
             
             if indexID == 21{
                 
@@ -788,9 +897,9 @@ import CoreBluetooth
                 else
                 {
                     
-                    RHCount = 10
-                    isRHAlarmActive = false
-                    RHTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateRHCount), userInfo: nil, repeats: true)
+                    //RHCount = 10
+                    isRHAlarmActive = true
+                    //RHTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateRHCount), userInfo: nil, repeats: true)
                     
                     USERDEFAULT.set(true, forKey: "isRH")
                     USERDEFAULT.synchronize()
@@ -821,17 +930,41 @@ import CoreBluetooth
             }
             else{
                 
+                var maxRangeTemp : Float = 0
+                var minRangeTemp : Float = 0
+                
+                if indexID == 22 {
+                    
+                    minRangeTemp = MainCenteralManager.sharedInstance().getT1MinValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK)
+                    maxRangeTemp = MainCenteralManager.sharedInstance().getT1MaxValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK)
+                    
+                }else if indexID == 23 {
+                    
+                    minRangeTemp = MainCenteralManager.sharedInstance().getMinValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK, deviceType: MainCenteralManager.sharedInstance().data.DeviceType)
+                    maxRangeTemp = MainCenteralManager.sharedInstance().getMaxValue(temperatureType: MainCenteralManager.sharedInstance().data.cOrFOrK, deviceType: MainCenteralManager.sharedInstance().data.DeviceType)
+                }
+                
+                let temp = MainCenteralManager.sharedInstance().data.cOrFOrK
+                if temp == "K" {
+                    
+                    alertMsg = "Please enter value between " + String(minRangeTemp) + " " + temp + " to " + String(maxRangeTemp) + " " + temp + "."
+                    
+                }else{
+                    
+                    alertMsg = "Please enter value between " + String(minRangeTemp) + " °" + temp + " to " + String(maxRangeTemp) + " °" + temp + "."
+                }
+                
                 //Please enter value between -200 C to 1370 C.
-                if Float(minTemp)! < -200 {
+                if Float(minTemp)! < minRangeTemp {
                     showAlert(Appname, title: alertMsg)
                     return
                 }
-                else if Float(maxTemp)! > 1370 {
+                else if Float(maxTemp)! > maxRangeTemp {
                     showAlert(Appname, title: alertMsg)
                     return
                 }
                 else if Float(minTemp)! > Float(maxTemp)! {
-                    showAlert(Appname, title: alertMsg)
+                    showAlert(Appname, title: "Minimum value should be less than Maximun value.")
                     return
                 }
                 else
@@ -839,9 +972,9 @@ import CoreBluetooth
                     
                     if indexID == 22{
                         
-                        T1Count = 10
-                        isT1AlarmActive = false
-                        T1Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT1Count), userInfo: nil, repeats: true)
+                        //T1Count = 10
+                        isT1AlarmActive = true
+                        //T1Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT1Count), userInfo: nil, repeats: true)
                         
                         if isFahSelected {
                             minTemp = String((Float(minTemp)! - 32) / 1.8)
@@ -876,9 +1009,9 @@ import CoreBluetooth
                     }
                     else if indexID == 23{
                         
-                        T2Count = 10
-                        isT2AlarmActive = false
-                        T2Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT2Count), userInfo: nil, repeats: true)
+                        //T2Count = 10
+                        isT2AlarmActive = true
+                        //T2Timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateT2Count), userInfo: nil, repeats: true)
                         
                         if isCelSelected {
                   
@@ -1017,38 +1150,66 @@ import CoreBluetooth
                 
                 if RHIntValue != nil {
                     
+                    if RHIntValue! > minIntValue! {
+                        isRHMinActive = true
+                    }
+                    if RHIntValue! < maxIntValue! {
+                        isRHMaxActive = true
+                    }
+                    
                     if RHIntValue! < minIntValue! {
-                        if temperatureRHAlertBool == true {
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
+                        
+                        if isRHMinActive {
                             
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                            if temperatureRHAlertBool == true {
                                 
-                            } else {
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 }*/
                                 
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                                isRHAlarmPlaying = true
+                                self.addAlertOutOfRange(AlertMsg: "Alert value reached below", AlertTemperature: "RH : \(minVal!)",dataType: "RH")
+                                temperatureRHAlertBool = false
+                                print("Play sound")
                             }
-                            temperatureRHAlertBool = false
-                            print("Play sound")
                         }
+                        
                     }
                     else if RHIntValue! > maxIntValue! {
-                        if temperatureRHAlertBool == true {
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
+                        
+                        if isRHMaxActive {
                             
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
+                            if temperatureRHAlertBool == true {
                                 
-                            } else {
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 }*/
                                 
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
+                                isRHAlarmPlaying = true
+                                self.addAlertOutOfRange(AlertMsg: "Alert value reached above", AlertTemperature: "RH : \(maxVal!)",dataType: "RH")
+                                temperatureRHAlertBool = false
+                                print("Play sound")
                             }
                             
-                            temperatureRHAlertBool = false
-                            print("Play sound")
                         }
                     }
                     else{
-                        temperatureRHAlertBool = true
-                        print("Stop Playing")
+                        
+                        if !isRHAlarmPlaying {
+                            
+                            temperatureRHAlertBool = true
+                            print("Stop Playing")
+                        }
                     }
                 }
             }
@@ -1089,56 +1250,81 @@ import CoreBluetooth
                 
                 if t1IntValue != nil {
                     
+                    if t1IntValue! > minIntValue! {
+                        isT1MinActive = true
+                    }
+                    if t1IntValue! < maxIntValue! {
+                        isT1MaxActive = true
+                    }
+                    
                     if t1IntValue! < minIntValue! {
-                        if temperatureT1AlertBool == true {
+                        
+                        if isT1MinActive {
                             
-                            if isFahrenheit {
+                            if temperatureT1AlertBool == true {
                                 
-                                minVal = celToFeh(degree: minVal!)
-                            }else if isKelvin {
+                                if isFahrenheit {
+                                    
+                                    minVal = celToFeh(degree: minVal!)
+                                }else if isKelvin {
+                                    
+                                    minVal = celToKel(degree: minVal!)
+                                }
                                 
-                                minVal = celToKel(degree: minVal!)
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 }*/
+                                
+                                isT1AlarmPlaying = true
+                                self.addAlertOutOfRangeT1(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
+                                temperatureT1AlertBool = false
+                                print("Play sound")
                             }
-                            
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T1 : \(minVal!)",dataType: "")
-                            
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
-                                
-                            } else {
-                                
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
-                            }
-                            temperatureT1AlertBool = false
-                            print("Play sound")
                         }
+                        
                     }
                     else if t1IntValue! > maxIntValue! {
-                        if temperatureT1AlertBool == true {
+                        
+                        if isT1MaxActive {
                             
-                            if isFahrenheit {
+                            if temperatureT1AlertBool == true {
                                 
-                                maxVal = celToFeh(degree: maxVal!)
-                            }else if isKelvin {
+                                if isFahrenheit {
+                                    
+                                    maxVal = celToFeh(degree: maxVal!)
+                                }else if isKelvin {
+                                    
+                                    maxVal = celToKel(degree: maxVal!)
+                                }
                                 
-                                maxVal = celToKel(degree: maxVal!)
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 }*/
+                                isT1AlarmPlaying = true
+                                
+                                self.addAlertOutOfRangeT1(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
+                                temperatureT1AlertBool = false
+                                print("Play sound")
                             }
-                            
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T1 : \(maxVal!)",dataType: "")
-                            
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
-                                
-                            } else {
-                                
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
-                            }
-                            
-                            temperatureT1AlertBool = false
-                            print("Play sound")
                         }
+                        
                     }
                     else{
-                        temperatureT1AlertBool = true
-                        print("Stop Playing")
+                        if !isT1AlarmPlaying {
+                            
+                            temperatureT1AlertBool = true
+                            print("Stop Playing")
+                        }
                     }
                 }
             }
@@ -1177,54 +1363,83 @@ import CoreBluetooth
                 let t2IntValue = Float(MainCenteralManager.sharedInstance().data.temperatureT2 as String)
                 
                 if t2IntValue != nil {
+                    
+                    if t2IntValue! > minIntValue! {
+                        isT2MinActive = true
+                    }
+                    if t2IntValue! < maxIntValue! {
+                        isT2MaxActive = true
+                    }
+                    
+                    
                     if t2IntValue! < minIntValue! {
-                        if temperatureT2AlertBool == true {
+                        
+                        if isT2MinActive {
                             
-                            if isCelsius {
+                            if temperatureT2AlertBool == true {
                                 
-                                minVal = FehToCel(degree: minVal!)
-                            }else if isKelvin {
+                                if isCelsius {
+                                    
+                                    minVal = FehToCel(degree: minVal!)
+                                }else if isKelvin {
+                                    
+                                    minVal = FehToKel(degree: minVal!)
+                                }
                                 
-                                minVal = FehToKel(degree: minVal!)
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 
+                                 }*/
+                                isT2AlarmPlaying = true
+                                
+                                self.addAlertOutOfRangeT2(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
+                                temperatureT2AlertBool = false
+                                print("Play sound")
                             }
-                            
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached below", AlertTemperature: "T2 : \(minVal!)",dataType: "")
-                            
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
-                                
-                            } else {
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
-                                
-                            }
-                            temperatureT2AlertBool = false
-                            print("Play sound")
                         }
                     }
                     else if t2IntValue! > maxIntValue! {
-                        if temperatureT2AlertBool == true {
+                        
+                        if isT2MaxActive {
                             
-                            if isCelsius {
+                            if temperatureT2AlertBool == true {
                                 
-                                maxVal = FehToCel(degree: maxVal!)
-                            }else if isKelvin {
+                                if isCelsius {
+                                    
+                                    maxVal = FehToCel(degree: maxVal!)
+                                }else if isKelvin {
+                                    
+                                    maxVal = FehToKel(degree: maxVal!)
+                                }
                                 
-                                maxVal = FehToKel(degree: maxVal!)
+                                /*viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
+                                 
+                                 if self.view.isDescendant(of: viewAlertOutRange.view) {
+                                 
+                                 } else {
+                                 self.present(viewAlertOutRange, animated: false, completion: nil)
+                                 
+                                 }*/
+                                isT2AlarmPlaying = true
+                                
+                                self.addAlertOutOfRangeT2(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
+                                temperatureT2AlertBool = false
+                                print("Play sound")
                             }
-                            viewAlertOutRange = viewAlertOutRangeViewController(AlertMsg: "Alert value reached above", AlertTemperature: "T2 : \(maxVal!)",dataType: "")
                             
-                            if self.view.isDescendant(of: viewAlertOutRange.view) {
-                                
-                            } else {
-                                self.present(viewAlertOutRange, animated: false, completion: nil)
-                                
-                            }
-                            temperatureT2AlertBool = false
-                            print("Play sound")
                         }
                     }
                     else{
-                        temperatureT2AlertBool = true
-                        print("Stop Playing")
+                        if !isT2AlarmPlaying {
+                            
+                            temperatureT2AlertBool = true
+                            print("Stop Playing")
+                        }
+                        
                     }
                 }
             }
@@ -1234,6 +1449,137 @@ import CoreBluetooth
     
   }
   
+    
+    func addAlertOutOfRange(AlertMsg :String , AlertTemperature:String , dataType:String) {
+        
+        objAlertView = Bundle.main.loadNibNamed("AlertOutOfRangeView", owner: self, options: nil)?[0] as! AlertOutOfRangeView
+        objAlertView.delegate = self   //AlertOutOfRangeViewDelegate
+        objAlertView.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        //self.view.addSubview(self.objAlertView)
+        //objAlertView.isHidden = true
+        objAlertView.lblAlertMsg.text = AlertMsg
+        objAlertView.lblTemp.text = AlertTemperature + " %"
+        self.view.layoutIfNeeded()
+        objAlertView.playSound()
+        
+        
+        arrViews.append(1)
+        
+        let index0 = arrViews.index(of: 1)
+        
+        
+        if index0 == 0 {
+            
+            self.view.addSubview(self.objAlertView)
+            
+        }else if index0 == 1 {
+            let value = arrViews[0]
+            if value == 2 {
+                
+                self.view.insertSubview(objAlertView, belowSubview: objAlertViewT1)
+            }else if value == 3 {
+                self.view.insertSubview(objAlertView, belowSubview: objAlertViewT2)
+            }
+        }else if index0 == 2 {
+            
+            let value = arrViews[1]
+            if value == 2 {
+                
+                self.view.insertSubview(objAlertView, belowSubview: objAlertViewT1)
+            }else if value == 3 {
+                self.view.insertSubview(objAlertView, belowSubview: objAlertViewT2)
+            }
+            
+        }
+        
+    }
+    
+    func addAlertOutOfRangeT1(AlertMsg :String , AlertTemperature:String , dataType:String) {
+        
+        objAlertViewT1 = Bundle.main.loadNibNamed("AlertOutOfRangeViewT1", owner: self, options: nil)?[0] as! AlertOutOfRangeViewT1
+        objAlertViewT1.delegate = self   //AlertOutOfRangeViewDelegate
+        objAlertViewT1.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        //self.view.addSubview(self.objAlertViewT1)
+        //objAlertViewT1.isHidden = true
+        objAlertViewT1.lblAlertMsg.text = AlertMsg
+        objAlertViewT1.lblTemp.text = AlertTemperature  + " " + MainCenteralManager.sharedInstance().data.cOrFOrK
+        self.view.layoutIfNeeded()
+        objAlertViewT1.playSound()
+        
+        arrViews.append(2)
+        
+        let index1 = arrViews.index(of: 2)
+        
+        if index1 == 0 {
+            
+            self.view.addSubview(self.objAlertViewT1)
+            
+        }else if index1 == 1 {
+            
+            let value = arrViews[0]
+            if value == 1 {
+                
+                self.view.insertSubview(objAlertViewT1, belowSubview: objAlertView)
+            }else if value == 3 {
+                self.view.insertSubview(objAlertViewT1, belowSubview: objAlertViewT2)
+            }
+        }else if index1 == 2 {
+            
+            let value = arrViews[1]
+            if value == 1 {
+                
+                self.view.insertSubview(objAlertViewT1, belowSubview: objAlertView)
+            }else if value == 3 {
+                self.view.insertSubview(objAlertViewT1, belowSubview: objAlertViewT2)
+            }
+            
+            
+        }
+    }
+    
+    func addAlertOutOfRangeT2(AlertMsg :String , AlertTemperature:String , dataType:String) {
+        
+        objAlertViewT2 = Bundle.main.loadNibNamed("AlertOutOfRangeViewT2", owner: self, options: nil)?[0] as! AlertOutOfRangeViewT2
+        objAlertViewT2.delegate = self   //AlertOutOfRangeViewDelegate
+        objAlertViewT2.frame = CGRect(x: 0, y: 0, width: ScreenSize.SCREEN_WIDTH, height: ScreenSize.SCREEN_HEIGHT)
+        //self.view.addSubview(self.objAlertViewT2)
+        //objAlertViewT2.isHidden = true
+        objAlertViewT2.lblAlertMsg.text = AlertMsg
+        objAlertViewT2.lblTemp.text = AlertTemperature  + " " + MainCenteralManager.sharedInstance().data.cOrFOrK
+        self.view.layoutIfNeeded()
+        objAlertViewT2.playSound()
+        
+        
+        arrViews.append(3)
+        
+        let index2 = arrViews.index(of: 3)
+        
+        if index2 == 0 {
+            
+            self.view.addSubview(self.objAlertViewT2)
+            
+        }else if index2 == 1 {
+            
+            let value = arrViews[0]
+            if value == 1 {
+                
+                self.view.insertSubview(objAlertViewT2, belowSubview: objAlertView)
+            }else if value == 2 {
+                self.view.insertSubview(objAlertViewT2, belowSubview: objAlertViewT1)
+            }
+        }else if index2 == 2 {
+            
+            let value = arrViews[1]
+            if value == 1 {
+                
+                self.view.insertSubview(objAlertViewT2, belowSubview: objAlertView)
+            }else if value == 2 {
+                self.view.insertSubview(objAlertViewT2, belowSubview: objAlertViewT1)
+            }
+        }
+        
+    }
+    
     @objc func updateRHCount()  {
         
         if(RHCount > 0)
@@ -1505,14 +1851,48 @@ import CoreBluetooth
 
 }
 
+extension BlueToothOptionVC : AlertOutOfRangeViewDelegate {
+    func btnOK_Tapped() {
+        
+        isRHAlarmPlaying = false
+        arrViews.remove(at: 0)
+        objAlertView.stopSound()
+        //objAlertView.isHidden = true
+        objAlertView.removeFromSuperview()
+    } 
+}
+extension BlueToothOptionVC : AlertOutOfRangeViewDelegateT1 {
+    func btnOKT1_Tapped() {
+        
+        isT1AlarmPlaying = false
+        arrViews.remove(at: 0)
+        objAlertViewT1.stopSound()
+        //objAlertViewT1.isHidden = true
+        objAlertViewT1.removeFromSuperview()
+    }
+}
+extension BlueToothOptionVC : AlertOutOfRangeViewDelegateT2 {
+    func btnOKT2_Tapped() {
+        
+        isT2AlarmPlaying = false
+        arrViews.remove(at: 0)
+        objAlertViewT2.stopSound()
+        //objAlertViewT2.isHidden = true
+        objAlertViewT2.removeFromSuperview()
+    }
+}
+
 extension BlueToothOptionVC : MainCenteralManagerDelegate{
   func ReceiveCommand(){
     
-    if !isChangingTemp {
+    if !isViewDisappear {
         
-        self.CheckingTemperature()
-        self.SetData()
-        self.setSettingData()
+        if !isChangingTemp {
+            
+            self.CheckingTemperature()
+            self.SetData()
+            self.setSettingData()
+        }
     }
     
   }

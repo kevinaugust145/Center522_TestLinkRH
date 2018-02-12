@@ -125,6 +125,12 @@
 		44AF19F81E0D0486006B9462 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AF19F71E0D0486006B9462 /* QuartzCore.framework */; };
 		44AF19FA1E0D0495006B9462 /* libReliableBurstData_arm64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AF19F91E0D0495006B9462 /* libReliableBurstData_arm64.a */; };
 		639061B291553D9C8BA68297 /* Pods_TestLink.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 502E05B2E7957D39BE84181C /* Pods_TestLink.framework */; };
+		8BBDA1C51FFBBA2100B7B87F /* AlertOutOfRangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBDA1C41FFBBA2100B7B87F /* AlertOutOfRangeView.swift */; };
+		8BBDA1C71FFBBA3900B7B87F /* AlertOutOfRangeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBDA1C61FFBBA3900B7B87F /* AlertOutOfRangeView.xib */; };
+		8BBDA1C91FFBBAEA00B7B87F /* AlertOutOfRangeViewT1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBDA1C81FFBBAEA00B7B87F /* AlertOutOfRangeViewT1.xib */; };
+		8BBDA1CB1FFBBAFC00B7B87F /* AlertOutOfRangeViewT1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBDA1CA1FFBBAFC00B7B87F /* AlertOutOfRangeViewT1.swift */; };
+		8BBDA1CD1FFBBB1100B7B87F /* AlertOutOfRangeViewT2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBDA1CC1FFBBB1100B7B87F /* AlertOutOfRangeViewT2.swift */; };
+		8BBDA1CF1FFBBB1C00B7B87F /* AlertOutOfRangeViewT2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8BBDA1CE1FFBBB1C00B7B87F /* AlertOutOfRangeViewT2.xib */; };
 		E30F83FE1E3F37E400D531BA /* alarmsound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E30F83FD1E3F37E400D531BA /* alarmsound.mp3 */; };
 		E3278A181E3C51030097359D /* Constant_Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3278A171E3C51030097359D /* Constant_Swift.swift */; };
 		E3278A1B1E3C91A20097359D /* FileOpenTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3278A191E3C91A20097359D /* FileOpenTableVC.swift */; };
@@ -324,6 +330,12 @@
 		44AF19F91E0D0495006B9462 /* libReliableBurstData_arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libReliableBurstData_arm64.a; sourceTree = "<group>"; };
 		502E05B2E7957D39BE84181C /* Pods_TestLink.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestLink.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F50D5BCD03F5C9BC4B8A30E /* Pods-TestLink.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestLink.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestLink/Pods-TestLink.debug.xcconfig"; sourceTree = "<group>"; };
+		8BBDA1C41FFBBA2100B7B87F /* AlertOutOfRangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertOutOfRangeView.swift; sourceTree = "<group>"; };
+		8BBDA1C61FFBBA3900B7B87F /* AlertOutOfRangeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlertOutOfRangeView.xib; sourceTree = "<group>"; };
+		8BBDA1C81FFBBAEA00B7B87F /* AlertOutOfRangeViewT1.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlertOutOfRangeViewT1.xib; sourceTree = "<group>"; };
+		8BBDA1CA1FFBBAFC00B7B87F /* AlertOutOfRangeViewT1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertOutOfRangeViewT1.swift; sourceTree = "<group>"; };
+		8BBDA1CC1FFBBB1100B7B87F /* AlertOutOfRangeViewT2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertOutOfRangeViewT2.swift; sourceTree = "<group>"; };
+		8BBDA1CE1FFBBB1C00B7B87F /* AlertOutOfRangeViewT2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlertOutOfRangeViewT2.xib; sourceTree = "<group>"; };
 		E30F83FD1E3F37E400D531BA /* alarmsound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = alarmsound.mp3; sourceTree = "<group>"; };
 		E3278A171E3C51030097359D /* Constant_Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant_Swift.swift; sourceTree = "<group>"; };
 		E3278A191E3C91A20097359D /* FileOpenTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileOpenTableVC.swift; path = ViewControllers/FileOpen/FileOpenTableVC.swift; sourceTree = "<group>"; };
@@ -514,6 +526,7 @@
 				E3C8FE561E377BBD00DC5372 /* AppDelegate.m */,
 				E3E82F791E152F0700070750 /* VenderLib */,
 				21DFB2361DFBCE0100B5D325 /* Resources */,
+				8BBDA1C31FFBB9A300B7B87F /* Views */,
 				21DFB2341DFBCD8600B5D325 /* ViewControllers */,
 				21DFB2241DFBC8F800B5D325 /* Assets.xcassets */,
 				21DFB2261DFBC8F800B5D325 /* LaunchScreen.storyboard */,
@@ -609,37 +622,37 @@
 		21DFB24D1DFBDB7600B5D325 /* General */ = {
 			isa = PBXGroup;
 			children = (
-				153C71511EE0121F001C0BB3 /* off@2x.png */,
-				153C71521EE0121F001C0BB3 /* off@3x.png */,
-				153C71531EE0121F001C0BB3 /* on@2x.png */,
-				153C71541EE0121F001C0BB3 /* on@3x.png */,
-				153C714D1EDFDAA6001C0BB3 /* off.png */,
-				153C714E1EDFDAA6001C0BB3 /* on.png */,
-				151392A61E49CF6100D7C7A3 /* share.png */,
-				151392A71E49CF6100D7C7A3 /* share@2x.png */,
-				151392A81E49CF6100D7C7A3 /* share@3x.png */,
+				E3E82F6F1E151D1200070750 /* back.png */,
+				21DFB24E1DFBDB7600B5D325 /* back@2x.png */,
+				E3E82F701E151D1200070750 /* back@3x.png */,
 				15C210531E3F72090032630A /* Battery1@2x.png */,
 				15C210541E3F72090032630A /* Battery2@2x.png */,
 				15C210551E3F72090032630A /* BatteryFull@2x.png */,
 				15C210561E3F72090032630A /* Batterynull@2x.png */,
-				E3E82F921E15319A00070750 /* record.png */,
-				E3E82F931E15319A00070750 /* record@2x.png */,
-				E3E82F941E15319A00070750 /* record@3x.png */,
-				E3E82F951E15319A00070750 /* reset.png */,
-				E3E82F961E15319A00070750 /* reset@2x.png */,
-				E3E82F971E15319A00070750 /* reset@3x.png */,
-				E3E82F981E15319A00070750 /* stop.png */,
-				E3E82F991E15319A00070750 /* stop@2x.png */,
-				E3E82F9A1E15319A00070750 /* stop@3x.png */,
 				21DFB26B1DFBEF2900B5D325 /* Header.png */,
 				21DFB26C1DFBEF2900B5D325 /* Header@2x.png */,
 				21DFB26D1DFBEF2900B5D325 /* Header@3x.png */,
 				21DFB26E1DFBEF2900B5D325 /* logo header.png */,
 				21DFB26F1DFBEF2900B5D325 /* logo header@2x.png */,
 				21DFB2701DFBEF2900B5D325 /* logo header@3x.png */,
-				E3E82F6F1E151D1200070750 /* back.png */,
-				21DFB24E1DFBDB7600B5D325 /* back@2x.png */,
-				E3E82F701E151D1200070750 /* back@3x.png */,
+				153C714D1EDFDAA6001C0BB3 /* off.png */,
+				153C71511EE0121F001C0BB3 /* off@2x.png */,
+				153C71521EE0121F001C0BB3 /* off@3x.png */,
+				153C714E1EDFDAA6001C0BB3 /* on.png */,
+				153C71531EE0121F001C0BB3 /* on@2x.png */,
+				153C71541EE0121F001C0BB3 /* on@3x.png */,
+				E3E82F921E15319A00070750 /* record.png */,
+				E3E82F931E15319A00070750 /* record@2x.png */,
+				E3E82F941E15319A00070750 /* record@3x.png */,
+				E3E82F951E15319A00070750 /* reset.png */,
+				E3E82F961E15319A00070750 /* reset@2x.png */,
+				E3E82F971E15319A00070750 /* reset@3x.png */,
+				151392A61E49CF6100D7C7A3 /* share.png */,
+				151392A71E49CF6100D7C7A3 /* share@2x.png */,
+				151392A81E49CF6100D7C7A3 /* share@3x.png */,
+				E3E82F981E15319A00070750 /* stop.png */,
+				E3E82F991E15319A00070750 /* stop@2x.png */,
+				E3E82F9A1E15319A00070750 /* stop@3x.png */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -650,6 +663,15 @@
 				21DFB2881DFBF0E300B5D325 /* bluetooth white@1x.png */,
 				21DFB2891DFBF0E300B5D325 /* bluetooth white@2x.png */,
 				21DFB28A1DFBF0E300B5D325 /* bluetooth white@3x.png */,
+				E3E82F6B1E151CC500070750 /* clock.png */,
+				E3E82F6C1E151CC500070750 /* clock@2x.png */,
+				21DFB2531DFBDC1800B5D325 /* clock@3x.png */,
+				21DFB28E1DFBF1D500B5D325 /* dd.png */,
+				21DFB28F1DFBF1D500B5D325 /* dd@2x.png */,
+				21DFB2901DFBF1D500B5D325 /* dd@3x.png */,
+				21DFB2911DFBF1D500B5D325 /* fo.png */,
+				21DFB2921DFBF1D500B5D325 /* fo@2x.png */,
+				21DFB2931DFBF1D500B5D325 /* fo@3x.png */,
 				21DFB29A1DFBF1DC00B5D325 /* gear@1x.png */,
 				21DFB29B1DFBF1DC00B5D325 /* gear@2x.png */,
 				21DFB29C1DFBF1DC00B5D325 /* gear@3x.png */,
@@ -659,15 +681,6 @@
 				21DFB2A01DFBF1DC00B5D325 /* rtg.png */,
 				21DFB2A11DFBF1DC00B5D325 /* rtg@2x.png */,
 				21DFB2A21DFBF1DC00B5D325 /* rtg@3x.png */,
-				21DFB28E1DFBF1D500B5D325 /* dd.png */,
-				21DFB28F1DFBF1D500B5D325 /* dd@2x.png */,
-				21DFB2901DFBF1D500B5D325 /* dd@3x.png */,
-				21DFB2911DFBF1D500B5D325 /* fo.png */,
-				21DFB2921DFBF1D500B5D325 /* fo@2x.png */,
-				21DFB2931DFBF1D500B5D325 /* fo@3x.png */,
-				21DFB2531DFBDC1800B5D325 /* clock@3x.png */,
-				E3E82F6B1E151CC500070750 /* clock.png */,
-				E3E82F6C1E151CC500070750 /* clock@2x.png */,
 			);
 			path = RealTimeReading;
 			sourceTree = "<group>";
@@ -807,6 +820,19 @@
 				376975A02D6A501E53ED4397 /* Pods-TestLink.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8BBDA1C31FFBB9A300B7B87F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8BBDA1C41FFBBA2100B7B87F /* AlertOutOfRangeView.swift */,
+				8BBDA1C61FFBBA3900B7B87F /* AlertOutOfRangeView.xib */,
+				8BBDA1CA1FFBBAFC00B7B87F /* AlertOutOfRangeViewT1.swift */,
+				8BBDA1C81FFBBAEA00B7B87F /* AlertOutOfRangeViewT1.xib */,
+				8BBDA1CC1FFBBB1100B7B87F /* AlertOutOfRangeViewT2.swift */,
+				8BBDA1CE1FFBBB1C00B7B87F /* AlertOutOfRangeViewT2.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E30F83FC1E3F37E400D531BA /* music */ = {
@@ -985,6 +1011,7 @@
 				E3E82FA01E15319A00070750 /* reset@3x.png in Resources */,
 				44AF19E51E0D044B006B9462 /* MFi_SPPViewController.xib in Resources */,
 				E3E82F9F1E15319A00070750 /* reset@2x.png in Resources */,
+				8BBDA1CF1FFBBB1C00B7B87F /* AlertOutOfRangeViewT2.xib in Resources */,
 				155076FE1E40B310007C673F /* merchant.m4a in Resources */,
 				E3E82F6D1E151CC500070750 /* clock.png in Resources */,
 				21DFB2981DFBF1D500B5D325 /* fo@2x.png in Resources */,
@@ -1009,6 +1036,7 @@
 				21DFB2651DFBE51F00B5D325 /* FileOpenVC.xib in Resources */,
 				21DFB2971DFBF1D500B5D325 /* fo.png in Resources */,
 				218018841DFE787E000B940A /* Roboto-ThinItalic.ttf in Resources */,
+				8BBDA1C91FFBBAEA00B7B87F /* AlertOutOfRangeViewT1.xib in Resources */,
 				E3E82F711E151D1200070750 /* back.png in Resources */,
 				153C71501EDFDAA6001C0BB3 /* on.png in Resources */,
 				21DFB2461DFBD45F00B5D325 /* setting@2x.png in Resources */,
@@ -1061,6 +1089,7 @@
 				21DFB2AA1DFBF1DC00B5D325 /* rtg@2x.png in Resources */,
 				E30F83FE1E3F37E400D531BA /* alarmsound.mp3 in Resources */,
 				E3E82F6E1E151CC500070750 /* clock@2x.png in Resources */,
+				8BBDA1C71FFBBA3900B7B87F /* AlertOutOfRangeView.xib in Resources */,
 				21DFB2A31DFBF1DC00B5D325 /* gear@1x.png in Resources */,
 				21DFB2251DFBC8F800B5D325 /* Assets.xcassets in Resources */,
 			);
@@ -1127,6 +1156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BBDA1CB1FFBBAFC00B7B87F /* AlertOutOfRangeViewT1.swift in Sources */,
 				E55AF4061EF6C4280092232B /* RealTImeReadingVC.swift in Sources */,
 				E3278A2A1E3C92370097359D /* InterfaceUtility.m in Sources */,
 				E3C8FE571E377BBD00DC5372 /* AppDelegate.m in Sources */,
@@ -1150,8 +1180,10 @@
 				E55461A11EFFA74300025F24 /* viewAlertOutRangeViewController.swift in Sources */,
 				15EF4A611E2F7B8C0068FBDA /* FileController.swift in Sources */,
 				E3E82F891E152F0700070750 /* UUChart.m in Sources */,
+				8BBDA1C51FFBBA2100B7B87F /* AlertOutOfRangeView.swift in Sources */,
 				15DF97501EC57DC000EF8A8B /* UITextView+Placeholder.m in Sources */,
 				E3278A181E3C51030097359D /* Constant_Swift.swift in Sources */,
+				8BBDA1CD1FFBBB1100B7B87F /* AlertOutOfRangeViewT2.swift in Sources */,
 				E3C8FE3F1E374D7100DC5372 /* TableViewCell.swift in Sources */,
 				44AF19E11E0D044B006B9462 /* MFi_SPPAboutViewController.m in Sources */,
 				44AF19DC1E0D044B006B9462 /* ISMFiDataPath.m in Sources */,

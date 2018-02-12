@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -25,17 +25,19 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="zdv-tW-ewQ">
-            <rect key="frame" x="0.0" y="0.0" width="280" height="240"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2tb-5F-op4">
-                    <rect key="frame" x="0.0" y="0.0" width="280" height="240"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2tb-5F-op4">
+                    <rect key="frame" x="20" y="164" width="280" height="240"/>
                     <subviews>
-                        <button opaque="NO" tag="99" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKa-bs-UmK">
+                        <button opaque="NO" tag="99" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKa-bs-UmK">
                             <rect key="frame" x="0.0" y="185" width="280" height="55"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.027450980390000001" green="0.4549019608" blue="0.77647058820000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="280" id="Lc2-Nq-i7k"/>
+                                <constraint firstAttribute="height" constant="55" id="mkd-X2-qnL"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                             <inset key="contentEdgeInsets" minX="20" minY="5" maxX="20" maxY="5"/>
                             <state key="normal" title="OK">
@@ -45,31 +47,56 @@
                                 <action selector="btnCloseTemperatureAlert:" destination="-1" eventType="touchUpInside" id="UmG-yv-33R"/>
                             </connections>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HZk-Hk-Ou6">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HZk-Hk-Ou6">
                             <rect key="frame" x="110" y="15" width="60" height="60"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="N6U-GC-1DF"/>
+                                <constraint firstAttribute="width" constant="60" id="XTv-FE-juG"/>
+                            </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Alert value reached above" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaP-PY-VPz">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alert value reached above" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaP-PY-VPz">
                             <rect key="frame" x="27" y="95" width="225" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="25" id="8aS-6i-igm"/>
+                                <constraint firstAttribute="width" constant="225" id="Jlj-6X-DwP"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="70 F" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qld-nl-6Ra">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="70 F" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qld-nl-6Ra">
                             <rect key="frame" x="27" y="125" width="225" height="40"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="3iB-tC-zMg"/>
+                                <constraint firstAttribute="width" constant="225" id="VGc-U8-i5Q"/>
+                            </constraints>
                             <fontDescription key="fontDescription" name="Digital-7" family="Digital-7" pointSize="30"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="XaP-PY-VPz" firstAttribute="centerX" secondItem="2tb-5F-op4" secondAttribute="centerX" id="1Jp-DV-WqH"/>
+                        <constraint firstAttribute="width" constant="280" id="45w-Tr-V0E"/>
+                        <constraint firstItem="HZk-Hk-Ou6" firstAttribute="centerX" secondItem="2tb-5F-op4" secondAttribute="centerX" id="Hes-Tb-HM0"/>
+                        <constraint firstItem="Qld-nl-6Ra" firstAttribute="top" secondItem="XaP-PY-VPz" secondAttribute="bottom" constant="5" id="PQa-WI-RLP"/>
+                        <constraint firstItem="XaP-PY-VPz" firstAttribute="top" secondItem="HZk-Hk-Ou6" secondAttribute="bottom" constant="20" id="eNC-Jc-6Xk"/>
+                        <constraint firstAttribute="bottom" secondItem="gKa-bs-UmK" secondAttribute="bottom" id="gRF-Db-82i"/>
+                        <constraint firstItem="HZk-Hk-Ou6" firstAttribute="top" secondItem="2tb-5F-op4" secondAttribute="top" constant="15" id="qQZ-h6-kNY"/>
+                        <constraint firstAttribute="height" constant="240" id="qd6-Zr-ZT2"/>
+                        <constraint firstItem="gKa-bs-UmK" firstAttribute="centerX" secondItem="2tb-5F-op4" secondAttribute="centerX" id="wlI-YH-vNQ"/>
+                        <constraint firstItem="Qld-nl-6Ra" firstAttribute="centerX" secondItem="2tb-5F-op4" secondAttribute="centerX" id="yPY-uh-XZa"/>
+                    </constraints>
                 </view>
             </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="2tb-5F-op4" firstAttribute="centerY" secondItem="zdv-tW-ewQ" secondAttribute="centerY" id="4rH-eo-Yek"/>
+                <constraint firstItem="2tb-5F-op4" firstAttribute="centerX" secondItem="zdv-tW-ewQ" secondAttribute="centerX" id="Sl8-fH-6lx"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-4062" y="-5281"/>
+            <point key="canvasLocation" x="-4052" y="-5219"/>
         </view>
     </objects>
 </document>

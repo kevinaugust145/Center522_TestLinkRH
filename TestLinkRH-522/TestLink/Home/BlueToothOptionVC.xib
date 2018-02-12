@@ -25,6 +25,7 @@
                 <outlet property="btnKelvin" destination="G5A-LE-KY0" id="1Rk-wY-wqH"/>
                 <outlet property="currentScale" destination="QOi-IL-u59" id="E60-S8-A7z"/>
                 <outlet property="imgbettery" destination="mVK-dA-Mss" id="le5-dQ-HrJ"/>
+                <outlet property="lblAlarmPopUpTitle" destination="uoC-5S-xva" id="1En-CG-yBK"/>
                 <outlet property="lblConnect" destination="hj8-mk-M6g" id="ZmT-P0-qBe"/>
                 <outlet property="lblMinMaxTemp" destination="3qU-IC-tym" id="E7b-WD-0XR"/>
                 <outlet property="lblRHMax" destination="qlA-be-7Jb" id="La0-f6-qmF"/>
@@ -45,6 +46,7 @@
                 <outlet property="txtMinTemp" destination="16M-9e-7Bx" id="Dv7-dH-hYQ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewAlarmTemp" destination="FMP-OW-7za" id="aZk-J8-YcF"/>
+                <outlet property="viewBGAlarmTemp" destination="Rzi-2v-Cok" id="dIb-l9-BcR"/>
                 <outlet property="viewSetting" destination="YJI-hu-Y7N" id="x6A-Xf-vX1"/>
                 <outlet property="viewUnderSetting" destination="Gmj-9i-ZXP" id="7eB-8W-MHy"/>
             </connections>
@@ -443,7 +445,7 @@ Graph</string>
                                 <action selector="switchedButtonAction:" destination="-1" eventType="touchUpInside" id="9c9-94-4aU"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="°K" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kZB-jK-tTh">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="K" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kZB-jK-tTh">
                             <rect key="frame" x="218.5" y="79" width="22" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="22" id="5Jw-c0-mI8"/>

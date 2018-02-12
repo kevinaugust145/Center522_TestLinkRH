@@ -42,8 +42,12 @@ class MainCenteralManager: NSObject{
     var dataP : CommandPViewModel = CommandPViewModel()
     var timer = Timer()
     
+    var DataCheckTimer = Timer()
+    
     var managerType = ManageType.Temperature
     
+    var isGotDataFromDevice : Bool = false
+    var counter = 0
     
     func SetObject(centralManager: CBCentralManager , peripheral: CBPeripheral){
         
@@ -147,8 +151,8 @@ class MainCenteralManager: NSObject{
             return
         }
 
-        let commandCbyte : [UInt8] = [  0x02 , 0x46 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
-        let data2 = Data(bytes:commandCbyte)
+        let commandFbyte : [UInt8] = [  0x02 , 0x46 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
+        let data2 = Data(bytes:commandFbyte)
         
         if self.btServices.count > 1 {
             let charItems = self.btServices[1].characteristics
@@ -159,7 +163,7 @@ class MainCenteralManager: NSObject{
                     //print("写入withoutResponse~")
                     finished()
                 }else{
-                    print("CommandC 写入不可用~")
+                    print("CommandF 写入不可用~")
                 }
             }
             
@@ -246,6 +250,9 @@ class MainCenteralManager: NSObject{
     }
     
     @objc func CommandA(){
+        
+        isGotDataFromDevice = false
+        
         print("CommandA")
         //檢查是否連線
         if !self.checkingStates() {
@@ -407,6 +414,8 @@ extension MainCenteralManager : CBPeripheralDelegate{
                         //開始發送指令
                         timer.invalidate()
                         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
+                        DataCheckTimer.invalidate()
+                        DataCheckTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.checkDataArrived), userInfo: nil, repeats: true)
                         
                     }else if (managerType == .Download){
                         if (value.count == 36){
@@ -415,9 +424,29 @@ extension MainCenteralManager : CBPeripheralDelegate{
                             DoCommandA(byteArray: byteArray)
                             SendData()
                         }
+                    }else  if (managerType == .Temperature && value.count == 32){
+                        
+                        print("Command Failed Got 32 bytes")
                     }
+                    
                 }
             }
+        }
+    }
+    
+    // This logic is for when sometime Command A not giving response so at this time if data is not received within 10 second after fail of COMMAND A then we are calling Command A for retrive data from device. 
+    @objc func checkDataArrived()  {
+        
+        if !isGotDataFromDevice {
+            counter += 1
+            //print("This is counter " ,counter)
+            if counter == 10 {
+                self.CommandA()
+            }
+        }else{
+            
+            counter = 0
+            //print("This is counter " ,counter)
         }
     }
     
@@ -458,6 +487,8 @@ extension MainCenteralManager : CBPeripheralDelegate{
     }
     
     func DoCommandA(byteArray :[UInt8]) {
+        
+        isGotDataFromDevice = true
         
         let byte3 = self.converToBinary(x1: byteArray[2])
         
@@ -663,19 +694,19 @@ extension MainCenteralManager : CBPeripheralDelegate{
                 
                 switch myDeviceType {
                 case "K":
-                    return 1645
+                    return 1645.15
                 case "J":
-                    return 1273
+                    return 1273.15
                 case "E":
-                    return 1023
+                    return 1023.15
                 case "T":
-                    return 673
+                    return 673.15
                 case "N":
-                    return 1573
+                    return 1573.15
                 case "R":
-                    return 2040
+                    return 2040.15
                 case "S":
-                    return 2040
+                    return 2040.15
                 default:
                     return 2500
                 }
@@ -733,25 +764,25 @@ extension MainCenteralManager : CBPeripheralDelegate{
             }else if self.data.cOrFOrK == "K" {
                 switch myDeviceType {
                 case "K":
-                    self.data.deviceMaxValueRange = 1645
+                    self.data.deviceMaxValueRange = 1645.15
                     break
                 case "J":
-                    self.data.deviceMaxValueRange = 1273
+                    self.data.deviceMaxValueRange = 1273.15
                     break
                 case "E":
-                    self.data.deviceMaxValueRange = 1023
+                    self.data.deviceMaxValueRange = 1023.15
                     break
                 case "T":
-                    self.data.deviceMaxValueRange = 673
+                    self.data.deviceMaxValueRange = 673.15
                     break
                 case "N":
-                    self.data.deviceMaxValueRange = 1573
+                    self.data.deviceMaxValueRange = 1573.15
                     break
                 case "R":
-                    self.data.deviceMaxValueRange = 2040
+                    self.data.deviceMaxValueRange = 2040.15
                     break
                 case "S":
-                    self.data.deviceMaxValueRange = 2040
+                    self.data.deviceMaxValueRange = 2040.15
                     break
                 default:
                     self.data.deviceMaxValueRange = 2500
@@ -826,21 +857,21 @@ extension MainCenteralManager : CBPeripheralDelegate{
             }else if temperatureType == "K" {
                 switch myDeviceType {
                 case "K":
-                    return 73
+                    return 73.15
                 case "J":
-                    return 73
+                    return 73.15
                 case "E":
-                    return 73
+                    return 73.15
                 case "T":
-                    return 73
+                    return 73.15
                 case "N":
-                    return 73
+                    return 73.15
                 case "R":
-                    return 273
+                    return 273.15
                 case "S":
-                    return 273
+                    return 273.15
                 default:
-                    return 73
+                    return 73.15
                 }
             }
             else {
@@ -896,28 +927,28 @@ extension MainCenteralManager : CBPeripheralDelegate{
             }else if self.data.cOrFOrK == "K" {
                 switch myDeviceType {
                 case "K":
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 case "J":
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 case "E":
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 case "T":
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 case "N":
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 case "R":
-                    self.data.deviceMinValueRange = 273
+                    self.data.deviceMinValueRange = 273.15
                     break
                 case "S":
-                    self.data.deviceMinValueRange = 273
+                    self.data.deviceMinValueRange = 273.15
                     break
                 default:
-                    self.data.deviceMinValueRange = 73
+                    self.data.deviceMinValueRange = 73.15
                     break
                 }
             }
@@ -955,6 +986,30 @@ extension MainCenteralManager : CBPeripheralDelegate{
     }
     
     
+    // Here is for T1 we need to set min and max for alarm is -20(Min) to 60(Max)
+    
+    func getT1MaxValue(temperatureType :String) -> Float {
+        
+        if temperatureType == "C" {
+            return 60
+        }else if temperatureType == "F" {
+            return 140
+        }else if temperatureType == "K" {
+            return 333.15
+        }
+        return 0.0
+    }
+    func getT1MinValue(temperatureType :String) -> Float {
+        
+        if temperatureType == "C" {
+            return -20
+        }else if temperatureType == "F" {
+            return -4
+        }else if temperatureType == "K" {
+            return 253.15
+        }
+        return 0.0
+    }
     
     // MARK: - Other Methods
     

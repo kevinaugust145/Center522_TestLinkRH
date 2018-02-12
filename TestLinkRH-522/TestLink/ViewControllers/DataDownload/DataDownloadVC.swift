@@ -13,7 +13,7 @@ import UIKit
 //private let commandWrong = "CommandWrong"
 //private let commandFinished = "CommandFinished"
 
-class DataDownloadVC: UIViewController{
+class DataDownloadVC: UIViewController,UITextFieldDelegate{
   
   @IBOutlet var textView :UITextView!
   
@@ -48,6 +48,8 @@ class DataDownloadVC: UIViewController{
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    UIApplication.shared.isIdleTimerDisabled = true //Disable auto-lock while app is in foreground for data download
+    
     self.generalSettings()
 
     self.GetData()
@@ -76,6 +78,7 @@ class DataDownloadVC: UIViewController{
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
+    UIApplication.shared.isIdleTimerDisabled = false
   }
   
   
@@ -85,7 +88,25 @@ class DataDownloadVC: UIViewController{
   }
   
   
-  
+   // MARK: - UITextField Delegate
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let numbersOnly = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+         let characterSetFromTextField = CharacterSet(charactersIn: string)
+         let stringIsValid: Bool = numbersOnly.isSuperset(of: characterSetFromTextField)
+         if stringIsValid {
+         return true
+         }
+         else {
+         return false
+         }
+        /*if !string.canBeConverted(to: String.Encoding.ascii){
+            return false
+        }else{
+            return true
+        }*/
+    }
   
   // MARK: - OTHER METHODS
   
