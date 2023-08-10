@@ -336,7 +336,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
             lblTitle.text = "Graph View"
         }
         else{
-            myCommandATimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.commandA), userInfo: nil, repeats: true)
+            myCommandATimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.commandA), userInfo: nil, repeats: true)
             //self.commandA()
             
             let myInterval : TimeInterval = TimeInterval(Float(self.pickerSelIndx + 1))
@@ -3280,7 +3280,7 @@ class RealTimeGraphVC: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
         if !isGotDataFromDevice {
             counter += 1
             //print("This is counter " ,counter)
-            if counter == 10 {
+            if counter == 5 {
                 self.commandA()
             }
         }else{

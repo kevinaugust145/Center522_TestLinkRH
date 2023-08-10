@@ -181,6 +181,7 @@ class DataDownloadVC: UIViewController,UITextFieldDelegate{
   @IBAction func btnBackliked(_ sender: UIButton) {
     
     //self.centralManager?.cancelPeripheralConnection(self.peripheral)
+      MainCenteralManager.sharedInstance().CommandP_Finish()
     MainCenteralManager.sharedInstance().SwitchCommandA()
     //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "callingMethodForBetryStatus"), object: nil)
     

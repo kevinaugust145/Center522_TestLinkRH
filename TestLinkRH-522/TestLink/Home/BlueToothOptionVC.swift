@@ -52,6 +52,10 @@ import CoreBluetooth
     @IBOutlet var viewBGAlarmTemp: UIView!
     @IBOutlet var nslcTopView: NSLayoutConstraint!
     @IBOutlet var topView: UIView!
+    
+    @IBOutlet var viewProgress: UIView!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    
     var indexID:Int!
     
     var rangeData = NSMutableArray()
@@ -136,6 +140,8 @@ import CoreBluetooth
         
         let tapOnAlramView = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
         self.viewBGAlarmTemp.addGestureRecognizer(tapOnAlramView)
+        
+        viewProgress.isHidden = true
     }
   
     
@@ -623,6 +629,8 @@ import CoreBluetooth
             
             if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
                 
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
@@ -635,6 +643,9 @@ import CoreBluetooth
                 }
                 
             }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
+                
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
@@ -669,6 +680,9 @@ import CoreBluetooth
             
             if MainCenteralManager.sharedInstance().data.cOrFOrK == "K" {
                 
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
+                
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandF {
@@ -678,6 +692,9 @@ import CoreBluetooth
                     }
                 }
             }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
+                
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
@@ -713,6 +730,9 @@ import CoreBluetooth
             
             if MainCenteralManager.sharedInstance().data.cOrFOrK == "C" {
                 
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
+                
                 MainCenteralManager.sharedInstance().CommandF {
                     
                     MainCenteralManager.sharedInstance().CommandF {
@@ -723,6 +743,9 @@ import CoreBluetooth
                 }
                 
             }else if MainCenteralManager.sharedInstance().data.cOrFOrK == "F" {
+                
+                viewProgress.isHidden = false
+                activityIndicator.startAnimating()
                 
                 MainCenteralManager.sharedInstance().CommandF {
                     
@@ -1888,6 +1911,10 @@ extension BlueToothOptionVC : MainCenteralManagerDelegate{
     if !isViewDisappear {
         
         if !isChangingTemp {
+            
+            self.viewProgress.isHidden = true
+            self.activityIndicator.stopAnimating()
+            
             
             self.CheckingTemperature()
             self.SetData()

@@ -78,14 +78,12 @@ class MainCenteralManager: NSObject{
             self.dataP =  CommandPViewModel()
             //開始發送指令
             timer.invalidate()
-            timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.CommandP), userInfo: nil, repeats: false)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.CommandP), userInfo: nil, repeats: false)
             break
         case .Temperature:
             //開始發送指令
             timer.invalidate()
-            timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
-            break
-        default:
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
             break
         }
     }
@@ -178,9 +176,10 @@ class MainCenteralManager: NSObject{
     }
     
     func SwitchCommandP() {
-        timer.invalidate()
+       
+        self.timer.invalidate()
         self.managerType = .Download
-        SendData()
+        self.SendData()
     }
     
     @objc func CommandP(){
@@ -199,7 +198,6 @@ class MainCenteralManager: NSObject{
             for characteristic in charItems {
                 peripheral?.setNotifyValue(true, for: characteristic)
             }
-            
             
             print("charItems is \(charItems)")
             
@@ -413,7 +411,7 @@ extension MainCenteralManager : CBPeripheralDelegate{
                         
                         //開始發送指令
                         timer.invalidate()
-                        timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
+                        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
                         DataCheckTimer.invalidate()
                         DataCheckTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.checkDataArrived), userInfo: nil, repeats: true)
                         
@@ -424,10 +422,18 @@ extension MainCenteralManager : CBPeripheralDelegate{
                             DoCommandA(byteArray: byteArray)
                             SendData()
                         }
-                    }else  if (managerType == .Temperature && value.count == 32){
+                    } else {
                         
-                        print("Command Failed Got 32 bytes")
+                        // 2023/07/18
+                        timer.invalidate()
+                        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.CommandA), userInfo: nil, repeats: false)
+                        DataCheckTimer.invalidate()
+                        DataCheckTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.checkDataArrived), userInfo: nil, repeats: true)
                     }
+//                    else  if (managerType == .Temperature && value.count == 32){
+//
+//                        print("Command Failed Got 32 bytes")
+//                    }
                     
                 }
             }
@@ -440,7 +446,7 @@ extension MainCenteralManager : CBPeripheralDelegate{
         if !isGotDataFromDevice {
             counter += 1
             //print("This is counter " ,counter)
-            if counter == 10 {
+            if counter == 5 {
                 self.CommandA()
             }
         }else{
