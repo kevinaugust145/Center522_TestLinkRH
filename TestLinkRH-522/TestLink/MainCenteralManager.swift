@@ -284,7 +284,7 @@ class MainCenteralManager: NSObject{
     
     
     func CommandWrongCommand(){
-        let command : [UInt8] = [  0x02 , 0x6e , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
+        let command : [UInt8] = [  0x02 , 0x72 , 0x00 , 0x00 , 0x00 , 0x00 , 0x03 ]
         let data1 = Data(bytes:command)
         
         if self.btServices.count > 1 {
