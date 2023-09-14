@@ -2048,4 +2048,12 @@ extension RealTImeReadingVC : MainCenteralManagerDelegate{
         self.SetData()
     }
   }
+    
+    func Disconnect() {
+        let alert=UIAlertController(title: Appname, message: "Connection Lost", preferredStyle: UIAlertControllerStyle.alert);
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
+            self.navigationController?.popViewController(animated: true)
+        }));
+        present(alert, animated: true, completion: nil);
+    }
 }

@@ -1923,4 +1923,10 @@ extension BlueToothOptionVC : MainCenteralManagerDelegate{
     }
     
   }
+    
+    func Disconnect() {
+        
+        MainCenteralManager.sharedInstance().ClearnObject()
+          self.settingDetails(connectedDeviceName: "")
+    }
 }

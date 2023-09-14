@@ -327,7 +327,7 @@ class DataDownloadVC: UIViewController,UITextFieldDelegate{
         
         let myRecords : NSMutableArray = myFinalDataArray[self.index] as! NSMutableArray
         
-        if myRecords.count < 32 {
+        if myRecords.count < 24 {
           return
         }
         
@@ -697,74 +697,134 @@ class DataDownloadVC: UIViewController,UITextFieldDelegate{
   
   func myDownloadedDataMethod() {
     
-    var myDownloadedData =  MainCenteralManager.sharedInstance().dataP.myDownloadedData
-    var myFinalDataArray = MainCenteralManager.sharedInstance().dataP.myFinalDataArray
-    
-    print("data is \(myDownloadedData)") 
-    
-    
-    var isSavingData:Bool = false
-    
-    var mySingFileDataArray:NSMutableArray = NSMutableArray()
-    
-    if myDownloadedData.count == 0 {
-      //self.tableDD.reloadData()
-      return
-    }
-    
-    
-    for i in 1..<myDownloadedData.count+1 {
-      if isSavingData == true {
-        
-        if "\((myDownloadedData[i-1] as AnyObject).value(forKey: "Hexa") as! String)" == "5A"
-        {
+      var myDownloadedData =  MainCenteralManager.sharedInstance().dataP.myDownloadedData
+      var myFinalDataArray = MainCenteralManager.sharedInstance().dataP.myFinalDataArray
+      
+      print("data is \(myDownloadedData)")
+      
+      guard myDownloadedData.count > 0 else { return }
+      
+      var mySingFileDataArray = NSMutableArray()
+      var totalCount = 0
+      var isSavingData: Bool = false
+      
+      for i in 0..<myDownloadedData.count {
+          let firstStartIndex = i - 2
+          let secondStartIndex = i - 1
+          let firstTotalIndex = i + 10
+          let secondTotalIndex = i + 11
           
-          if myDownloadedData.count > i
-          {
-            if "\((myDownloadedData[i] as AnyObject).value(forKey: "Hexa") as! String)" == "A5"
-            {
-              myFinalDataArray.add(mySingFileDataArray)
-              mySingFileDataArray = NSMutableArray()
-              //tableDD.reloadData()
-              isSavingData = false
-              print("Stop data download")
-              print("Saved data download")
-            }
-          }
-        }
-        else{
-          mySingFileDataArray.add(myDownloadedData[i-1] as AnyObject)
-        }
-      }
-      else{
-        if "\((myDownloadedData[i-1] as AnyObject).value(forKey: "Hexa") as! String)" == "A5"
-        {
+          guard firstStartIndex >= 0 else { continue }
+          let firstStartHexa = "\((myDownloadedData[firstStartIndex] as AnyObject).value(forKey: "Hexa") as! String)"
+          let secondStartHexa = "\((myDownloadedData[secondStartIndex] as AnyObject).value(forKey: "Hexa") as! String)"
           
-          if myDownloadedData.count > i
-          {
-            if "\((myDownloadedData[i] as AnyObject).value(forKey: "Hexa") as! String)" == "5A"
-            {
+          if firstStartHexa == "A5" && secondStartHexa == "5A" && !isSavingData {
               isSavingData = true
-              print("New data download");
-            }
+              
+              guard secondTotalIndex < myDownloadedData.count else { continue }
+              let firstInt = "\((myDownloadedData[firstTotalIndex] as AnyObject).value(forKey: "Hexa") as! String)"
+              let secoundInt = "\((myDownloadedData[secondTotalIndex] as AnyObject).value(forKey: "Hexa") as! String)"
+              let count = Int("\(firstInt)\(secoundInt)", radix: 16) ?? 0
+              totalCount = 8 * count + 16
           }
           
-        }
+          if isSavingData && mySingFileDataArray.count < totalCount {
+              mySingFileDataArray.add(myDownloadedData[i] as AnyObject)
+          } else if isSavingData && mySingFileDataArray.count == totalCount && totalCount > 0 {
+              let firstEndIndex = i
+              let secondEndIndex = i + 1
+              guard secondEndIndex < myDownloadedData.count else { continue }
+              let firstEndHexa = "\((myDownloadedData[firstEndIndex] as AnyObject).value(forKey: "Hexa") as! String)"
+              let secondEndHexa = "\((myDownloadedData[secondEndIndex] as AnyObject).value(forKey: "Hexa") as! String)"
+              
+              if firstEndHexa == "5A" && secondEndHexa == "A5" {
+                  isSavingData = false
+                  myFinalDataArray.add(mySingFileDataArray)
+                  mySingFileDataArray = NSMutableArray()
+              }
+          }
       }
+      self.removeLoadingIndicatiorOnFooterOnTableViewStore()
       
-      
-      if i == myDownloadedData.count {
-        if mySingFileDataArray.count > 0 {
-          myFinalDataArray.add(mySingFileDataArray)
-          mySingFileDataArray = NSMutableArray()
-          print("Saved data download")
-        }
+      if MainCenteralManager.sharedInstance().dataP.myFinalDataArray.count == 0 {
+          let label = UILabel.init(frame: CGRect(x: 0, y: 44, width: 320, height: 30))
+          label.text = "No Data"
+          label.textAlignment = .center
+          
+          let myFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 320, height: 74))
+          myFooterView.addSubview(label)
+          tableDD.tableFooterView = myFooterView
       }
-    }
-    
-    //print("myFinalDataArray myFinalDataArray ", myFinalDataArray);
-    self.removeLoadingIndicatiorOnFooterOnTableViewStore()
-    tableDD.reloadData()
+      tableDD.reloadData()
+      
+//    var myDownloadedData =  MainCenteralManager.sharedInstance().dataP.myDownloadedData
+//    var myFinalDataArray = MainCenteralManager.sharedInstance().dataP.myFinalDataArray
+//
+//    print("data is \(myDownloadedData)")
+//
+//
+//    var isSavingData:Bool = false
+//
+//    var mySingFileDataArray:NSMutableArray = NSMutableArray()
+//
+//    if myDownloadedData.count == 0 {
+//      //self.tableDD.reloadData()
+//      return
+//    }
+//
+//
+//    for i in 1..<myDownloadedData.count+1 {
+//      if isSavingData == true {
+//
+//        if "\((myDownloadedData[i-1] as AnyObject).value(forKey: "Hexa") as! String)" == "5A"
+//        {
+//
+//          if myDownloadedData.count > i
+//          {
+//            if "\((myDownloadedData[i] as AnyObject).value(forKey: "Hexa") as! String)" == "A5"
+//            {
+//              myFinalDataArray.add(mySingFileDataArray)
+//              mySingFileDataArray = NSMutableArray()
+//              //tableDD.reloadData()
+//              isSavingData = false
+//              print("Stop data download")
+//              print("Saved data download")
+//            }
+//          }
+//        }
+//        else{
+//          mySingFileDataArray.add(myDownloadedData[i-1] as AnyObject)
+//        }
+//      }
+//      else{
+//        if "\((myDownloadedData[i-1] as AnyObject).value(forKey: "Hexa") as! String)" == "A5"
+//        {
+//
+//          if myDownloadedData.count > i
+//          {
+//            if "\((myDownloadedData[i] as AnyObject).value(forKey: "Hexa") as! String)" == "5A"
+//            {
+//              isSavingData = true
+//              print("New data download");
+//            }
+//          }
+//
+//        }
+//      }
+//
+//
+//      if i == myDownloadedData.count {
+//        if mySingFileDataArray.count > 0 {
+//          myFinalDataArray.add(mySingFileDataArray)
+//          mySingFileDataArray = NSMutableArray()
+//          print("Saved data download")
+//        }
+//      }
+//    }
+//
+//    //print("myFinalDataArray myFinalDataArray ", myFinalDataArray);
+//    self.removeLoadingIndicatiorOnFooterOnTableViewStore()
+//    tableDD.reloadData()
     
   }
   
@@ -884,4 +944,12 @@ extension DataDownloadVC : MainCenteralManagerForCommandPDelegate{
     self.myFinishCommandCalled = true
     self.GetData()
   }
+    
+    func Disconnect() {
+        let alert=UIAlertController(title: Appname, message: "Connection Lost", preferredStyle: UIAlertControllerStyle.alert);
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
+            self.navigationController?.popViewController(animated: true)
+        }));
+        present(alert, animated: true, completion: nil);
+    }
 }

@@ -14,11 +14,13 @@ enum ManageType {
 
 protocol MainCenteralManagerDelegate: class {
     func ReceiveCommand()
+    func Disconnect()
 }
 
 protocol MainCenteralManagerForCommandPDelegate: class {
     func ReceiveCommand()
     func ReceiveFinish()
+    func Disconnect()
 }
 
 
@@ -310,6 +312,10 @@ extension MainCenteralManager : CBCentralManagerDelegate{
         
     }
     
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        self.mainCenteralManagerDelegate?.Disconnect()
+        self.mainCenteralManagerForCommandPDelegate?.Disconnect()
+    }
     
     // MARK: - CBCentralManager Methods
     

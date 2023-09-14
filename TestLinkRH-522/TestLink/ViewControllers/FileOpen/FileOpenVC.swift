@@ -426,7 +426,9 @@ class FileOpenVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     //        if let userCSVDescription = USERDEFAULT.value(forKey: "userCSVFileData") as? NSArray
     //        {
     //            let description = NSMutableArray(array: userCSVDescription)
-    descriptionData.removeObject(at: index)
+      tableView(tableFO, didDeselectRowAt: IndexPath(row: index, section: 0))
+      csvFilename = ""
+      descriptionData.removeObject(at: index)
     
     USERDEFAULT.set(descriptionData, forKey: "userCSVFileData")
     USERDEFAULT.synchronize()
