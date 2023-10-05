@@ -2052,8 +2052,17 @@ extension RealTImeReadingVC : MainCenteralManagerDelegate{
     func Disconnect() {
         let alert=UIAlertController(title: Appname, message: "Connection Lost", preferredStyle: UIAlertControllerStyle.alert);
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {(action:UIAlertAction) in
-            self.navigationController?.popViewController(animated: true)
+            self.exitApp()
         }));
         present(alert, animated: true, completion: nil);
+    }
+    
+    func exitApp() {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }
     }
 }
