@@ -883,12 +883,13 @@ import CoreBluetooth
     }
     
     @IBAction func btnAlarmSetClicked(_ sender:UIButton){
+        let minTemp = txtMinTemp.text ?? ""
+        let maxTemp = txtMaxTemp.text ?? ""
         
-
-        if txtMinTemp.text == "" {
+        if txtMinTemp.text == "" || Float(minTemp) == nil {
             showAlert(Appname, title: "Please fill minimum field")
         }
-        else if txtMaxTemp.text == ""{
+        else if txtMaxTemp.text == "" || Float(maxTemp) == nil {
             showAlert(Appname, title: "Please fill maximum field")
         }
         else{
