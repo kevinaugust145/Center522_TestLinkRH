@@ -562,71 +562,97 @@ class RealTImeReadingVC: UIViewController, UITextFieldDelegate {
     }else{
         tempType = "C"
     }
-    
-    if MainCenteralManager.sharedInstance().data.temperatureT1 == "--" && MainCenteralManager.sharedInstance().data.temperatureT2 == "--"  {
-        
-        T1Value = "--"
-        T2Value = "--"
-        
-    }else if MainCenteralManager.sharedInstance().data.temperatureT1 == "--" {
-        
-        T1Value = "--"
-        if isCelsius {
-    
-            let val = Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)) >= 600 ? String(format: "%.1f", floor(Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))) : String(format: "%.1f", Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
-            T2Value = val
-            //T2Value = String(format:"%.1f",Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
-            
-        }else if isFahrenheit {
-            let val = Double(MainCenteralManager.sharedInstance().data.temperatureT2)! >= 1000 ? String(format: "%.1f", floor(Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)) : String(format: "%.1f", Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
-            T2Value = val
-            //T2Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
-            
-        }else if isKelvin {
-            
-            T2Value = String(format:"%.1f",Float((5.0 / 9.0) * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! + 459.67)))
-        }
-        
-    }else if MainCenteralManager.sharedInstance().data.temperatureT2 == "--" {
-        
-        T2Value = "--"
-        if isCelsius {
-            
-            T1Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT1)!)
-            
-        }else if isFahrenheit {
-            
-            T1Value = String(format:"%.1f",Float((1.8 * Double(MainCenteralManager.sharedInstance().data.temperatureT1)!) + 32.0))
-            
-        }else if isKelvin {
-            
-            T1Value = String(format:"%.1f",Float(Float(MainCenteralManager.sharedInstance().data.temperatureT1)! + 273.15))
-        }
-    }
-    else{
-        
-        if isCelsius {
-            
-            tempType = "C"
-            T1Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT1)!)
-            let val = Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)) >= 600 ? String(format: "%.1f", floor(Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))) : String(format: "%.1f", Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
-            T2Value = val
-            
-        }else if isFahrenheit {
-            
-            tempType = "F"
-            T1Value = String(format:"%.1f",Float((1.8 * Double(MainCenteralManager.sharedInstance().data.temperatureT1)!) + 32.0))
-            let val = Double(MainCenteralManager.sharedInstance().data.temperatureT2)! >= 1000 ? String(format: "%.1f", floor(Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)) : String(format: "%.1f", Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
-            T2Value = val
-            
-        }else if isKelvin {
-            
-            tempType = "K"
-            T1Value = String(format:"%.1f",Float(Float(MainCenteralManager.sharedInstance().data.temperatureT1)! + 273.15))
-            T2Value = String(format:"%.1f",Float((5.0 / 9.0) * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! + 459.67)))
-        }
+      
+      
+      T1Value = MainCenteralManager.sharedInstance().data.temperatureT1
+      T2Value = MainCenteralManager.sharedInstance().data.temperatureT2
+      
+      if T1Value != "--" && T1Value != "OL" && T1Value != "-OL" {
+          if isCelsius {
+              T1Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT1)!)
+          }else if isFahrenheit {
+              T1Value = String(format:"%.1f",Float((1.8 * Double(MainCenteralManager.sharedInstance().data.temperatureT1)!) + 32.0))
+          }else if isKelvin {
+              T1Value = String(format:"%.1f",Float(Float(MainCenteralManager.sharedInstance().data.temperatureT1)! + 273.15))
+          }
+      }
+      
+      if T2Value != "--" && T2Value != "OL" && T2Value != "-OL" {
+          if isCelsius {
+              let val = Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)) >= 600 ? String(format: "%.1f", floor(Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))) : String(format: "%.1f", Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
+              T2Value = val
+          }else if isFahrenheit {
+              let val = Double(MainCenteralManager.sharedInstance().data.temperatureT2)! >= 1000 ? String(format: "%.1f", floor(Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)) : String(format: "%.1f", Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
+              T2Value = val
+          }else if isKelvin {
+              T2Value = String(format:"%.1f",Float((5.0 / 9.0) * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! + 459.67)))
+          }
+      }
 
-    }
+//    if MainCenteralManager.sharedInstance().data.temperatureT1 == "--" && MainCenteralManager.sharedInstance().data.temperatureT2 == "--"  {
+//
+//        T1Value = "--"
+//        T2Value = "--"
+//
+//    }else if MainCenteralManager.sharedInstance().data.temperatureT1 == "--" {
+//
+//        T1Value = "--"
+//        if isCelsius {
+//
+//            let val = Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)) >= 600 ? String(format: "%.1f", floor(Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))) : String(format: "%.1f", Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
+//            T2Value = val
+//            //T2Value = String(format:"%.1f",Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
+//
+//        }else if isFahrenheit {
+//            let val = Double(MainCenteralManager.sharedInstance().data.temperatureT2)! >= 1000 ? String(format: "%.1f", floor(Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)) : String(format: "%.1f", Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
+//            T2Value = val
+//            //T2Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
+//
+//        }else if isKelvin {
+//
+//            T2Value = String(format:"%.1f",Float((5.0 / 9.0) * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! + 459.67)))
+//        }
+//
+//    }else if MainCenteralManager.sharedInstance().data.temperatureT2 == "--" {
+//
+//        T2Value = "--"
+//        if isCelsius {
+//
+//            T1Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT1)!)
+//
+//        }else if isFahrenheit {
+//
+//            T1Value = String(format:"%.1f",Float((1.8 * Double(MainCenteralManager.sharedInstance().data.temperatureT1)!) + 32.0))
+//
+//        }else if isKelvin {
+//
+//            T1Value = String(format:"%.1f",Float(Float(MainCenteralManager.sharedInstance().data.temperatureT1)! + 273.15))
+//        }
+//    }
+//    else{
+//
+//        if isCelsius {
+//
+//            tempType = "C"
+//            T1Value = String(format:"%.1f",Double(MainCenteralManager.sharedInstance().data.temperatureT1)!)
+//            let val = Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)) >= 600 ? String(format: "%.1f", floor(Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))) : String(format: "%.1f", Float(5.0 / 9.0 * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! - 32.0)))
+//            T2Value = val
+//
+//        }else if isFahrenheit {
+//
+//            tempType = "F"
+//            T1Value = String(format:"%.1f",Float((1.8 * Double(MainCenteralManager.sharedInstance().data.temperatureT1)!) + 32.0))
+//            let val = Double(MainCenteralManager.sharedInstance().data.temperatureT2)! >= 1000 ? String(format: "%.1f", floor(Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)) : String(format: "%.1f", Double(MainCenteralManager.sharedInstance().data.temperatureT2)!)
+//            T2Value = val
+//
+//        }else if isKelvin {
+//
+//            tempType = "K"
+//            T1Value = String(format:"%.1f",Float(Float(MainCenteralManager.sharedInstance().data.temperatureT1)! + 273.15))
+//            T2Value = String(format:"%.1f",Float((5.0 / 9.0) * (Double(MainCenteralManager.sharedInstance().data.temperatureT2)! + 459.67)))
+//        }
+//
+//    }
     
     if isKelvin {
         
