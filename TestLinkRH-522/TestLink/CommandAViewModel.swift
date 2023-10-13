@@ -77,7 +77,15 @@ class CommandAViewModel: NSObject {
     private var _temperatureT1 : String = "--"
     var temperatureT1 : String{
         set {
-            let i = Double(newValue)
+            
+            var newT1 = newValue
+            if cOrFOrK == "F" {
+                newT1 = String(format: "%.1f",(Float(newValue)! * 1.8) + 32)
+            }else if cOrFOrK == "K" {
+                newT1 = String(format: "%.1f",(Float(newValue)! + 273.15))
+            }
+            
+            var i = Double(newT1)
             if i == nil
             {
                 self._temperatureT1 = "--"
@@ -85,13 +93,26 @@ class CommandAViewModel: NSObject {
             else
             {
                 
+//                if !self.isT1Connected {
+//                    self._temperatureT1 = "--"
+//                }
+//                else if i! > Double(MaxTempValue) {
+//                    self._temperatureT1 = "OL"
+//                }
+//                else if i! < Double(MinTempValue) {
+//                    self._temperatureT1 = "-OL"
+//                }
+//                else {
+//                    self._temperatureT1 = newValue
+//                }
+                
                 if !self.isT1Connected {
                     self._temperatureT1 = "--"
                 }
-                else if i! > Double(MaxTempValue) {
+                else if i! > Double(MainCenteralManager.sharedInstance().getMaxValue(temperatureType: cOrFOrK, deviceType: DeviceType)) {
                     self._temperatureT1 = "OL"
                 }
-                else if i! < Double(MinTempValue) {
+                else if i! > Double(MainCenteralManager.sharedInstance().getMaxValue(temperatureType: cOrFOrK, deviceType: DeviceType)) {
                     self._temperatureT1 = "-OL"
                 }
                 else {
@@ -108,7 +129,15 @@ class CommandAViewModel: NSObject {
     private var _temperatureT2 : String = "--"
     var temperatureT2 : String{
         set {
-            let i = Double(newValue)
+            
+            var newT2 = newValue
+            if cOrFOrK == "C" {
+                newT2 = String(format: "%.1f", (Float(newValue)! - 32) / 1.8)
+            }else if cOrFOrK == "K" {
+                newT2 = String(format:"%.1f",(Float(newValue)! + 459.67) * (5/9))
+            }
+
+            let i = Double(newT2)
             if i == nil
             {
                 self._temperatureT2 = "--"
@@ -116,13 +145,26 @@ class CommandAViewModel: NSObject {
             else
             {
                 
+//                if !self.isT2Connected {
+//                    self._temperatureT2 = "--"
+//                }
+//                else if i! > Double(MaxTempValue) {
+//                    self._temperatureT2 = "OL"
+//                }
+//                else if i! < Double(MinTempValue) {
+//                    self._temperatureT2 = "-OL"
+//                }
+//                else {
+//                    self._temperatureT2 = newValue
+//                }
+                
                 if !self.isT2Connected {
                     self._temperatureT2 = "--"
                 }
-                else if i! > Double(MaxTempValue) {
+                else if i! > Double(MainCenteralManager.sharedInstance().getMaxValue(temperatureType: cOrFOrK, deviceType: DeviceType)) {
                     self._temperatureT2 = "OL"
                 }
-                else if i! < Double(MinTempValue) {
+                else if i! > Double(MainCenteralManager.sharedInstance().getMaxValue(temperatureType: cOrFOrK, deviceType: DeviceType)) {
                     self._temperatureT2 = "-OL"
                 }
                 else {
