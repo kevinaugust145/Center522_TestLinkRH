@@ -358,8 +358,12 @@ class DataDownloadVC: UIViewController,UITextFieldDelegate{
         var secondsInterval:Int = Int("\((myRecords[6] as AnyObject).value(forKey: "Hexa") as! String)")!
  
         //Fetching time invertal
-        let h2:String = "\("\((myRecords[7] as AnyObject).value(forKey: "Hexa") as! String)")\("\((myRecords[8] as AnyObject).value(forKey: "Hexa") as! String)")"
-        let timeInterval:Int = Int(h2, radix: 16)!
+          
+        let h1:String = "\("\((myRecords[7] as AnyObject).value(forKey: "Hexa") as! String)")"
+        let h2:String = "\("\((myRecords[8] as AnyObject).value(forKey: "Hexa") as! String)")"
+        let timeH1 = Int(h1, radix: 16)!
+        let timeH2 = Int(h2, radix: 16)!
+        let timeInterval = timeH1 * 60 + timeH2
         
         print("timeInterval = ", timeInterval)
         
